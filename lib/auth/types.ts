@@ -6,7 +6,6 @@ export type AuthUserInfo = {
 
 export type AuthUser = {
   isAnonymous: boolean
-  token: string
   userId: string
   userInfo: AuthUserInfo
 }

@@ -2,15 +2,14 @@ import { User } from "lib/firebase/auth"
 
 import { AuthUser } from "./types"
 
-export async function formatUser(user: User): Promise<AuthUser> {
+export function formatUser(firebaseUser: User): AuthUser {
   return {
-    isAnonymous: user.isAnonymous,
-    token: await user.getIdToken(),
-    userId: user.uid,
+    isAnonymous: firebaseUser.isAnonymous,
+    userId: firebaseUser.uid,
     userInfo: {
-      email: user.email,
-      imageUrl: user.photoURL,
-      userName: user.displayName ?? "[Guest]",
+      email: firebaseUser.email,
+      imageUrl: firebaseUser.photoURL,
+      userName: firebaseUser.displayName ?? "[Guest]",
     },
   }
 }
