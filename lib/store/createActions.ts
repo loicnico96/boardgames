@@ -1,5 +1,3 @@
-import { GetState, SetState } from "zustand"
-
 import { setPersistence } from "lib/auth/setPersistence"
 import { setUserName } from "lib/auth/setUserName"
 import { signInAnonymously } from "lib/auth/signInAnonymously"
@@ -7,50 +5,46 @@ import { signInWithGoogle } from "lib/auth/signInWithGoogle"
 import { signOut } from "lib/auth/signOut"
 import { AuthUser } from "lib/auth/types"
 
-import { Actions, State } from "./types"
+import { Actions, GetState, SetState } from "./types"
 
-export function createActions(
-  set: SetState<State>,
-  get: GetState<State>
-): Actions {
+export function createActions(set: SetState, get: GetState): Actions {
   return {
     setUser(user: AuthUser | null) {
-      set({ auth: { user } })
+      set(state => {
+        state.auth.user = user
+      })
     },
 
     async setUserName(userName: string) {
-      const { user } = get().auth
-      if (user) {
-        await setUserName(userName)
-        set({
-          auth: {
-            user: {
-              ...user,
-              userInfo: {
-                ...user.userInfo,
-                userName,
-              },
-            },
-          },
-        })
-      }
+      await setUserName(userName)
+      set(state => {
+        if (state.auth.user) {
+          state.auth.user.userInfo.userName = userName
+        }
+      })
     },
 
     async signInAnonymously(persistence: boolean) {
       await setPersistence(persistence)
       const user = await signInAnonymously()
-      set({ auth: { user } })
+      set(state => {
+        state.auth.user = user
+      })
     },
 
     async signInWithGoogle(persistence: boolean) {
       await setPersistence(persistence)
       const user = await signInWithGoogle()
-      set({ auth: { user } })
+      set(state => {
+        state.auth.user = user
+      })
     },
 
     async signOut() {
       await signOut()
-      set({ auth: { user: null } })
+      set(state => {
+        state.auth.user = null
+      })
     },
   }
 }

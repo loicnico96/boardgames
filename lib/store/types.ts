@@ -1,3 +1,4 @@
+import { Draft } from "immer"
 import { AuthState, AuthUser } from "lib/auth/types"
 
 export type Actions = {
@@ -15,3 +16,7 @@ export type State = {
 export type Store = State & {
   actions: Actions
 }
+
+export type GetState = () => State
+
+export type SetState = (recipe: (draft: Draft<State>) => void) => void
