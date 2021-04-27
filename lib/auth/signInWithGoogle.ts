@@ -1,8 +1,9 @@
 import auth, { GoogleAuthProvider } from "lib/firebase/auth"
 
 import { formatUser } from "./formatUser"
+import { AuthUser } from "./types"
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(): Promise<AuthUser> {
   const googleAuthProvider = new GoogleAuthProvider()
   const { user } = await auth.signInWithPopup(googleAuthProvider)
   if (user) {

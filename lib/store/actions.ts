@@ -1,3 +1,5 @@
+import { Draft } from "immer"
+
 import { setPersistence } from "lib/auth/setPersistence"
 import { setUserName } from "lib/auth/setUserName"
 import { signInAnonymously } from "lib/auth/signInAnonymously"
@@ -5,7 +7,18 @@ import { signInWithGoogle } from "lib/auth/signInWithGoogle"
 import { signOut } from "lib/auth/signOut"
 import { AuthUser } from "lib/auth/types"
 
-import { Actions, GetState, SetState } from "./types"
+import { State } from "./state"
+
+export type Actions = {
+  setUser: (user: AuthUser | null) => void
+  setUserName: (userName: string) => Promise<void>
+  signInAnonymously: (persistence: boolean) => Promise<void>
+  signInWithGoogle: (persistence: boolean) => Promise<void>
+  signOut: () => Promise<void>
+}
+
+export type GetState = () => State
+export type SetState = (recipe: (draft: Draft<State>) => void) => void
 
 export function createActions(set: SetState, get: GetState): Actions {
   return {

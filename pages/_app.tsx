@@ -4,7 +4,7 @@ import React from "react"
 
 import Layout from "components/Layout"
 import AuthProvider from "components/providers/AuthProvider"
-import StoreProvider from "components/providers/StoreProvider"
+import { StoreProvider } from "lib/store/context"
 
 import "styles/globals.css"
 

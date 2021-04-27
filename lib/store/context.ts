@@ -1,8 +1,44 @@
-import { createContext } from "react"
-import { UseStore } from "zustand"
+import { produce } from "immer"
+import React, { createContext, useContext, useState } from "react"
+import create, { UseStore } from "zustand"
+import { combine } from "zustand/middleware"
 
-import { Store } from "./types"
+import { Actions, createActions } from "./actions"
+import { getInitialState, State } from "./state"
 
-export const StoreContext = createContext<UseStore<Store> | null>(null)
+export type Store = State & {
+  actions: Actions
+}
 
-export const StoreContextProvider = StoreContext.Provider
+export function createStore(): UseStore<Store> {
+  return create(
+    combine(getInitialState(), (set, get) => {
+      const actions = createActions(recipe => set(produce(recipe)), get)
+      return { actions }
+    })
+  )
+}
+
+const StoreContext = createContext<UseStore<Store> | null>(null)
+
+export type StoreProviderProps = {
+  children: React.ReactNode
+}
+
+export function StoreProvider({ children }: StoreProviderProps) {
+  const [value] = useState(createStore)
+
+  return React.createElement(StoreContext.Provider, { value }, children)
+}
+
+export function useStore<T>(
+  selector: (store: Store) => T,
+  eqFn?: (oldState: T, newState: T) => boolean
+): T {
+  const store = useContext(StoreContext)
+  if (store) {
+    return store(selector, eqFn)
+  } else {
+    throw Error("Invalid store context")
+  }
+}

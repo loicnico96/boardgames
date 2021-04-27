@@ -1,6 +1,5 @@
-import { Actions, Store } from "lib/store/types"
-
-import { useStore } from "./useStore"
+import { Actions } from "lib/store/actions"
+import { Store, useStore } from "lib/store/context"
 
 export function getActions(store: Store): Actions {
   return store.actions

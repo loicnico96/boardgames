@@ -1,7 +1,5 @@
 import { AuthState } from "lib/auth/types"
-import { Store } from "lib/store/types"
-
-import { useStore } from "./useStore"
+import { Store, useStore } from "lib/store/context"
 
 export function getAuth(store: Store): AuthState {
   return store.auth
