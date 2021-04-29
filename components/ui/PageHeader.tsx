@@ -1,3 +1,4 @@
+import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { useCallback } from "react"
@@ -5,6 +6,7 @@ import React, { useCallback } from "react"
 import { useActions } from "hooks/store/useActions"
 import { useAuth } from "hooks/store/useAuth"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
+import { useTranslations } from "hooks/useTranslations"
 import { promptUserName } from "lib/auth/promptUserName"
 import { ROUTES } from "lib/utils/navigation"
 import { withSearchParams } from "lib/utils/search"
@@ -22,6 +24,8 @@ export default function PageHeader({ title }: PageHeaderProps) {
 
   const loginUrl = withSearchParams(ROUTES.login(), { callback: pathname })
 
+  const t = useTranslations()
+
   const changeUserName = useCallback(async () => {
     if (user !== null) {
       const oldName = user.userInfo.userName
@@ -36,21 +40,27 @@ export default function PageHeader({ title }: PageHeaderProps) {
 
   return (
     <div className="PageHeader">
+      <Head>
+        <title>{title}</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <div className="Breadcrumbs">{title}</div>
       {user ? (
         <>
           <div
             className="UserName"
             onClick={changeUserNameAsync}
-            title="Click to change user name"
+            title={t.login.setUserName}
           >
             {user.userInfo.userName}
           </div>
-          <AsyncButton onClick={signOut}>Sign out</AsyncButton>
+          <AsyncButton className="SignOut" onClick={signOut}>
+            {t.login.signOut}
+          </AsyncButton>
         </>
       ) : (
         <Link href={loginUrl} as={loginUrl}>
-          <a>Sign in</a>
+          <a>{t.login.signIn}</a>
         </Link>
       )}
       <style jsx>{`
@@ -59,6 +69,7 @@ export default function PageHeader({ title }: PageHeaderProps) {
           background-color: #aaa;
           column-gap: 8px;
           display: flex;
+          height: 64px;
           padding: 16px 48px;
         }
 
@@ -68,6 +79,10 @@ export default function PageHeader({ title }: PageHeaderProps) {
 
         .UserName {
           cursor: pointer;
+        }
+
+        :global(.SignOut) {
+          height: 32px;
         }
       `}</style>
     </div>

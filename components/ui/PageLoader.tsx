@@ -8,11 +8,11 @@ export type PageLoaderProps = {
 
 export default function PageLoader({ message }: PageLoaderProps) {
   return (
-    <div className="container">
+    <div className="PageLoader">
       <Spinner size={96} />
       {!!message && <div>{message}</div>}
       <style jsx>{`
-        .container {
+        .PageLoader {
           align-items: center;
           display: flex;
           flex-direction: column;

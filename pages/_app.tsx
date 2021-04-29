@@ -1,25 +1,23 @@
 import { AppProps } from "next/app"
-import Head from "next/head"
 import React from "react"
 
 import AuthProvider from "components/providers/AuthProvider"
 import ToastProvider from "components/providers/ToastProvider"
+import TranslationProvider from "components/providers/TranslationProvider"
 import { StoreProvider } from "lib/store/context"
 
 import "styles/globals.css"
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ToastProvider>
-      <StoreProvider>
-        <AuthProvider>
-          <Head>
-            <title>App</title>
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
-          <Component {...pageProps} />
-        </AuthProvider>
-      </StoreProvider>
-    </ToastProvider>
+    <TranslationProvider>
+      <ToastProvider>
+        <StoreProvider>
+          <AuthProvider>
+            <Component {...pageProps} />
+          </AuthProvider>
+        </StoreProvider>
+      </ToastProvider>
+    </TranslationProvider>
   )
 }

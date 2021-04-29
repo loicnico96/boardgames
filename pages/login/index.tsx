@@ -7,6 +7,7 @@ import PageContent from "components/ui/PageContent"
 import PageHeader from "components/ui/PageHeader"
 import { useActions } from "hooks/store/useActions"
 import { useAuth } from "hooks/store/useAuth"
+import { useTranslations } from "hooks/useTranslations"
 import { ROUTES } from "lib/utils/navigation"
 import { getSearchParams } from "lib/utils/search"
 
@@ -20,6 +21,7 @@ export default function LoginPage() {
 
   const isAuthenticated = user !== null
   const router = useRouter()
+  const t = useTranslations()
 
   const [persistence, setPersistence] = useState(DEFAULT_PERSISTENCE)
 
@@ -32,33 +34,33 @@ export default function LoginPage() {
 
   return (
     <PageContainer>
-      <PageHeader title="Login" />
+      <PageHeader title={t.login.pageTitle} />
       <PageContent>
         <div>
           <AsyncButton
             disabled={isAuthenticated}
             onClick={() => signInAnonymously(persistence)}
-            title="Sign in as guest"
+            title={t.login.signInAnonymously}
           >
-            Sign in as guest
+            {t.login.signInAnonymously}
           </AsyncButton>
           <AsyncButton
             disabled={isAuthenticated}
             onClick={() => signInWithGoogle(persistence)}
-            title="Sign in with Google"
+            title={t.login.signInWithGoogle}
           >
-            Sign in with Google
+            {t.login.signInWithGoogle}
           </AsyncButton>
         </div>
         <div className="AuthPersistence">
           <input
             checked={persistence}
             disabled={isAuthenticated}
-            name="Remember me"
+            name={t.login.rememberMe}
             onChange={() => setPersistence(!persistence)}
             type="checkbox"
           />
-          <span>Remember me</span>
+          <span>{t.login.rememberMe}</span>
         </div>
         <style jsx>
           {`
