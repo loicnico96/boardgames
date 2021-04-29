@@ -1,9 +1,9 @@
-export async function promptUserName(oldName?: string): Promise<string> {
+export async function promptUserName(oldName?: string): Promise<string | null> {
   // eslint-disable-next-line no-alert
-  const newName = window.prompt("Enter your user name", oldName)?.trim()
-  if (newName) {
-    return newName
+  const userName = window.prompt("Enter your user name", oldName)
+  if (userName) {
+    return userName.trim()
   } else {
-    throw Error("Username cannot be empty")
+    return null
   }
 }

@@ -9,7 +9,7 @@ export function formatUser(firebaseUser: User): AuthUser {
     userInfo: {
       email: firebaseUser.email,
       imageUrl: firebaseUser.photoURL,
-      userName: firebaseUser.displayName ?? "[Guest]",
+      userName: firebaseUser.displayName ?? "...",
     },
   }
 }
