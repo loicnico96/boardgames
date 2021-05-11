@@ -90,7 +90,7 @@ module.exports = {
 
     // Best Practices
     "block-scoped-var": ["error"],
-    "class-methods-use-this": ["error"],
+    "class-methods-use-this": ["warn"],
     "consistent-return": ["error"],
     "curly": ["error", "all"],
     "default-case": ["error"],

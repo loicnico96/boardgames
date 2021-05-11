@@ -88,4 +88,4 @@ export class AsyncCache {
   }
 }
 
-export const cache = new AsyncCache()
+export default new AsyncCache()

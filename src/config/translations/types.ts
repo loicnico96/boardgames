@@ -16,6 +16,10 @@ export type TranslationConfig = {
     pageLoading: string
     pageTitle: string
   }
+  roomPage: {
+    pageLoading: string
+    pageTitle: string
+  }
 }
 
 export type ReplaceParams = Record<string, unknown>

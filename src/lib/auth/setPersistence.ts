@@ -1,5 +1,5 @@
-import { Auth } from "lib/firebase/auth"
+import auth from "lib/firebase/auth"
 
 export async function setPersistence(persistence: boolean): Promise<void> {
-  await Auth.setPersistence(persistence ? "local" : "session")
+  await auth.setPersistence(persistence ? "local" : "session")
 }

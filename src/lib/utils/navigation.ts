@@ -12,3 +12,7 @@ export const ROUTES = {
   login: () => route(PATH_LOGIN),
   roomList: () => route(PATH_ROOMS),
 }
+
+export function isSSR(): boolean {
+  return typeof window === "undefined"
+}

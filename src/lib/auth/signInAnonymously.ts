@@ -1,4 +1,4 @@
-import { Auth } from "lib/firebase/auth"
+import auth from "lib/firebase/auth"
 
 import { formatUser } from "./formatUser"
 import { promptUserName } from "./promptUserName"
@@ -11,7 +11,7 @@ export async function signInAnonymously(): Promise<AuthUser> {
     throw Error("Username cannot be empty")
   }
 
-  const { user } = await Auth.signInAnonymously()
+  const { user } = await auth.signInAnonymously()
 
   if (!user) {
     throw Error("Login failed")

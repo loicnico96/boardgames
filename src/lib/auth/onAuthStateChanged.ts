@@ -1,4 +1,4 @@
-import { Auth } from "lib/firebase/auth"
+import auth from "lib/firebase/auth"
 import { ErrorHandler } from "lib/utils/error"
 
 import { formatUser } from "./formatUser"
@@ -10,7 +10,7 @@ export function onAuthStateChanged(
   onChange: (user: AuthUser | null) => void,
   onError: ErrorHandler
 ): Unsubscribe {
-  return Auth.onAuthStateChanged(
+  return auth.onAuthStateChanged(
     firebaseUser => {
       try {
         onChange(firebaseUser ? formatUser(firebaseUser) : null)

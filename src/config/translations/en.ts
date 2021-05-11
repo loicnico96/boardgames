@@ -18,6 +18,10 @@ const CONFIG: TranslationConfig = {
     pageLoading: "Loading rooms...",
     pageTitle: "Rooms",
   },
+  roomPage: {
+    pageLoading: "Loading room...",
+    pageTitle: "Room",
+  },
 }
 
 export default CONFIG
