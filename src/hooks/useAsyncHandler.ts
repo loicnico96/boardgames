@@ -2,6 +2,8 @@ import { useCallback, useState } from "react"
 
 import { ErrorHandler, handleGenericError } from "lib/utils/error"
 
+import { useMountedRef } from "./useMountedRef"
+
 export type Params = unknown[]
 export type AsyncHandler<P extends Params> = (...args: P) => Promise<void>
 
@@ -10,6 +12,8 @@ export function useAsyncHandler<P extends Params>(
   onError: ErrorHandler = handleGenericError
 ): [AsyncHandler<P>, boolean] {
   const [isRunning, setRunning] = useState(false)
+
+  const mountedRef = useMountedRef()
 
   const asyncHandler = useCallback(
     async (...args: P) => {
@@ -20,11 +24,13 @@ export function useAsyncHandler<P extends Params>(
         } catch (error) {
           onError(error)
         } finally {
-          setRunning(false)
+          if (mountedRef.current) {
+            setRunning(false)
+          }
         }
       }
     },
-    [handler, isRunning, onError]
+    [handler, isRunning, mountedRef, onError]
   )
 
   return [asyncHandler, isRunning]

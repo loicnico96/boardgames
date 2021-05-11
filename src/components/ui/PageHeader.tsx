@@ -70,7 +70,7 @@ export default function PageHeader({ title }: PageHeaderProps) {
           >
             {user.userInfo.userName}
           </div>
-          <AsyncButton className="SignOut" onClick={signOut}>
+          <AsyncButton onClick={signOut} style={{ height: 32 }}>
             {t.login.signOut}
           </AsyncButton>
         </>
@@ -95,10 +95,6 @@ export default function PageHeader({ title }: PageHeaderProps) {
 
         .UserName {
           cursor: pointer;
-        }
-
-        :global(.SignOut) {
-          height: 32px;
         }
       `}</style>
     </div>
