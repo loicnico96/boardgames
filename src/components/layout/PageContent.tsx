@@ -12,9 +12,9 @@ export type PageContainerProps = {
 export default function PageContent({ children }: PageContainerProps) {
   return (
     <ErrorBoundary renderError={renderError} onError={handleGenericError}>
-      <div className="PageContent">{children}</div>
+      <div>{children}</div>
       <style jsx>{`
-        .PageContent {
+        div {
           padding: 24px 48px;
         }
       `}</style>

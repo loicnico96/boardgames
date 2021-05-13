@@ -10,6 +10,7 @@ export function route(...paths: string[]): string {
 export const ROUTES = {
   home: () => route(),
   login: () => route(PATH_LOGIN),
+  room: (roomId: string) => route(PATH_ROOMS, roomId),
   roomList: () => route(PATH_ROOMS),
 }
 

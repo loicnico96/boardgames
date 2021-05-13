@@ -1,8 +1,8 @@
 import React from "react"
 
-import PageContainer from "components/ui/PageContainer"
-import PageContent from "components/ui/PageContent"
-import PageHeader from "components/ui/PageHeader"
+import PageContainer from "components/layout/PageContainer"
+import PageContent from "components/layout/PageContent"
+import PageHeader from "components/layout/PageHeader"
 import { useTranslations } from "hooks/useTranslations"
 
 export default function HomePage() {

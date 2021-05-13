@@ -1,12 +1,14 @@
 import { GetServerSideProps } from "next"
 import React, { useState } from "react"
 
-import PageContainer from "components/ui/PageContainer"
-import PageContent from "components/ui/PageContent"
-import PageHeader from "components/ui/PageHeader"
+import PageContainer from "components/layout/PageContainer"
+import PageContent from "components/layout/PageContent"
+import PageHeader from "components/layout/PageHeader"
+import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
 import { useDocumentListener } from "hooks/db/useDocumentListener"
 import { useTranslations } from "hooks/useTranslations"
 import cache from "lib/utils/cache"
+import { ROUTES } from "lib/utils/navigation"
 
 export type RoomPageProps = {
   roomId: string
@@ -14,6 +16,17 @@ export type RoomPageProps = {
 
 export default function RoomPage({ roomId }: RoomPageProps) {
   const t = useTranslations()
+
+  const parents: BreadcrumbsParent[] = [
+    {
+      path: ROUTES.home(),
+      title: t.home.pageTitle,
+    },
+    {
+      path: ROUTES.roomList(),
+      title: t.roomList.pageTitle,
+    },
+  ]
 
   const docRef = `room/${roomId}`
 
@@ -25,7 +38,7 @@ export default function RoomPage({ roomId }: RoomPageProps) {
 
   return (
     <PageContainer>
-      <PageHeader title={t.roomPage.pageTitle} />
+      <PageHeader parents={parents} title={t.roomPage.pageTitle} />
       <PageContent>{t.roomPage.pageTitle}</PageContent>
     </PageContainer>
   )

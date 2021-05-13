@@ -1,6 +1,6 @@
 import React from "react"
 
-import Spinner from "./Spinner"
+import Spinner from "components/ui/Spinner"
 
 export type PageLoaderProps = {
   message?: string

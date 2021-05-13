@@ -1,10 +1,11 @@
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 
-import AsyncButton from "components/ui/AsyncButton"
-import PageContainer from "components/ui/PageContainer"
-import PageContent from "components/ui/PageContent"
-import PageHeader from "components/ui/PageHeader"
+import PageContainer from "components/layout/PageContainer"
+import PageContent from "components/layout/PageContent"
+import PageHeader from "components/layout/PageHeader"
+import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
+import Button from "components/ui/Button"
 import { useActions } from "hooks/store/useActions"
 import { useAuth } from "hooks/store/useAuth"
 import { useTranslations } from "hooks/useTranslations"
@@ -23,6 +24,13 @@ export default function LoginPage() {
   const router = useRouter()
   const t = useTranslations()
 
+  const parents: BreadcrumbsParent[] = [
+    {
+      path: ROUTES.home(),
+      title: t.home.pageTitle,
+    },
+  ]
+
   const [persistence, setPersistence] = useState(DEFAULT_PERSISTENCE)
 
   useEffect(() => {
@@ -34,23 +42,23 @@ export default function LoginPage() {
 
   return (
     <PageContainer>
-      <PageHeader title={t.login.pageTitle} />
+      <PageHeader parents={parents} title={t.login.pageTitle} />
       <PageContent>
         <div>
-          <AsyncButton
+          <Button
             disabled={isAuthenticated}
             onClick={() => signInAnonymously(persistence)}
             title={t.login.signInAnonymously}
           >
             {t.login.signInAnonymously}
-          </AsyncButton>
-          <AsyncButton
+          </Button>
+          <Button
             disabled={isAuthenticated}
             onClick={() => signInWithGoogle(persistence)}
             title={t.login.signInWithGoogle}
           >
             {t.login.signInWithGoogle}
-          </AsyncButton>
+          </Button>
         </div>
         <div className="AuthPersistence">
           <input

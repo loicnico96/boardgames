@@ -6,10 +6,10 @@ export type PageContainerProps = {
 
 export default function PageContainer({ children }: PageContainerProps) {
   return (
-    <div className="PageContainer">
+    <div>
       {children}
       <style jsx>{`
-        .PageContainer {
+        div {
           background-color: #eee;
           display: flex;
           flex-direction: column;
