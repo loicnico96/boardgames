@@ -1,5 +1,6 @@
 import { useCache, UseCacheResult } from "hooks/useCache"
-import db, { DocumentData, QueryOptions, WithId } from "lib/db"
+import { query } from "lib/db/query"
+import { DocumentData, QueryOptions, WithId } from "lib/db/types"
 import cache from "lib/utils/cache"
 import { getLoadedResource } from "lib/utils/resources"
 
@@ -46,7 +47,7 @@ export function useQuery<T extends DocumentData>(
 ): UseCacheResult<WithId<T>[]> {
   const key = getQueryKey(colRef, options)
   return useCache(key, async () => {
-    const docs = await db.query<T>(colRef, options)
+    const docs = await query<T>(colRef, options)
     docs.forEach(doc => cache.set(doc.id, getLoadedResource(doc)))
     return docs
   })

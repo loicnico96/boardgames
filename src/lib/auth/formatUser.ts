@@ -1,4 +1,4 @@
-import { User } from "lib/firebase/auth"
+import { User } from "firebase/auth"
 
 import { AuthUser } from "./types"
 

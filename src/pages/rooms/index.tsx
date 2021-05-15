@@ -6,7 +6,7 @@ import PageHeader from "components/layout/PageHeader"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
 import { useQuery } from "hooks/db/useQuery"
 import { useTranslations } from "hooks/useTranslations"
-import { SortDirection } from "lib/db"
+import { SortDirection } from "lib/db/types"
 import { ROUTES } from "lib/utils/navigation"
 
 export default function RoomListPage() {

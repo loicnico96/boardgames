@@ -1,5 +1,7 @@
-import auth from "lib/firebase/auth"
+import { signOut as _signOut } from "firebase/auth"
+
+import firebaseAuth from "lib/firebase/auth"
 
 export async function signOut(): Promise<void> {
-  await auth.signOut()
+  await _signOut(firebaseAuth)
 }

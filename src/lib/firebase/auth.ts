@@ -1,9 +1,5 @@
-import firebase from "./app"
+import { getAuth } from "firebase/auth"
 
-export type User = firebase.User
+import firebaseApp from "./app"
 
-export type UserCredential = firebase.auth.UserCredential
-
-export const { GoogleAuthProvider } = firebase.auth
-
-export default firebase.auth()
+export default getAuth(firebaseApp)

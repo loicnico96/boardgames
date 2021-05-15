@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 
-import db, { DocumentData, WithId } from "lib/db"
+import { subscribe } from "lib/db/subscribe"
+import { DocumentData, WithId } from "lib/db/types"
 import cache from "lib/utils/cache"
 import {
   getErrorResource,
@@ -13,7 +14,7 @@ export function useDocumentListener<T extends DocumentData>(
   onChange: (resource: Resource<WithId<T>>) => void
 ): void {
   useEffect(() => {
-    const unsubscribe = db.subscribe<T>(
+    const unsubscribe = subscribe<T>(
       docRef,
       data => {
         const resource = data
