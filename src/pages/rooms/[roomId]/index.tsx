@@ -1,20 +1,24 @@
-import { GetServerSideProps } from "next"
-import React, { useState } from "react"
+import { useRouter } from "next/router"
+import React from "react"
 
-import PageContainer from "components/layout/PageContainer"
-import PageContent from "components/layout/PageContent"
-import PageHeader from "components/layout/PageHeader"
+import PageLayout from "components/layout/PageLayout"
+import PageLoader from "components/layout/PageLoader"
+import Room from "components/rooms/Room"
+import RoomProvider from "components/rooms/RoomProvider"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
-import { useDocumentListener } from "hooks/db/useDocumentListener"
+import { useParams } from "hooks/useParams"
 import { useTranslations } from "hooks/useTranslations"
-import cache from "lib/utils/cache"
+import { RoomId } from "lib/model/RoomData"
 import { ROUTES } from "lib/utils/navigation"
 
-export type RoomPageProps = {
-  roomId: string
+export type RoomPageParams = {
+  roomId: RoomId
 }
 
-export default function RoomPage({ roomId }: RoomPageProps) {
+export default function RoomPage() {
+  const { isReady } = useRouter()
+  const { roomId } = useParams<RoomPageParams>()
+
   const t = useTranslations()
 
   const parents: BreadcrumbsParent[] = [
@@ -28,34 +32,15 @@ export default function RoomPage({ roomId }: RoomPageProps) {
     },
   ]
 
-  const docRef = `room/${roomId}`
-
-  const [resource, setResource] = useState(cache.get(docRef))
-
-  useDocumentListener(docRef, setResource)
-
-  console.log("Room", resource)
-
   return (
-    <PageContainer>
-      <PageHeader parents={parents} title={t.roomPage.pageTitle} />
-      <PageContent>{t.roomPage.pageTitle}</PageContent>
-    </PageContainer>
+    <PageLayout parents={parents} title={t.roomPage.pageTitle}>
+      {isReady ? (
+        <RoomProvider roomId={roomId}>
+          {room => <Room room={room} />}
+        </RoomProvider>
+      ) : (
+        <PageLoader message={t.roomPage.pageLoading} />
+      )}
+    </PageLayout>
   )
-}
-
-export const getServerSideProps: GetServerSideProps<RoomPageProps> = async ({
-  query,
-}) => {
-  if (query.roomId) {
-    return {
-      props: {
-        roomId: Array.isArray(query.roomId) ? query.roomId[0] : query.roomId,
-      },
-    }
-  }
-
-  return {
-    notFound: true,
-  }
 }

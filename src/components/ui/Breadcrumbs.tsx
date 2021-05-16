@@ -1,6 +1,8 @@
-import Link from "next/link"
-import { useRouter } from "next/router"
 import React from "react"
+
+import { useLocation } from "hooks/useLocation"
+
+import Link from "./Link"
 
 export type BreadcrumbsParent = {
   title: string
@@ -13,26 +15,24 @@ export type BreadcrumbsProps = {
 }
 
 export default function Breadcrumbs({ parents = [], title }: BreadcrumbsProps) {
-  const { asPath } = useRouter()
+  const location = useLocation()
 
   return (
-    <React.Fragment>
+    <>
       {parents.map(parent => (
-        <React.Fragment key={parent.path}>
-          <Link href={parent.path}>
-            <a>{parent.title}</a>
-          </Link>
-          <span>{">"}</span>
-        </React.Fragment>
+        <span key={parent.path}>
+          <Link href={parent.path}>{parent.title}</Link>
+        </span>
       ))}
-      <Link href={asPath}>
-        <a>{title}</a>
-      </Link>
+      <span>
+        <Link href={location}>{title}</Link>
+      </span>
       <style jsx>{`
-        span {
+        span:not(:last-of-type)::after {
+          content: ">";
           margin: 0px 8px;
         }
       `}</style>
-    </React.Fragment>
+    </>
   )
 }

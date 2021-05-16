@@ -1,9 +1,7 @@
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 
-import PageContainer from "components/layout/PageContainer"
-import PageContent from "components/layout/PageContent"
-import PageHeader from "components/layout/PageHeader"
+import PageLayout from "components/layout/PageLayout"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
 import Button from "components/ui/Button"
 import { useActions } from "hooks/store/useActions"
@@ -41,49 +39,46 @@ export default function LoginPage() {
   }, [isAuthenticated, router])
 
   return (
-    <PageContainer>
-      <PageHeader parents={parents} title={t.login.pageTitle} />
-      <PageContent>
-        <div>
-          <Button
-            disabled={isAuthenticated}
-            onClick={() => signInAnonymously(persistence)}
-            title={t.login.signInAnonymously}
-          >
-            {t.login.signInAnonymously}
-          </Button>
-          <Button
-            disabled={isAuthenticated}
-            onClick={() => signInWithGoogle(persistence)}
-            title={t.login.signInWithGoogle}
-          >
-            {t.login.signInWithGoogle}
-          </Button>
-        </div>
-        <div className="AuthPersistence">
-          <input
-            checked={persistence}
-            disabled={isAuthenticated}
-            name={t.login.rememberMe}
-            onChange={() => setPersistence(!persistence)}
-            type="checkbox"
-          />
-          <span>{t.login.rememberMe}</span>
-        </div>
-        <style jsx>
-          {`
-            .AuthPersistence {
-              align-items: center;
-              display: flex;
-              padding-top: 8px;
-            }
+    <PageLayout parents={parents} title={t.login.pageTitle}>
+      <div>
+        <Button
+          disabled={isAuthenticated}
+          onClick={() => signInAnonymously(persistence)}
+          title={t.login.signInAnonymously}
+        >
+          {t.login.signInAnonymously}
+        </Button>
+        <Button
+          disabled={isAuthenticated}
+          onClick={() => signInWithGoogle(persistence)}
+          title={t.login.signInWithGoogle}
+        >
+          {t.login.signInWithGoogle}
+        </Button>
+      </div>
+      <div className="AuthPersistence">
+        <input
+          checked={persistence}
+          disabled={isAuthenticated}
+          name={t.login.rememberMe}
+          onChange={() => setPersistence(!persistence)}
+          type="checkbox"
+        />
+        <span>{t.login.rememberMe}</span>
+      </div>
+      <style jsx>
+        {`
+          .AuthPersistence {
+            align-items: center;
+            display: flex;
+            padding-top: 8px;
+          }
 
-            .AuthPersistence > input {
-              margin-right: 8px;
-            }
-          `}
-        </style>
-      </PageContent>
-    </PageContainer>
+          .AuthPersistence > input {
+            margin-right: 8px;
+          }
+        `}
+      </style>
+    </PageLayout>
   )
 }

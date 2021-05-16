@@ -1,8 +1,6 @@
 import React from "react"
 
-import PageContainer from "components/layout/PageContainer"
-import PageContent from "components/layout/PageContent"
-import PageHeader from "components/layout/PageHeader"
+import PageLayout from "components/layout/PageLayout"
 import RoomList from "components/rooms/RoomList"
 import RoomListProvider from "components/rooms/RoomListProvider"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
@@ -20,13 +18,8 @@ export default function RoomListPage() {
   ]
 
   return (
-    <PageContainer>
-      <PageHeader parents={parents} title={t.roomList.pageTitle} />
-      <PageContent>
-        <RoomListProvider>
-          {rooms => <RoomList rooms={rooms} />}
-        </RoomListProvider>
-      </PageContent>
-    </PageContainer>
+    <PageLayout parents={parents} title={t.roomList.pageTitle}>
+      <RoomListProvider>{rooms => <RoomList rooms={rooms} />}</RoomListProvider>
+    </PageLayout>
   )
 }

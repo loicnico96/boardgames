@@ -1,4 +1,3 @@
-import { useRouter } from "next/router"
 import React, { useCallback } from "react"
 
 import Breadcrumbs, { BreadcrumbsProps } from "components/ui/Breadcrumbs"
@@ -7,21 +6,20 @@ import Link from "components/ui/Link"
 import { useActions } from "hooks/store/useActions"
 import { useAuth } from "hooks/store/useAuth"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
+import { useLocation } from "hooks/useLocation"
 import { useTranslations } from "hooks/useTranslations"
 import { promptUserName } from "lib/auth/promptUserName"
 import { ROUTES } from "lib/utils/navigation"
 import { withSearchParams } from "lib/utils/search"
 
-import PageHead from "./PageHead"
-
 export type PageHeaderProps = BreadcrumbsProps
 
 export default function PageHeader({ parents, title }: PageHeaderProps) {
-  const { asPath } = useRouter()
+  const location = useLocation()
   const { setUserName, signOut } = useActions()
   const { user } = useAuth()
 
-  const loginUrl = withSearchParams(ROUTES.login(), { callback: asPath })
+  const loginUrl = withSearchParams(ROUTES.login(), { callback: location })
 
   const t = useTranslations()
 
@@ -39,7 +37,6 @@ export default function PageHeader({ parents, title }: PageHeaderProps) {
 
   return (
     <div className="PageHeader">
-      <PageHead title={title} />
       <div className="Breadcrumbs">
         <Breadcrumbs parents={parents} title={title} />
       </div>
