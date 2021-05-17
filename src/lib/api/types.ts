@@ -33,7 +33,7 @@ export enum ApiTrigger {
 }
 
 export type ApiRequest<T extends ApiTrigger> = {
-  [ApiTrigger.ROOM_CREATE]: Record<string, unknown>
+  [ApiTrigger.ROOM_CREATE]: { game: string }
 }[T]
 
 export type ApiResponse<T extends ApiTrigger> = {

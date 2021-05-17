@@ -26,7 +26,7 @@ export default function RoomListPage() {
     <PageLayout parents={parents} title={t.roomList.pageTitle}>
       <Button
         onClick={async () => {
-          await onClick({ abc: "def" })
+          await onClick({ game: "roborally" })
         }}
       >
         Create room
