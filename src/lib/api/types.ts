@@ -1,5 +1,3 @@
-import { NextApiRequest } from "next"
-
 export enum HttpHeader {
   ALLOW = "Allow",
   AUTHORIZATION = "Authorization",
@@ -27,17 +25,3 @@ export enum HttpStatus {
   METHOD_NOT_ALLOWED = 405,
   INTERNAL = 500,
 }
-
-export enum ApiTrigger {
-  ROOM_CREATE = "/api/rooms/createRoom",
-}
-
-export type ApiRequest<T extends ApiTrigger> = {
-  [ApiTrigger.ROOM_CREATE]: { game: string }
-}[T]
-
-export type ApiResponse<T extends ApiTrigger> = {
-  [ApiTrigger.ROOM_CREATE]: { success: boolean }
-}[T]
-
-export type ApiHandler<T = unknown> = (req: NextApiRequest) => Promise<T>

@@ -1,14 +1,8 @@
 import { useCallback } from "react"
 
 import { ApiError } from "lib/api/error"
-import {
-  ApiRequest,
-  ApiResponse,
-  ApiTrigger,
-  HttpHeader,
-  HttpMethod,
-  HttpStatus,
-} from "lib/api/types"
+import { ApiRequest, ApiResponse, ApiTrigger } from "lib/api/triggers"
+import { HttpHeader, HttpMethod, HttpStatus } from "lib/api/types"
 import auth from "lib/firebase/auth"
 
 export function useApiTrigger<T extends ApiTrigger>(

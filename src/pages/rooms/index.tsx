@@ -7,7 +7,7 @@ import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
 import Button from "components/ui/Button"
 import { useApiTrigger } from "hooks/api/useApiTrigger"
 import { useTranslations } from "hooks/useTranslations"
-import { ApiTrigger } from "lib/api/types"
+import { ApiTrigger } from "lib/api/triggers"
 import { ROUTES } from "lib/utils/navigation"
 
 export default function RoomListPage() {
@@ -20,7 +20,7 @@ export default function RoomListPage() {
     },
   ]
 
-  const onClick = useApiTrigger(ApiTrigger.ROOM_CREATE)
+  const onClick = useApiTrigger(ApiTrigger.CREATE_ROOM)
 
   return (
     <PageLayout parents={parents} title={t.roomList.pageTitle}>

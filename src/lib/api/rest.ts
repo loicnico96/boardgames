@@ -4,7 +4,12 @@ import { getTime, getTimeDiff } from "lib/utils/performance"
 
 import { ApiError } from "./error"
 import { ApiLogger } from "./logger"
-import { ApiHandler, HttpMethod, HttpStatus } from "./types"
+import { HttpMethod, HttpStatus } from "./types"
+
+export type ApiHandler<T = unknown> = (
+  req: NextApiRequest,
+  logger: ApiLogger
+) => Promise<T>
 
 export function handle(
   handlers: Partial<Record<HttpMethod, ApiHandler>>
@@ -27,7 +32,7 @@ export function handle(
         logger.log("Calling without body")
       }
 
-      const data = await handler(req)
+      const data = await handler(req, logger)
 
       if (data !== null) {
         logger.log("Response:", data)
