@@ -9,6 +9,7 @@ import {
   HttpMethod,
   HttpStatus,
 } from "lib/api/types"
+import auth from "lib/firebase/auth"
 
 export function useApiTrigger<T extends ApiTrigger>(
   api: T
@@ -21,12 +22,22 @@ export function useApiTrigger<T extends ApiTrigger>(
         console.log(`${logName} Calling...`)
       }
 
+      const headers: HeadersInit = {}
+
+      // Send body as JSON
+      headers[HttpHeader.CONTENT_TYPE] = "application/json"
+      const body = JSON.stringify(params)
+
+      if (auth.currentUser) {
+        // Set "Authorization" header if user is logged in
+        const authToken = await auth.currentUser.getIdToken()
+        headers[HttpHeader.AUTHORIZATION] = `Bearer ${authToken}`
+      }
+
       const response = await fetch(api, {
         method: HttpMethod.POST,
-        headers: {
-          [HttpHeader.CONTENT_TYPE]: "application/json",
-        },
-        body: JSON.stringify(params),
+        headers,
+        body,
       })
 
       if (response.status !== HttpStatus.OK) {

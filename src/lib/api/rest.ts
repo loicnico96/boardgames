@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { getTime, getTimeDiff } from "lib/utils/performance"
 
 import { ApiError } from "./error"
+import { log, logError } from "./log"
 import { ApiHandler, HttpMethod, HttpStatus } from "./types"
 
 export function handle(
@@ -16,16 +17,26 @@ export function handle(
       return
     }
 
-    const logName = `[${req.method} ${req.url}]`
     const timeStart = getTime()
 
     try {
-      console.log(`${logName} Calling with:`, req.body)
-      const json = await handler(req)
-      console.log(`${logName} Response:`, json)
-      res.status(HttpStatus.OK).json(json)
+      if (req.body) {
+        log(req, "Calling with:", req.body)
+      } else {
+        log(req, "Calling without body")
+      }
+
+      const data = await handler(req)
+
+      if (data) {
+        log(req, "Response:", data)
+        res.status(HttpStatus.OK).json(data)
+      } else {
+        log(req, "No content")
+        res.status(HttpStatus.NO_CONTENT).end()
+      }
     } catch (error) {
-      console.error(`${logName} Error:`, error)
+      logError(req, error)
       if (error instanceof ApiError) {
         res.status(error.statusCode).send(error.message)
       } else {
@@ -33,7 +44,7 @@ export function handle(
       }
     } finally {
       const timeDiff = getTimeDiff(timeStart)
-      console.log(`${logName} Responded in ${timeDiff}ms`)
+      log(req, `Responded in ${timeDiff}ms`)
     }
   }
 }
