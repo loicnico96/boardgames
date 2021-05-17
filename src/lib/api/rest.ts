@@ -3,13 +3,16 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { getTime, getTimeDiff } from "lib/utils/performance"
 
 import { ApiError } from "./error"
-import { log, logError } from "./log"
+import { ApiLogger } from "./logger"
 import { ApiHandler, HttpMethod, HttpStatus } from "./types"
 
 export function handle(
   handlers: Partial<Record<HttpMethod, ApiHandler>>
 ): (req: NextApiRequest, res: NextApiResponse) => Promise<void> {
   return async (req: NextApiRequest, res: NextApiResponse) => {
+    const timeStart = getTime()
+    const logger = new ApiLogger(req)
+
     const handler = handlers[req.method as HttpMethod]
     if (!handler) {
       res.setHeader("Allow", Object.keys(handlers))
@@ -17,26 +20,24 @@ export function handle(
       return
     }
 
-    const timeStart = getTime()
-
     try {
       if (req.body) {
-        log(req, "Calling with:", req.body)
+        logger.log("Calling with:", req.body)
       } else {
-        log(req, "Calling without body")
+        logger.log("Calling without body")
       }
 
       const data = await handler(req)
 
-      if (data) {
-        log(req, "Response:", data)
+      if (data !== null) {
+        logger.log("Response:", data)
         res.status(HttpStatus.OK).json(data)
       } else {
-        log(req, "No content")
+        logger.log("No content")
         res.status(HttpStatus.NO_CONTENT).end()
       }
     } catch (error) {
-      logError(req, error)
+      logger.error(error)
       if (error instanceof ApiError) {
         res.status(error.statusCode).send(error.message)
       } else {
@@ -44,7 +45,7 @@ export function handle(
       }
     } finally {
       const timeDiff = getTimeDiff(timeStart)
-      log(req, `Responded in ${timeDiff}ms`)
+      logger.log(`Responded in ${timeDiff}ms`)
     }
   }
 }
