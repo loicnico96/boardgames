@@ -1,4 +1,3 @@
-import { useRouter } from "next/router"
 import React from "react"
 
 import PageLayout from "components/layout/PageLayout"
@@ -6,6 +5,7 @@ import PageLoader from "components/layout/PageLoader"
 import Room from "components/rooms/Room"
 import RoomProvider from "components/rooms/RoomProvider"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
+import { useHydratedState } from "hooks/useHydratedState"
 import { useParams } from "hooks/useParams"
 import { useTranslations } from "hooks/useTranslations"
 import { RoomId } from "lib/model/RoomData"
@@ -16,7 +16,7 @@ export type RoomPageParams = {
 }
 
 export default function RoomPage() {
-  const { isReady } = useRouter()
+  const isHydrated = useHydratedState()
   const { roomId } = useParams<RoomPageParams>()
 
   const t = useTranslations()
@@ -34,7 +34,7 @@ export default function RoomPage() {
 
   return (
     <PageLayout parents={parents} title={t.roomPage.pageTitle}>
-      {isReady ? (
+      {isHydrated ? (
         <RoomProvider roomId={roomId}>
           {room => <Room room={room} />}
         </RoomProvider>

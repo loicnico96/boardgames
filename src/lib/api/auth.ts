@@ -1,5 +1,6 @@
 import { NextApiRequest } from "next"
 
+import { AuthUserInfo } from "lib/auth/types"
 import { auth } from "lib/firebase/admin"
 
 import { ApiError } from "./error"
@@ -8,7 +9,7 @@ import { HttpStatus } from "./types"
 
 const AUTH_PREFIX = "Bearer "
 
-export async function authenticate(
+export async function getUserId(
   req: NextApiRequest,
   logger: ApiLogger
 ): Promise<string> {
@@ -35,5 +36,14 @@ export async function authenticate(
   } catch (error) {
     logger.error(error)
     throw new ApiError(HttpStatus.NOT_AUTHENTICATED, "Not authenticated")
+  }
+}
+
+export async function getUserInfo(userId: string): Promise<AuthUserInfo> {
+  const firebaseUser = await auth.getUser(userId)
+  return {
+    email: firebaseUser.email ?? null,
+    imageUrl: firebaseUser.photoURL ?? null,
+    userName: firebaseUser.displayName ?? "...",
   }
 }

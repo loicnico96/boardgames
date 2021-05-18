@@ -1,5 +1,7 @@
-// @TODO Complete this type
-export type GameType = string
+export enum GameType {
+  METROPOLYS = "metropolys",
+  ROBORALLY = "roborally",
+}
 
 export type UserId = string
 
@@ -10,7 +12,7 @@ export type UserInfo = {
 export type RoomId = string
 
 // @TODO Complete this type
-export type RoomOptions = unknown
+export type RoomOptions = Record<string, unknown>
 
 export enum RoomStatus {
   FINISHED = "finished",

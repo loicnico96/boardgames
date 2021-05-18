@@ -4,6 +4,7 @@ import { renderError } from "components/layout/PageError"
 import { renderLoader } from "components/layout/PageLoader"
 import { useDocumentListener } from "hooks/db/useDocumentListener"
 import { useTranslations } from "hooks/useTranslations"
+import { getRoomRef } from "lib/db/collections"
 import { WithId } from "lib/db/types"
 import { RoomData, RoomId } from "lib/model/RoomData"
 import cache from "lib/utils/cache"
@@ -16,7 +17,7 @@ export type RoomProviderProps = {
 export default function RoomProvider({ children, roomId }: RoomProviderProps) {
   const t = useTranslations()
 
-  const docRef = `room/${roomId}`
+  const docRef = getRoomRef(roomId)
 
   const [resource, setResource] = useState(cache.get<WithId<RoomData>>(docRef))
 
