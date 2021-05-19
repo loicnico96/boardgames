@@ -8,8 +8,8 @@ import RoomList from "components/rooms/RoomList"
 import RoomListProvider from "components/rooms/RoomListProvider"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
 import Button from "components/ui/Button"
-import { useApiTrigger } from "hooks/api/useApiTrigger"
 import { useTranslations } from "hooks/useTranslations"
+import { trigger } from "lib/api/client"
 import { ApiTrigger } from "lib/api/triggers"
 import { GameType } from "lib/model/RoomData"
 import { ROUTES } from "lib/utils/navigation"
@@ -25,20 +25,18 @@ export default function RoomListPage() {
     },
   ]
 
-  const createRoom = useApiTrigger(ApiTrigger.CREATE_ROOM)
-
   const game = GameType.ROBORALLY
 
-  const onClick = useCallback(async () => {
-    const { roomId } = await createRoom({ game })
+  const createRoom = useCallback(async () => {
+    const { roomId } = await trigger(ApiTrigger.CREATE_ROOM, { game })
     router.push(ROUTES.room(roomId))
-  }, [createRoom, game, router])
+  }, [game, router])
 
   return (
     <PageContainer>
       <PageHeader parents={parents} title={t.roomList.pageTitle} />
       <PageContent>
-        <Button onClick={onClick}>Create room</Button>
+        <Button onClick={createRoom}>Create room</Button>
         <RoomListProvider>
           {rooms => <RoomList rooms={rooms} />}
         </RoomListProvider>
