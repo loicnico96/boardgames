@@ -1,10 +1,17 @@
 import React from "react"
 
-import PageLayout from "components/layout/PageLayout"
+import PageContainer from "components/layout/PageContainer"
+import PageContent from "components/layout/PageContent"
+import PageHeader from "components/layout/PageHeader"
 import { useTranslations } from "hooks/useTranslations"
 
 export default function HomePage() {
   const t = useTranslations()
 
-  return <PageLayout title={t.home.pageTitle}>{t.home.pageTitle}</PageLayout>
+  return (
+    <PageContainer>
+      <PageHeader title={t.home.pageTitle} />
+      <PageContent>{t.home.pageTitle}</PageContent>
+    </PageContainer>
+  )
 }

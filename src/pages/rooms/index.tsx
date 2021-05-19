@@ -1,7 +1,9 @@
 import { useRouter } from "next/router"
 import React, { useCallback } from "react"
 
-import PageLayout from "components/layout/PageLayout"
+import PageContainer from "components/layout/PageContainer"
+import PageContent from "components/layout/PageContent"
+import PageHeader from "components/layout/PageHeader"
 import RoomList from "components/rooms/RoomList"
 import RoomListProvider from "components/rooms/RoomListProvider"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
@@ -33,9 +35,14 @@ export default function RoomListPage() {
   }, [createRoom, game, router])
 
   return (
-    <PageLayout parents={parents} title={t.roomList.pageTitle}>
-      <Button onClick={onClick}>Create room</Button>
-      <RoomListProvider>{rooms => <RoomList rooms={rooms} />}</RoomListProvider>
-    </PageLayout>
+    <PageContainer>
+      <PageHeader parents={parents} title={t.roomList.pageTitle} />
+      <PageContent>
+        <Button onClick={onClick}>Create room</Button>
+        <RoomListProvider>
+          {rooms => <RoomList rooms={rooms} />}
+        </RoomListProvider>
+      </PageContent>
+    </PageContainer>
   )
 }

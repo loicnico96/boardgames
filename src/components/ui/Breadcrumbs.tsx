@@ -18,7 +18,7 @@ export default function Breadcrumbs({ parents = [], title }: BreadcrumbsProps) {
   const location = useLocation()
 
   return (
-    <>
+    <div>
       {parents.map(parent => (
         <span key={parent.path}>
           <Link href={parent.path}>{parent.title}</Link>
@@ -28,11 +28,14 @@ export default function Breadcrumbs({ parents = [], title }: BreadcrumbsProps) {
         <Link href={location}>{title}</Link>
       </span>
       <style jsx>{`
+        div {
+          flex: 1 1 auto;
+        }
         span:not(:last-of-type)::after {
           content: ">";
           margin: 0px 8px;
         }
       `}</style>
-    </>
+    </div>
   )
 }

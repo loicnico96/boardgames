@@ -6,6 +6,20 @@ import ToastProvider from "components/providers/ToastProvider"
 import TranslationProvider from "components/providers/TranslationProvider"
 import { StoreProvider } from "lib/store/context"
 
+const FONTS = [
+  "-apple-system",
+  "BlinkMacSystemFont",
+  "Segoe UI",
+  "Roboto",
+  "Oxygen",
+  "Ubuntu",
+  "Cantarell",
+  "Fira Sans",
+  "Droid Sans",
+  "Helvetica Neue",
+  "sans-serif",
+].join(", ")
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <TranslationProvider>
@@ -17,12 +31,14 @@ export default function App({ Component, pageProps }: AppProps) {
               html,
               body,
               #__next {
-                font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-                  Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
-                  Helvetica Neue, sans-serif;
+                font-family: ${FONTS};
                 height: 100%;
                 margin: 0;
                 padding: 0;
+              }
+
+              * {
+                box-sizing: border-box;
               }
 
               a {
@@ -30,8 +46,12 @@ export default function App({ Component, pageProps }: AppProps) {
                 text-decoration: none;
               }
 
-              * {
-                box-sizing: border-box;
+              button {
+                cursor: pointer;
+              }
+
+              button:disabled {
+                cursor: not-allowed;
               }
             `}</style>
           </AuthProvider>

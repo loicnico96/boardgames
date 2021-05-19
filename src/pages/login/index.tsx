@@ -1,7 +1,10 @@
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 
-import PageLayout from "components/layout/PageLayout"
+import PageContainer from "components/layout/PageContainer"
+import PageContent from "components/layout/PageContent"
+import PageHeader from "components/layout/PageHeader"
+import AuthPersistence from "components/login/AuthPersistence"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
 import Button from "components/ui/Button"
 import { useActions } from "hooks/store/useActions"
@@ -10,8 +13,7 @@ import { useTranslations } from "hooks/useTranslations"
 import { ROUTES } from "lib/utils/navigation"
 import { getSearchParams } from "lib/utils/search"
 
-const CALLBACK_URL_KEY = "callback"
-const DEFAULT_CALLBACK_URL = ROUTES.home()
+const CALLBACK_URL_PARAM = "callback"
 const DEFAULT_PERSISTENCE = false
 
 export default function LoginPage() {
@@ -33,52 +35,37 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      const callbackUrl = getSearchParams().get(CALLBACK_URL_KEY)
-      router.push(callbackUrl ?? DEFAULT_CALLBACK_URL)
+      const callbackUrl = getSearchParams().get(CALLBACK_URL_PARAM)
+      router.push(callbackUrl ?? ROUTES.home())
     }
   }, [isAuthenticated, router])
 
   return (
-    <PageLayout parents={parents} title={t.login.pageTitle}>
-      <div>
-        <Button
+    <PageContainer>
+      <PageHeader parents={parents} title={t.login.pageTitle} />
+      <PageContent>
+        <div>
+          <Button
+            disabled={isAuthenticated}
+            onClick={() => signInAnonymously(persistence)}
+            title={t.login.signInAnonymously}
+          >
+            {t.login.signInAnonymously}
+          </Button>
+          <Button
+            disabled={isAuthenticated}
+            onClick={() => signInWithGoogle(persistence)}
+            title={t.login.signInWithGoogle}
+          >
+            {t.login.signInWithGoogle}
+          </Button>
+        </div>
+        <AuthPersistence
           disabled={isAuthenticated}
-          onClick={() => signInAnonymously(persistence)}
-          title={t.login.signInAnonymously}
-        >
-          {t.login.signInAnonymously}
-        </Button>
-        <Button
-          disabled={isAuthenticated}
-          onClick={() => signInWithGoogle(persistence)}
-          title={t.login.signInWithGoogle}
-        >
-          {t.login.signInWithGoogle}
-        </Button>
-      </div>
-      <div className="AuthPersistence">
-        <input
-          checked={persistence}
-          disabled={isAuthenticated}
-          name={t.login.rememberMe}
-          onChange={() => setPersistence(!persistence)}
-          type="checkbox"
+          onChange={setPersistence}
+          value={persistence}
         />
-        <span>{t.login.rememberMe}</span>
-      </div>
-      <style jsx>
-        {`
-          .AuthPersistence {
-            align-items: center;
-            display: flex;
-            padding-top: 8px;
-          }
-
-          .AuthPersistence > input {
-            margin-right: 8px;
-          }
-        `}
-      </style>
-    </PageLayout>
+      </PageContent>
+    </PageContainer>
   )
 }

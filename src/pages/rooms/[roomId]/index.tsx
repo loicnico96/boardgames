@@ -1,6 +1,8 @@
 import React from "react"
 
-import PageLayout from "components/layout/PageLayout"
+import PageContainer from "components/layout/PageContainer"
+import PageContent from "components/layout/PageContent"
+import PageHeader from "components/layout/PageHeader"
 import PageLoader from "components/layout/PageLoader"
 import Room from "components/rooms/Room"
 import RoomProvider from "components/rooms/RoomProvider"
@@ -33,14 +35,17 @@ export default function RoomPage() {
   ]
 
   return (
-    <PageLayout parents={parents} title={t.roomPage.pageTitle}>
+    <PageContainer>
+      <PageHeader parents={parents} title={t.roomPage.pageTitle} />
       {isHydrated ? (
-        <RoomProvider roomId={roomId}>
-          {room => <Room room={room} />}
-        </RoomProvider>
+        <PageContent>
+          <RoomProvider roomId={roomId}>
+            {room => <Room room={room} />}
+          </RoomProvider>
+        </PageContent>
       ) : (
         <PageLoader message={t.roomPage.pageLoading} />
       )}
-    </PageLayout>
+    </PageContainer>
   )
 }

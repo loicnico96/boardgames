@@ -6,10 +6,10 @@ export type PageErrorProps = {
 
 export default function PageError({ error }: PageErrorProps) {
   return (
-    <div className="PageError">
-      <div>Error: {error.message}</div>
+    <div>
+      <span>Error: {error.message}</span>
       <style jsx>{`
-        .PageError {
+        div {
           align-items: center;
           display: flex;
           justify-content: center;
