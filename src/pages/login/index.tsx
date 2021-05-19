@@ -13,7 +13,7 @@ import { useTranslations } from "hooks/useTranslations"
 import { ROUTES } from "lib/utils/navigation"
 import { getSearchParams } from "lib/utils/search"
 
-const CALLBACK_URL_PARAM = "callback"
+const CALLBACK_PARAM = "callback"
 const DEFAULT_PERSISTENCE = false
 
 export default function LoginPage() {
@@ -35,7 +35,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      const callbackUrl = getSearchParams().get(CALLBACK_URL_PARAM)
+      const callbackUrl = getSearchParams(router).get(CALLBACK_PARAM)
       router.push(callbackUrl ?? ROUTES.home())
     }
   }, [isAuthenticated, router])

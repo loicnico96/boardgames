@@ -3,10 +3,10 @@ import { GameType } from "lib/model/RoomData"
 const SEPARATOR = "/"
 
 export enum Collection {
-  GAMES = "games",
+  GAMES = "game",
   GAMES_CLIENT = "client",
   GAMES_SERVER = "server",
-  ROOMS = "rooms",
+  ROOMS = "room",
 }
 
 export function getRef(...segments: string[]): string {

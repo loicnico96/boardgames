@@ -14,6 +14,11 @@ const CONFIG: TranslationConfig = {
     signOut: "Sign out",
   },
   roomList: {
+    allGames: "All games",
+    createRoom: {
+      label: "Create room",
+      tooltip: "Create a new room",
+    },
     noRooms: "No rooms are available.",
     pageLoading: "Loading rooms...",
     pageTitle: "Rooms",

@@ -4,17 +4,24 @@ import React, { useCallback } from "react"
 import PageContainer from "components/layout/PageContainer"
 import PageContent from "components/layout/PageContent"
 import PageHeader from "components/layout/PageHeader"
+import PageLoader from "components/layout/PageLoader"
 import RoomList from "components/rooms/RoomList"
-import RoomListProvider from "components/rooms/RoomListProvider"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
 import Button from "components/ui/Button"
+import GameSelect from "components/ui/GameSelect"
+import { useHydratedState } from "hooks/useHydratedState"
+import { useParamState } from "hooks/useParamState"
 import { useTranslations } from "hooks/useTranslations"
 import { trigger } from "lib/api/client"
 import { ApiTrigger } from "lib/api/triggers"
 import { GameType } from "lib/model/RoomData"
+import { isEnum } from "lib/utils/enums"
 import { ROUTES } from "lib/utils/navigation"
 
+export const GAME_PARAM = "game"
+
 export default function RoomListPage() {
+  const isHydrated = useHydratedState()
   const router = useRouter()
   const t = useTranslations()
 
@@ -25,21 +32,45 @@ export default function RoomListPage() {
     },
   ]
 
-  const game = GameType.ROBORALLY
+  const [gameParam, setGameParam] = useParamState(GAME_PARAM)
+
+  const game = isEnum(gameParam, GameType) ? gameParam : null
 
   const createRoom = useCallback(async () => {
-    const { roomId } = await trigger(ApiTrigger.CREATE_ROOM, { game })
-    router.push(ROUTES.room(roomId))
+    if (game) {
+      const { roomId } = await trigger(ApiTrigger.CREATE_ROOM, { game })
+      router.push(ROUTES.room(roomId))
+    }
   }, [game, router])
 
   return (
     <PageContainer>
       <PageHeader parents={parents} title={t.roomList.pageTitle} />
       <PageContent>
-        <Button onClick={createRoom}>Create room</Button>
-        <RoomListProvider>
-          {rooms => <RoomList rooms={rooms} />}
-        </RoomListProvider>
+        <div>
+          <GameSelect
+            disabled={!isHydrated}
+            onChange={setGameParam}
+            value={game}
+          />
+          <Button
+            disabled={!game}
+            onClick={createRoom}
+            title={t.roomList.createRoom.tooltip}
+          >
+            {t.roomList.createRoom.label}
+          </Button>
+        </div>
+        {isHydrated ? (
+          <RoomList game={game} />
+        ) : (
+          <PageLoader message={t.roomList.pageLoading} />
+        )}
+        <style jsx>{`
+          div {
+            margin-bottom: 24px;
+          }
+        `}</style>
       </PageContent>
     </PageContainer>
   )

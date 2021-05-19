@@ -12,6 +12,11 @@ export type TranslationConfig = {
     signOut: string
   }
   roomList: {
+    allGames: string
+    createRoom: {
+      label: string
+      tooltip: string
+    }
     noRooms: string
     pageLoading: string
     pageTitle: string
