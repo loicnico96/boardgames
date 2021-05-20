@@ -1,35 +1,29 @@
 import { getUserInfo } from "lib/api/auth"
 import { Collection } from "lib/db/collections"
 import { firestore } from "lib/firebase/admin"
-import {
-  GameType,
-  RoomData,
-  RoomId,
-  RoomStatus,
-  UserId,
-} from "lib/model/RoomData"
+import { GameType, RoomData, RoomStatus } from "lib/model/RoomData"
 
 export type ApiRequestCreateRoom = {
   game: GameType
 }
 
 export type ApiResponseCreateRoom = {
-  roomId: RoomId
+  roomId: string
 }
 
 export async function createRoom(
   game: GameType,
-  ownerId: UserId
+  userId: string
 ): Promise<ApiResponseCreateRoom> {
-  const { userName } = await getUserInfo(ownerId)
+  const { userName } = await getUserInfo(userId)
 
   const roomData: RoomData = {
     createdAt: Date.now(),
     game,
     options: {},
-    ownerId,
-    playerOrder: [ownerId],
-    players: { [ownerId]: { name: userName } },
+    ownerId: userId,
+    playerOrder: [userId],
+    players: { [userId]: { name: userName } },
     status: RoomStatus.OPENED,
   }
 

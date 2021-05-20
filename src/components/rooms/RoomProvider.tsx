@@ -6,12 +6,12 @@ import { useDocumentListener } from "hooks/db/useDocumentListener"
 import { useTranslations } from "hooks/useTranslations"
 import { getRoomRef } from "lib/db/collections"
 import { WithId } from "lib/db/types"
-import { RoomData, RoomId } from "lib/model/RoomData"
+import { RoomData } from "lib/model/RoomData"
 import cache from "lib/utils/cache"
 
 export type RoomProviderProps = {
   children: (room: WithId<RoomData>) => JSX.Element
-  roomId: RoomId
+  roomId: string
 }
 
 export default function RoomProvider({ children, roomId }: RoomProviderProps) {

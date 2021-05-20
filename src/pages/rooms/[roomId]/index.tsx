@@ -10,11 +10,10 @@ import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
 import { useHydratedState } from "hooks/useHydratedState"
 import { useParams } from "hooks/useParams"
 import { useTranslations } from "hooks/useTranslations"
-import { RoomId } from "lib/model/RoomData"
 import { ROUTES } from "lib/utils/navigation"
 
 export type RoomPageParams = {
-  roomId: RoomId
+  roomId: string
 }
 
 export default function RoomPage() {
