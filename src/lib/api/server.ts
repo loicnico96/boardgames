@@ -1,9 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next"
 
 import { getTime, getTimeDiff } from "lib/utils/performance"
+import { Validator } from "lib/utils/validation"
 
+import { getUserId } from "./auth"
 import { ApiError } from "./error"
 import { ApiLogger } from "./logger"
+import { ApiRequest, ApiResponse, ApiTrigger } from "./triggers"
 import { HttpMethod, HttpStatus } from "./types"
 
 export type ApiHandler<T = unknown> = (
@@ -53,4 +56,24 @@ export function handle(
       logger.log(`Responded in ${timeDiff}ms`)
     }
   }
+}
+
+export function handleTrigger<T extends ApiTrigger>(
+  validator: Validator<ApiRequest<T>>,
+  handler: (data: ApiRequest<T>, userId: string) => Promise<ApiResponse<T>>
+): (req: NextApiRequest, res: NextApiResponse) => Promise<void> {
+  return handle({
+    [HttpMethod.POST]: async (request, logger) => {
+      const userId = await getUserId(request, logger)
+      let data: ApiRequest<T>
+
+      try {
+        data = validator(request.body)
+      } catch (error) {
+        throw new ApiError(HttpStatus.BAD_REQUEST, error.message)
+      }
+
+      return handler(data, userId)
+    },
+  })
 }
