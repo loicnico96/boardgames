@@ -1,4 +1,5 @@
 import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 
 /**
  * Retrieves the hydration status and re-renders the component after hydrating.
@@ -13,5 +14,9 @@ import { useRouter } from "next/router"
  */
 export function useHydratedState(): boolean {
   const { isReady } = useRouter()
-  return isReady
+  const [isHydrated, setHydrated] = useState(!isReady)
+  useEffect(() => {
+    setHydrated(true)
+  }, [])
+  return isHydrated && isReady
 }
