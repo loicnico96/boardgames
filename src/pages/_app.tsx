@@ -4,6 +4,7 @@ import React from "react"
 import AuthProvider from "components/providers/AuthProvider"
 import ToastProvider from "components/providers/ToastProvider"
 import TranslationProvider from "components/providers/TranslationProvider"
+import { HydrationContextProvider } from "lib/context/HydrationContext"
 import { StoreProvider } from "lib/store/context"
 
 const FONTS = [
@@ -22,41 +23,43 @@ const FONTS = [
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <TranslationProvider>
-      <ToastProvider>
-        <StoreProvider>
-          <AuthProvider>
-            <Component {...pageProps} />
-            <style jsx global>{`
-              html,
-              body,
-              #__next {
-                font-family: ${FONTS};
-                height: 100%;
-                margin: 0;
-                padding: 0;
-              }
+    <HydrationContextProvider>
+      <TranslationProvider>
+        <ToastProvider>
+          <StoreProvider>
+            <AuthProvider>
+              <Component {...pageProps} />
+              <style jsx global>{`
+                html,
+                body,
+                #__next {
+                  font-family: ${FONTS};
+                  height: 100%;
+                  margin: 0;
+                  padding: 0;
+                }
 
-              * {
-                box-sizing: border-box;
-              }
+                * {
+                  box-sizing: border-box;
+                }
 
-              a {
-                color: inherit;
-                text-decoration: none;
-              }
+                a {
+                  color: inherit;
+                  text-decoration: none;
+                }
 
-              button {
-                cursor: pointer;
-              }
+                button {
+                  cursor: pointer;
+                }
 
-              button:disabled {
-                cursor: not-allowed;
-              }
-            `}</style>
-          </AuthProvider>
-        </StoreProvider>
-      </ToastProvider>
-    </TranslationProvider>
+                button:disabled {
+                  cursor: not-allowed;
+                }
+              `}</style>
+            </AuthProvider>
+          </StoreProvider>
+        </ToastProvider>
+      </TranslationProvider>
+    </HydrationContextProvider>
   )
 }

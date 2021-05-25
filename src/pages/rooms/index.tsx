@@ -9,11 +9,11 @@ import RoomList from "components/rooms/RoomList"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
 import Button from "components/ui/Button"
 import GameSelect from "components/ui/GameSelect"
-import { useHydratedState } from "hooks/useHydratedState"
 import { useParamState } from "hooks/useParamState"
 import { useTranslations } from "hooks/useTranslations"
 import { trigger } from "lib/api/client"
 import { ApiTrigger } from "lib/api/triggers"
+import { useHydrationContext } from "lib/context/HydrationContext"
 import { GameType } from "lib/model/RoomData"
 import { isEnum } from "lib/utils/enums"
 import { ROUTES } from "lib/utils/navigation"
@@ -21,7 +21,7 @@ import { ROUTES } from "lib/utils/navigation"
 export const GAME_PARAM = "game"
 
 export default function RoomListPage() {
-  const isHydrated = useHydratedState()
+  const isHydrated = useHydrationContext()
   const router = useRouter()
   const t = useTranslations()
 

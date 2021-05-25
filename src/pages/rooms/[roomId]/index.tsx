@@ -7,9 +7,9 @@ import PageLoader from "components/layout/PageLoader"
 import Room from "components/rooms/Room"
 import RoomProvider from "components/rooms/RoomProvider"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
-import { useHydratedState } from "hooks/useHydratedState"
 import { useParams } from "hooks/useParams"
 import { useTranslations } from "hooks/useTranslations"
+import { useHydrationContext } from "lib/context/HydrationContext"
 import { ROUTES } from "lib/utils/navigation"
 
 export type RoomPageParams = {
@@ -17,7 +17,7 @@ export type RoomPageParams = {
 }
 
 export default function RoomPage() {
-  const isHydrated = useHydratedState()
+  const isHydrated = useHydrationContext()
   const { roomId } = useParams<RoomPageParams>()
 
   const t = useTranslations()
