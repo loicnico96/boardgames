@@ -40,10 +40,10 @@ export async function getUserId(
 }
 
 export async function getUserInfo(userId: string): Promise<AuthUserInfo> {
-  const firebaseUser = await auth.getUser(userId)
+  const { displayName, email, photoURL } = await auth.getUser(userId)
   return {
-    email: firebaseUser.email ?? null,
-    imageUrl: firebaseUser.photoURL ?? null,
-    userName: firebaseUser.displayName ?? "...",
+    email: email ?? null,
+    imageUrl: photoURL ?? null,
+    userName: displayName ?? null,
   }
 }

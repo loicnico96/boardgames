@@ -3,10 +3,10 @@ import React from "react"
 import Breadcrumbs, { BreadcrumbsProps } from "components/ui/Breadcrumbs"
 import Button from "components/ui/Button"
 import Link from "components/ui/Link"
-import { useActions } from "hooks/store/useActions"
 import { useAuth } from "hooks/store/useAuth"
 import { useLocation } from "hooks/useLocation"
 import { useTranslations } from "hooks/useTranslations"
+import { signOut } from "lib/firebase/auth"
 import { ROUTES } from "lib/utils/navigation"
 import { withSearchParams } from "lib/utils/search"
 
@@ -17,7 +17,6 @@ export type PageHeaderProps = BreadcrumbsProps
 
 export default function PageHeader({ parents, title }: PageHeaderProps) {
   const location = useLocation()
-  const { signOut } = useActions()
   const { user } = useAuth()
 
   const loginUrl = withSearchParams(ROUTES.login(), { callback: location })

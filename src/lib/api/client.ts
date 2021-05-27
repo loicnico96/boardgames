@@ -1,15 +1,17 @@
 import { ApiError } from "lib/api/error"
 import { ApiRequest, ApiResponse, ApiTrigger } from "lib/api/triggers"
 import { HttpHeader, HttpMethod, HttpStatus } from "lib/api/types"
-import auth from "lib/firebase/auth"
+import { getCurrentUser } from "lib/firebase/auth"
 
 export async function getHeaders(): Promise<HeadersInit> {
   const headers: HeadersInit = {}
 
   headers[HttpHeader.CONTENT_TYPE] = "application/json"
 
-  if (auth.currentUser) {
-    const authToken = await auth.currentUser.getIdToken()
+  const firebaseUser = getCurrentUser()
+
+  if (firebaseUser) {
+    const authToken = await firebaseUser.getIdToken()
     headers[HttpHeader.AUTHORIZATION] = `Bearer ${authToken}`
   }
 

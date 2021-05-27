@@ -7,6 +7,7 @@ export type State = {
 export function getInitialState(): State {
   return {
     auth: {
+      loading: true,
       user: null,
     },
   }

@@ -5,7 +5,7 @@ import { ErrorHandler } from "lib/utils/error"
 import { computeStyleProps, StyleProps } from "lib/utils/style"
 
 export type ButtonClickEvent = React.MouseEvent<HTMLButtonElement>
-export type ButtonClickHandler = (event: ButtonClickEvent) => Promise<void>
+export type ButtonClickHandler = (event: ButtonClickEvent) => Promise<unknown>
 export type BaseButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
 
 export type ButtonProps = Omit<BaseButtonProps, "onClick" | "onError"> & {

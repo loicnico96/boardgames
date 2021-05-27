@@ -1,4 +1,6 @@
 import { getUserInfo } from "lib/api/auth"
+import { ApiError } from "lib/api/error"
+import { HttpStatus } from "lib/api/types"
 import { Collection } from "lib/db/collections"
 import { firestore } from "lib/firebase/admin"
 import { GameType, RoomData, RoomStatus } from "lib/model/RoomData"
@@ -16,6 +18,13 @@ export async function createRoom(
   userId: string
 ): Promise<ApiResponseCreateRoom> {
   const { userName } = await getUserInfo(userId)
+
+  if (!userName) {
+    throw new ApiError(
+      HttpStatus.FAILED_PRECONDITION,
+      "You must set an username in order to create or enter rooms."
+    )
+  }
 
   const roomData: RoomData = {
     createdAt: Date.now(),

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 
 import { useActions } from "hooks/store/useActions"
-import { onAuthStateChanged } from "lib/auth/onAuthStateChanged"
+import { onAuthStateChanged } from "lib/firebase/auth"
 import { handleGenericError } from "lib/utils/error"
 
 export type AuthProviderProps = {

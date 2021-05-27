@@ -14,7 +14,7 @@ export default function UserInfo() {
 
   const changeUserName = useCallback(async () => {
     if (user !== null) {
-      const oldName = user.userInfo.userName
+      const oldName = user.userInfo.userName ?? undefined
       const newName = await promptUserName(oldName)
       if (newName && newName !== oldName) {
         await setUserName(newName)
@@ -30,7 +30,7 @@ export default function UserInfo() {
 
   return (
     <div onClick={changeUserNameAsync} title={t.login.setUserName}>
-      {user.userInfo.userName}
+      {user.userInfo.userName ?? "..."}
       <style jsx>{`
         div {
           cursor: pointer;

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 
 import PageContainer from "components/layout/PageContainer"
 import PageContent from "components/layout/PageContent"
@@ -10,6 +10,8 @@ import Button from "components/ui/Button"
 import { useActions } from "hooks/store/useActions"
 import { useAuth } from "hooks/store/useAuth"
 import { useTranslations } from "hooks/useTranslations"
+import { promptUserName } from "lib/auth/promptUserName"
+import { signInAnonymously, signInWithGoogle } from "lib/firebase/auth"
 import { ROUTES } from "lib/utils/navigation"
 import { getSearchParams } from "lib/utils/search"
 
@@ -17,7 +19,7 @@ const CALLBACK_PARAM = "callback"
 const DEFAULT_PERSISTENCE = false
 
 export default function LoginPage() {
-  const { signInAnonymously, signInWithGoogle } = useActions()
+  const { setUserName } = useActions()
   const { user } = useAuth()
 
   const isAuthenticated = user !== null
@@ -40,6 +42,20 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, router])
 
+  const guestSignIn = useCallback(async () => {
+    const userName = await promptUserName()
+    if (userName) {
+      await signInAnonymously(persistence)
+      await setUserName(userName)
+    } else {
+      throw Error("Username must not be empty")
+    }
+  }, [persistence, setUserName])
+
+  const googleSignIn = useCallback(async () => {
+    await signInWithGoogle(persistence)
+  }, [persistence])
+
   return (
     <PageContainer>
       <PageHeader parents={parents} title={t.login.pageTitle} />
@@ -47,14 +63,14 @@ export default function LoginPage() {
         <div>
           <Button
             disabled={isAuthenticated}
-            onClick={() => signInAnonymously(persistence)}
+            onClick={guestSignIn}
             title={t.login.signInAnonymously}
           >
             {t.login.signInAnonymously}
           </Button>
           <Button
             disabled={isAuthenticated}
-            onClick={() => signInWithGoogle(persistence)}
+            onClick={googleSignIn}
             title={t.login.signInWithGoogle}
           >
             {t.login.signInWithGoogle}

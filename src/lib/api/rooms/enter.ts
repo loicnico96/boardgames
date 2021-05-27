@@ -21,6 +21,13 @@ export async function enterRoom(
   await firestore.runTransaction(async transaction => {
     const { userName } = await getUserInfo(userId)
 
+    if (!userName) {
+      throw new ApiError(
+        HttpStatus.FAILED_PRECONDITION,
+        "You must set an username in order to create or enter rooms."
+      )
+    }
+
     const roomRef = firestore.doc(getRoomRef(roomId))
     const roomDoc = await transaction.get(roomRef)
     const roomData = roomDoc.data() as RoomData | undefined

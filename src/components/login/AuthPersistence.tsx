@@ -22,7 +22,7 @@ export default function AuthPersistence({
         checked={value}
         disabled={disabled}
         name={t.login.rememberMe}
-        onChange={e => onChange(!e.target.checked)}
+        onChange={e => onChange(e.target.checked)}
         type="checkbox"
       />
       <span>{t.login.rememberMe}</span>

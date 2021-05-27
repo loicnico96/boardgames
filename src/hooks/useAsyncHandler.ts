@@ -5,7 +5,7 @@ import { ErrorHandler, handleGenericError } from "lib/utils/error"
 import { useMountedRef } from "./useMountedRef"
 
 export type Params = unknown[]
-export type AsyncHandler<P extends Params> = (...args: P) => Promise<void>
+export type AsyncHandler<P extends Params> = (...args: P) => Promise<unknown>
 
 export function useAsyncHandler<P extends Params>(
   handler: AsyncHandler<P>,

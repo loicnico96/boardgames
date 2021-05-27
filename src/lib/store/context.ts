@@ -3,6 +3,8 @@ import React, { createContext, useContext, useState } from "react"
 import create, { UseStore } from "zustand"
 import { combine } from "zustand/middleware"
 
+import { Debug } from "lib/utils/debug"
+
 import { Actions, createActions } from "./actions"
 import { getInitialState, State } from "./state"
 
@@ -13,7 +15,11 @@ export type Store = State & {
 export function createStore(): UseStore<Store> {
   return create(
     combine(getInitialState(), (set, get) => {
-      const actions = createActions(recipe => set(produce(recipe)), get)
+      const actions = createActions((logName, recipe) => {
+        Debug.log(logName, "Before:", get())
+        set(produce(recipe))
+        Debug.log(logName, "After:", get())
+      }, get)
       return { actions }
     })
   )

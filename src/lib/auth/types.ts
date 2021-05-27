@@ -1,7 +1,7 @@
 export type AuthUserInfo = {
   email: string | null
   imageUrl: string | null
-  userName: string
+  userName: string | null
 }
 
 export type AuthUser = {
@@ -11,5 +11,6 @@ export type AuthUser = {
 }
 
 export type AuthState = {
+  loading: boolean
   user: AuthUser | null
 }
