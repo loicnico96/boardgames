@@ -1,18 +1,16 @@
-import { useRouter } from "next/router"
-import React, { useCallback } from "react"
+import React from "react"
 
 import PageContainer from "components/layout/PageContainer"
 import PageContent from "components/layout/PageContent"
 import PageHeader from "components/layout/PageHeader"
 import PageLoader from "components/layout/PageLoader"
 import RoomList from "components/rooms/RoomList"
+import { useCreateRoom } from "components/rooms/RoomList/useCreateRoom"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
 import Button from "components/ui/Button"
 import GameSelect from "components/ui/GameSelect"
 import { useParamState } from "hooks/useParamState"
 import { useTranslations } from "hooks/useTranslations"
-import { trigger } from "lib/api/client"
-import { ApiTrigger } from "lib/api/triggers"
 import { useHydrationContext } from "lib/context/HydrationContext"
 import { GameType } from "lib/model/RoomData"
 import { isEnum } from "lib/utils/enums"
@@ -22,7 +20,6 @@ export const GAME_PARAM = "game"
 
 export default function RoomListPage() {
   const isHydrated = useHydrationContext()
-  const router = useRouter()
   const t = useTranslations()
 
   const parents: BreadcrumbsParent[] = [
@@ -36,12 +33,7 @@ export default function RoomListPage() {
 
   const game = isEnum(gameParam, GameType) ? gameParam : null
 
-  const createRoom = useCallback(async () => {
-    if (game) {
-      const { roomId } = await trigger(ApiTrigger.CREATE_ROOM, { game })
-      router.push(ROUTES.room(roomId))
-    }
-  }, [game, router])
+  const [createRoom, createRoomEnabled, createRoomReason] = useCreateRoom(game)
 
   return (
     <PageContainer>
@@ -54,12 +46,11 @@ export default function RoomListPage() {
             value={game}
           />
           <Button
-            disabled={!game}
+            disabled={!createRoomEnabled}
             onClick={createRoom}
-            title={t.roomList.createRoom.tooltip}
-          >
-            {t.roomList.createRoom.label}
-          </Button>
+            reason={createRoomReason}
+            translations={t.roomList.createRoom}
+          />
         </div>
         {isHydrated ? (
           <RoomList game={game} />

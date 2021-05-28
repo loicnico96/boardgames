@@ -1,3 +1,7 @@
+import { EnterRoomReason } from "components/rooms/Room/useEnterRoom"
+import { LeaveRoomReason } from "components/rooms/Room/useLeaveRoom"
+import { CreateRoomReason } from "components/rooms/RoomList/useCreateRoom"
+
 export type TranslationConfig = {
   home: {
     pageTitle: string
@@ -7,39 +11,44 @@ export type TranslationConfig = {
     rememberMe: string
     setUserName: string
     signIn: string
-    signInAnonymously: string
-    signInWithGoogle: string
-    signOut: string
+    signInAnonymously: ButtonTranslation
+    signInWithGoogle: ButtonTranslation
+    signOut: ButtonTranslation
   }
   roomList: {
     allGames: string
-    createRoom: {
-      label: string
-      tooltip: string
-    }
+    createRoom: ButtonTranslation<CreateRoomReason>
     noRooms: string
     pageLoading: string
     pageTitle: string
   }
   roomPage: {
+    enterRoom: ButtonTranslation<EnterRoomReason>
+    leaveRoom: ButtonTranslation<LeaveRoomReason>
     pageLoading: string
     pageTitle: string
   }
 }
 
-export type ReplaceParams = Record<string, unknown>
+export type ButtonTranslation<Reason extends string = never> = {
+  label: string
+  reason: Record<Reason, string>
+  tooltip: string
+}
 
-export type Replace<T extends string> = (params: Record<T, unknown>) => string
+export type ReplaceParam = number | string
+export type ReplaceParams<T extends string> = Record<T, ReplaceParam>
+export type Replace<T extends string> = (params: ReplaceParams<T>) => string
 
 export function replace<T extends string>(entry: string): Replace<T> {
-  return (params: Record<T, unknown>) =>
+  return (params: ReplaceParams<T>) =>
     entry.replace(/{{([a-zA-Z0-9_]+)}}/g, (match, key: T) => {
       if (params[key]) {
         return String(params[key])
       }
 
       if (process.env.NODE_ENV !== "production") {
-        console.error(`Could not replace parameters ${key}`, params)
+        console.warn(`Could not replace parameters ${key}`, params)
       }
 
       return match

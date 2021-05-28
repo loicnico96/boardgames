@@ -64,17 +64,13 @@ export default function LoginPage() {
           <Button
             disabled={isAuthenticated}
             onClick={guestSignIn}
-            title={t.login.signInAnonymously}
-          >
-            {t.login.signInAnonymously}
-          </Button>
+            translations={t.login.signInAnonymously}
+          />
           <Button
             disabled={isAuthenticated}
             onClick={googleSignIn}
-            title={t.login.signInWithGoogle}
-          >
-            {t.login.signInWithGoogle}
-          </Button>
+            translations={t.login.signInWithGoogle}
+          />
         </div>
         <AuthPersistence
           disabled={isAuthenticated}

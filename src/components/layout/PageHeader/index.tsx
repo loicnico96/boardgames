@@ -29,9 +29,7 @@ export default function PageHeader({ parents, title }: PageHeaderProps) {
       <Breadcrumbs parents={parents} title={title} />
       <UserInfo />
       {user ? (
-        <Button onClick={signOut} height={32}>
-          {t.login.signOut}
-        </Button>
+        <Button onClick={signOut} translations={t.login.signOut} />
       ) : (
         <Link href={loginUrl}>{t.login.signIn}</Link>
       )}
@@ -43,6 +41,10 @@ export default function PageHeader({ parents, title }: PageHeaderProps) {
           display: flex;
           height: 64px;
           padding: 16px 48px;
+        }
+
+        div > :global(button) {
+          height: 32px;
         }
       `}</style>
     </div>

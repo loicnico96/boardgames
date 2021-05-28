@@ -9,14 +9,31 @@ const CONFIG: TranslationConfig = {
     rememberMe: "Remember me",
     setUserName: "Click to change user name",
     signIn: "Sign in",
-    signInAnonymously: "Sign in as guest",
-    signInWithGoogle: "Sign in with Google",
-    signOut: "Sign out",
+    signInAnonymously: {
+      label: "Sign in as guest",
+      reason: {},
+      tooltip: "Sign in as guest",
+    },
+    signInWithGoogle: {
+      label: "Sign in with Google",
+      reason: {},
+      tooltip: "Sign in with Google",
+    },
+    signOut: {
+      label: "Sign out",
+      reason: {},
+      tooltip: "Sign out",
+    },
   },
   roomList: {
     allGames: "All games",
     createRoom: {
       label: "Create room",
+      reason: {
+        noGameSelected: "You must select a game",
+        notAuthenticated: "You must be signed in to create or join rooms",
+        noUserName: "You must set an username to create or join rooms",
+      },
       tooltip: "Create a new room",
     },
     noRooms: "No rooms are available.",
@@ -24,6 +41,24 @@ const CONFIG: TranslationConfig = {
     pageTitle: "Rooms",
   },
   roomPage: {
+    enterRoom: {
+      label: "Join",
+      reason: {
+        alreadyInRoom: "You have already joined this room",
+        notAuthenticated: "You must be signed in to create or join rooms",
+        noUserName: "You must set an username to create or join rooms",
+      },
+      tooltip: "Join this room as a player",
+    },
+    leaveRoom: {
+      label: "Leave",
+      reason: {
+        isOwner: "You cannot leave a room that you have created",
+        notAuthenticated: "You are not a player in this room",
+        notInRoom: "You are not a player in this room",
+      },
+      tooltip: "Leave this room",
+    },
     pageLoading: "Loading room...",
     pageTitle: "Room",
   },

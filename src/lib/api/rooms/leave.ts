@@ -50,9 +50,7 @@ export async function leaveRoom(
 
     transaction.update(roomRef, {
       playerOrder: FieldValue.arrayRemove(userId),
-      players: {
-        [userId]: FieldValue.delete(),
-      },
+      [`players.${userId}`]: FieldValue.delete(),
     })
   })
 
