@@ -1,5 +1,6 @@
 export type ObjectKey = number | string
 export type ObjectRecord<T = unknown> = Record<ObjectKey, T>
+export type UnsafeRecord<T = unknown> = Partial<ObjectRecord<T>>
 export type Key<T extends ObjectRecord> = Extract<keyof T, ObjectKey>
 export type Value<T extends ObjectRecord> = T[Key<T>]
 

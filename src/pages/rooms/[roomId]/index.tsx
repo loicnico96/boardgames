@@ -3,22 +3,15 @@ import React from "react"
 import PageContainer from "components/layout/PageContainer"
 import PageContent from "components/layout/PageContent"
 import PageHeader from "components/layout/PageHeader"
-import PageLoader from "components/layout/PageLoader"
 import Room from "components/rooms/Room"
 import RoomProvider from "components/rooms/RoomProvider"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
-import { useParams } from "hooks/useParams"
+import { useRoomIdParam } from "hooks/store/useRoomId"
 import { useTranslations } from "hooks/useTranslations"
-import { useHydrationContext } from "lib/context/HydrationContext"
 import { ROUTES } from "lib/utils/navigation"
 
-export type RoomPageParams = {
-  roomId: string
-}
-
 export default function RoomPage() {
-  const isHydrated = useHydrationContext()
-  const { roomId } = useParams<RoomPageParams>()
+  const roomId = useRoomIdParam()
 
   const t = useTranslations()
 
@@ -36,15 +29,11 @@ export default function RoomPage() {
   return (
     <PageContainer>
       <PageHeader parents={parents} title={t.roomPage.pageTitle} />
-      {isHydrated ? (
-        <PageContent>
-          <RoomProvider roomId={roomId}>
-            {room => <Room room={room} />}
-          </RoomProvider>
-        </PageContent>
-      ) : (
-        <PageLoader message={t.roomPage.pageLoading} />
-      )}
+      <PageContent>
+        <RoomProvider roomId={roomId}>
+          <Room />
+        </RoomProvider>
+      </PageContent>
     </PageContainer>
   )
 }

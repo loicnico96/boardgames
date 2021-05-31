@@ -1,11 +1,11 @@
 import { useCallback } from "react"
 
-import { useAuth } from "hooks/store/useAuth"
+import { getAuth } from "hooks/store/useAuth"
+import { getRoomData } from "hooks/store/useRoomData"
 import { AsyncHandler } from "hooks/useAsyncHandler"
 import { trigger } from "lib/api/client"
 import { ApiTrigger } from "lib/api/triggers"
-import { WithId } from "lib/db/types"
-import { RoomData } from "lib/model/RoomData"
+import { useStore } from "lib/store/context"
 
 export enum LeaveRoomReason {
   IS_OWNER = "isOwner",
@@ -14,23 +14,30 @@ export enum LeaveRoomReason {
 }
 
 export function useLeaveRoom(
-  room: WithId<RoomData>
+  roomId: string
 ): [AsyncHandler<[]>, boolean, LeaveRoomReason?] {
-  const roomId = room.id
-
-  const { user } = useAuth()
+  const reason = useStore(
+    useCallback(
+      store => {
+        const { user } = getAuth(store)
+        const room = getRoomData(store, roomId)
+        if (!user) {
+          return LeaveRoomReason.NOT_AUTHENTICATED
+        } else if (user.userId === room.ownerId) {
+          return LeaveRoomReason.IS_OWNER
+        } else if (!room.playerOrder.includes(user.userId)) {
+          return LeaveRoomReason.NOT_IN_ROOM
+        } else {
+          return undefined
+        }
+      },
+      [roomId]
+    )
+  )
 
   const leaveRoom = useCallback(async () => {
     await trigger(ApiTrigger.LEAVE_ROOM, { roomId })
   }, [roomId])
 
-  if (!user) {
-    return [leaveRoom, false, LeaveRoomReason.NOT_AUTHENTICATED]
-  } else if (user.userId === room.ownerId) {
-    return [leaveRoom, false, LeaveRoomReason.IS_OWNER]
-  } else if (!room.playerOrder.includes(user.userId)) {
-    return [leaveRoom, false, LeaveRoomReason.NOT_IN_ROOM]
-  } else {
-    return [leaveRoom, true]
-  }
+  return [leaveRoom, !reason, reason]
 }

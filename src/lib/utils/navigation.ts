@@ -14,6 +14,5 @@ export const ROUTES = {
   roomList: () => route(PATH_ROOMS),
 }
 
-export function isSSR(): boolean {
-  return typeof window === "undefined"
-}
+export const isBrowser = typeof window !== "undefined"
+export const isServer = typeof window === "undefined"

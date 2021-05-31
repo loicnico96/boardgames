@@ -1,8 +1,11 @@
 import { useQuery } from "hooks/db/useQuery"
+import { useActions } from "hooks/store/useActions"
 import { UseCacheResult } from "hooks/useCache"
 import { Collection } from "lib/db/collections"
 import { QueryFilter, QueryOptions, SortDirection, WithId } from "lib/db/types"
 import { GameType, RoomData } from "lib/model/RoomData"
+import { generate } from "lib/utils/arrays"
+import { getLoadedResource } from "lib/utils/resources"
 
 const defaultOptions: QueryOptions = {
   sort: [{ field: "createdAt", direction: SortDirection.DESC }],
@@ -25,5 +28,9 @@ export function getQueryOptions(game: GameType | null): QueryOptions {
 export function useRoomList(
   game: GameType | null
 ): UseCacheResult<WithId<RoomData>[]> {
-  return useQuery<RoomData>(Collection.ROOMS, getQueryOptions(game))
+  const { setRoomResources } = useActions()
+
+  return useQuery<RoomData>(Collection.ROOMS, getQueryOptions(game), data => {
+    setRoomResources(generate(data, room => [room.id, getLoadedResource(room)]))
+  })
 }

@@ -1,7 +1,7 @@
 import {
   getErrorResource,
   getLoadedResource,
-  getLoadingResource,
+  LOADING,
   Resource,
 } from "./resources"
 
@@ -44,7 +44,7 @@ export class AsyncCache {
     let resource = this.resources[key]
 
     if (!resource) {
-      this.set(key, getLoadingResource())
+      this.set(key, LOADING)
     }
 
     if (!resource || force) {

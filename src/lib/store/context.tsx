@@ -1,6 +1,7 @@
 import { produce } from "immer"
-import React, { createContext, useContext, useState } from "react"
+import React, { useState } from "react"
 import create, { UseStore } from "zustand"
+import createContext from "zustand/context"
 import { combine } from "zustand/middleware"
 
 import { Debug } from "lib/utils/debug"
@@ -16,35 +17,28 @@ export function createStore(): UseStore<Store> {
   return create(
     combine(getInitialState(), (set, get) => {
       const actions = createActions((logName, recipe) => {
-        Debug.log(logName, "Before:", get())
         set(produce(recipe))
-        Debug.log(logName, "After:", get())
+        Debug.log(`[Store] ${logName}`, get())
       }, get)
       return { actions }
     })
   )
 }
 
-const StoreContext = createContext<UseStore<Store> | null>(null)
+const StoreContext = createContext<Store>()
 
 export type StoreProviderProps = {
   children: React.ReactNode
 }
 
 export function StoreProvider({ children }: StoreProviderProps) {
-  const [value] = useState(createStore)
+  const [store] = useState(createStore)
 
-  return React.createElement(StoreContext.Provider, { value }, children)
+  return (
+    <StoreContext.Provider initialStore={store}>
+      {children}
+    </StoreContext.Provider>
+  )
 }
 
-export function useStore<T>(
-  selector: (store: Store) => T,
-  eqFn?: (oldState: T, newState: T) => boolean
-): T {
-  const store = useContext(StoreContext)
-  if (store) {
-    return store(selector, eqFn)
-  } else {
-    throw Error("Invalid store context")
-  }
-}
+export const { useStore } = StoreContext

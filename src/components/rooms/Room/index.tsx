@@ -1,27 +1,27 @@
 import React from "react"
 
 import Button from "components/ui/Button"
+import { useRoomData } from "hooks/store/useRoomData"
+import { useRoomId } from "hooks/store/useRoomId"
 import { useTranslations } from "hooks/useTranslations"
-import { WithId } from "lib/db/types"
-import { RoomData } from "lib/model/RoomData"
 
 import { useEnterRoom } from "./useEnterRoom"
 import { useLeaveRoom } from "./useLeaveRoom"
 
-export type RoomProps = {
-  room: WithId<RoomData>
-}
-
-export default function Room({ room }: RoomProps) {
+export default function Room() {
   const t = useTranslations()
 
-  const [enterRoom, enterRoomEnabled, enterRoomReason] = useEnterRoom(room)
-  const [leaveRoom, leaveRoomEnabled, leaveRoomReason] = useLeaveRoom(room)
+  const roomId = useRoomId()
+  const status = useRoomData(roomId, room => room.status)
+  const playerOrder = useRoomData(roomId, room => room.playerOrder)
+
+  const [enterRoom, enterRoomEnabled, enterRoomReason] = useEnterRoom(roomId)
+  const [leaveRoom, leaveRoomEnabled, leaveRoomReason] = useLeaveRoom(roomId)
 
   return (
     <div>
-      <p>{room.status}</p>
-      <p>{JSON.stringify(room.playerOrder)}</p>
+      <p>{status}</p>
+      <p>{JSON.stringify(playerOrder)}</p>
       <Button
         disabled={!enterRoomEnabled}
         onClick={enterRoom}

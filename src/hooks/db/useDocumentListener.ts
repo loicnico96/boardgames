@@ -10,24 +10,26 @@ import {
 } from "lib/utils/resources"
 
 export function useDocumentListener<T extends DocumentData>(
-  docRef: string,
+  docRef: string | null,
   onChange: (resource: Resource<WithId<T>>) => void
 ): void {
   useEffect(() => {
-    const unsubscribe = subscribe<T>(
-      docRef,
-      data => {
-        const resource = data
-          ? getLoadedResource(data)
-          : getErrorResource(Error("Not found"))
-        cache.set(docRef, resource)
-        onChange(resource)
-      },
-      error => {
-        onChange(getErrorResource(error))
-      }
-    )
+    if (docRef) {
+      return subscribe<T>(
+        docRef,
+        data => {
+          const resource = data
+            ? getLoadedResource(data)
+            : getErrorResource(Error("Not found"))
+          cache.set(docRef, resource)
+          onChange(resource)
+        },
+        error => {
+          onChange(getErrorResource(error))
+        }
+      )
+    }
 
-    return unsubscribe
+    return undefined
   }, [docRef, onChange])
 }

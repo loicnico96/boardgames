@@ -43,12 +43,16 @@ export function getQueryKey(
 
 export function useQuery<T extends DocumentData>(
   colRef: string,
-  options: QueryOptions = {}
+  options: QueryOptions = {},
+  onComplete?: (data: WithId<T>[]) => void
 ): UseCacheResult<WithId<T>[]> {
   const key = getQueryKey(colRef, options)
   return useCache(key, async () => {
     const docs = await query<T>(colRef, options)
     docs.forEach(doc => cache.set(doc.id, getLoadedResource(doc)))
+    if (onComplete) {
+      onComplete(docs)
+    }
     return docs
   })
 }

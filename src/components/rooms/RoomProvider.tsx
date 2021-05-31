@@ -1,33 +1,46 @@
-import { useState } from "react"
+import React, { useCallback } from "react"
 
-import { renderError } from "components/layout/PageError"
-import { renderLoader } from "components/layout/PageLoader"
+import PageError from "components/layout/PageError"
+import PageLoader from "components/layout/PageLoader"
 import { useDocumentListener } from "hooks/db/useDocumentListener"
+import { useActions } from "hooks/store/useActions"
+import { useRoomResource } from "hooks/store/useRoomResource"
 import { useTranslations } from "hooks/useTranslations"
 import { getRoomRef } from "lib/db/collections"
-import { WithId } from "lib/db/types"
-import { RoomData } from "lib/model/RoomData"
-import cache from "lib/utils/cache"
+import { getResourceError, isLoading } from "lib/utils/resources"
 
 export type RoomProviderProps = {
-  children: (room: WithId<RoomData>) => JSX.Element
-  roomId: string
+  children: React.ReactNode
+  roomId: string | null
 }
 
 export default function RoomProvider({ children, roomId }: RoomProviderProps) {
   const t = useTranslations()
 
-  const docRef = getRoomRef(roomId)
+  const { setRoomResources } = useActions()
 
-  const [resource, setResource] = useState(cache.get<WithId<RoomData>>(docRef))
+  const error = useRoomResource(roomId, getResourceError)
+  const loading = useRoomResource(roomId, isLoading)
 
-  useDocumentListener(docRef, setResource)
+  useDocumentListener(
+    roomId ? getRoomRef(roomId) : null,
+    useCallback(
+      resource => {
+        if (roomId) {
+          setRoomResources({ [roomId]: resource })
+        }
+      },
+      [roomId, setRoomResources]
+    )
+  )
 
-  if (resource === undefined || resource.loading) {
-    return renderLoader(t.roomPage.pageLoading)
-  } else if (resource.error) {
-    return renderError(resource.error)
-  } else {
-    return children(resource.data)
+  if (loading) {
+    return <PageLoader message={t.roomPage.pageLoading} />
   }
+
+  if (error) {
+    return <PageError error={error} />
+  }
+
+  return <>{children}</>
 }
