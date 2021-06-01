@@ -1,4 +1,4 @@
-import { Draft } from "immer"
+import { Spec } from "immutability-helper"
 
 import { AuthUser } from "lib/auth/types"
 import { setUserName } from "lib/firebase/auth"
@@ -15,37 +15,41 @@ export type Actions = {
 }
 
 export type GetState = () => State
-export type SetState = (
-  logName: string,
-  recipe: (draft: Draft<State>) => void
-) => void
+export type SetState = (logName: string, spec: Spec<State>) => void
 
 export function createActions(set: SetState, get: GetState): Actions {
   return {
     setRoomResources(resources: UnsafeRecord<Resource<RoomData>>) {
-      set("setRoomResources", state => {
-        state.rooms = {
-          ...state.rooms,
-          ...resources,
-        }
+      set("setRoomResources", {
+        rooms: {
+          $merge: resources,
+        },
       })
     },
 
     setUser(user: AuthUser | null) {
-      set("setUser", state => {
-        state.auth = {
-          loading: false,
-          user,
-        }
+      set("setUser", {
+        auth: {
+          $merge: {
+            loading: false,
+            user,
+          },
+        },
       })
     },
 
     async setUserName(userName: string) {
       await setUserName(userName)
-      set("setUserName", state => {
-        if (state.auth.user) {
-          state.auth.user.userInfo.userName = userName
-        }
+      set("setUserName", {
+        auth: {
+          user: {
+            userInfo: {
+              $merge: {
+                userName,
+              },
+            },
+          },
+        },
       })
     },
   }

@@ -1,4 +1,4 @@
-import { produce } from "immer"
+import update from "immutability-helper"
 import React, { useState } from "react"
 import create, { UseStore } from "zustand"
 import createContext from "zustand/context"
@@ -16,9 +16,9 @@ export type Store = State & {
 export function createStore(): UseStore<Store> {
   return create(
     combine(getInitialState(), (set, get) => {
-      const actions = createActions((logName, recipe) => {
-        set(produce(recipe))
-        Debug.log(`[Store] ${logName}`, get())
+      const actions = createActions((logName, spec) => {
+        set(state => update(state, spec))
+        Debug.log(`[Store] ${logName}`, spec, get())
       }, get)
       return { actions }
     })
