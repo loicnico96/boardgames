@@ -1,7 +1,6 @@
 import React from "react"
 
 import PageContainer from "components/layout/PageContainer"
-import PageContent from "components/layout/PageContent"
 import PageHeader from "components/layout/PageHeader"
 import Room from "components/rooms/Room"
 import RoomProvider from "components/rooms/RoomProvider"
@@ -29,11 +28,9 @@ export default function RoomPage() {
   return (
     <PageContainer>
       <PageHeader parents={parents} title={t.roomPage.pageTitle} />
-      <PageContent>
-        <RoomProvider roomId={roomId}>
-          <Room />
-        </RoomProvider>
-      </PageContent>
+      <RoomProvider roomId={roomId}>
+        <Room />
+      </RoomProvider>
     </PageContainer>
   )
 }
