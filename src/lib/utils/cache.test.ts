@@ -221,7 +221,7 @@ describe("AsyncCache", () => {
       expect(listener).not.toHaveBeenCalled()
     })
 
-    it("returns an unsubscribe function", async () => {
+    it("returns an unsubscribe function", () => {
       const listener = mockListener()
       const unsubscribe = cache.subscribe("key", listener)
       const resourceA = getLoadedResource("value")

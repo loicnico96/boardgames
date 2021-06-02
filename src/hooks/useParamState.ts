@@ -1,6 +1,8 @@
 import { NextRouter, useRouter } from "next/router"
 import { useCallback } from "react"
 
+import { handleGenericError } from "lib/utils/error"
+
 export type ParamState = string | null
 export type SetParamState = (newState: ParamState) => void
 
@@ -17,18 +19,20 @@ export function useParamState(key: string): [ParamState, SetParamState] {
     (newState: ParamState) => {
       const oldState = getParam(router, key)
       if (router.isReady && newState !== oldState) {
-        router.replace(
-          {
-            query: {
-              ...router.query,
-              [key]: newState,
+        router
+          .replace(
+            {
+              query: {
+                ...router.query,
+                [key]: newState,
+              },
             },
-          },
-          undefined,
-          {
-            shallow: true,
-          }
-        )
+            undefined,
+            {
+              shallow: true,
+            }
+          )
+          .catch(handleGenericError)
       }
     },
     [key, router]

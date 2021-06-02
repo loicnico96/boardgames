@@ -1,15 +1,17 @@
 import React, { Component } from "react"
 
+import { isDev } from "lib/utils/debug"
 import { ErrorHandler, toError } from "lib/utils/error"
 
 export type ErrorComponentProps = {
   error: Error
 }
 
-export type ErrorBoundaryProps = React.PropsWithChildren<{
+export type ErrorBoundaryProps = {
+  children: React.ReactNode
   onError?: ErrorHandler
   renderError?: (error: Error) => JSX.Element
-}>
+}
 
 export type ErrorBoundaryState = {
   error: Error | null
@@ -28,8 +30,9 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   componentDidCatch(rawError: unknown, errorInfo: unknown) {
     const { onError } = this.props
 
-    if (process.env.NODE_ENV !== "production") {
-      console.error("Caught in ErrorBoundary:", rawError, errorInfo)
+    if (isDev) {
+      // eslint-disable-next-line no-console
+      console.error("[ErrorBoundary] Caught:", rawError, errorInfo)
     }
 
     if (onError) {

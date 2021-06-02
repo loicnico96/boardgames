@@ -1,21 +1,23 @@
+/* eslint-disable no-console */
+
 import { NextApiRequest } from "next"
 
 export class ApiLogger {
-  prefix: string
+  public readonly prefix: string
 
-  constructor(req: NextApiRequest) {
+  public constructor(req: NextApiRequest) {
     this.prefix = `[${req.method} ${req.url}]`
   }
 
-  log(message: string, ...params: unknown[]): void {
+  public log(message: string, ...params: unknown[]): void {
     console.log(`${this.prefix} ${message}`, ...params)
   }
 
-  warn(message: string, ...params: unknown[]): void {
+  public warn(message: string, ...params: unknown[]): void {
     console.warn(`${this.prefix} ${message}`, ...params)
   }
 
-  error(error: Error): void {
+  public error(error: Error): void {
     console.error(this.prefix, error)
   }
 }

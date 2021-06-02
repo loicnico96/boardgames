@@ -2,6 +2,7 @@ import { ApiError } from "lib/api/error"
 import { ApiRequest, ApiResponse, ApiTrigger } from "lib/api/triggers"
 import { HttpHeader, HttpMethod, HttpStatus } from "lib/api/types"
 import { getCurrentUser } from "lib/firebase/auth"
+import { Debug } from "lib/utils/debug"
 
 export async function getHeaders(): Promise<HeadersInit> {
   const headers: HeadersInit = {}
@@ -22,9 +23,7 @@ export async function trigger<T extends ApiTrigger>(
   api: T,
   params: ApiRequest<T>
 ): Promise<ApiResponse<T>> {
-  if (process.env.NODE_ENV === "development") {
-    console.log(`[${HttpMethod.POST} ${api}] Calling...`)
-  }
+  Debug.log(`[${HttpMethod.POST} ${api}] Calling...`)
 
   const response = await fetch(api, {
     body: JSON.stringify(params),
@@ -39,9 +38,7 @@ export async function trigger<T extends ApiTrigger>(
 
   const data = await response.json()
 
-  if (process.env.NODE_ENV === "development") {
-    console.log(`[${HttpMethod.POST} ${api}] Response:`, data)
-  }
+  Debug.log(`[${HttpMethod.POST} ${api}] Response:`, data)
 
   return data
 }

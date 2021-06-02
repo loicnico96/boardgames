@@ -1,4 +1,4 @@
 module.exports = {
+  plugins: ["styled-components"],
   presets: ["next/babel"],
-  plugins: ["babel-plugin-styled-components"],
 }

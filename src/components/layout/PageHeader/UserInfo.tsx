@@ -15,7 +15,7 @@ export default function UserInfo() {
   const changeUserName = useCallback(async () => {
     if (user !== null) {
       const oldName = user.userInfo.userName ?? undefined
-      const newName = await promptUserName(oldName)
+      const newName = promptUserName(oldName)
       if (newName && newName !== oldName) {
         await setUserName(newName)
       }

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { ObjectRecord } from "./objects"
 
 export type Params = any[]

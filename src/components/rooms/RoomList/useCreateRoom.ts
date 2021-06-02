@@ -6,6 +6,7 @@ import { AsyncHandler } from "hooks/useAsyncHandler"
 import { trigger } from "lib/api/client"
 import { ApiTrigger } from "lib/api/triggers"
 import { GameType } from "lib/model/RoomData"
+import { handleGenericError } from "lib/utils/error"
 import { ROUTES } from "lib/utils/navigation"
 
 export enum CreateRoomReason {
@@ -24,7 +25,7 @@ export function useCreateRoom(
   const createRoom = useCallback(async () => {
     if (game) {
       const { roomId } = await trigger(ApiTrigger.CREATE_ROOM, { game })
-      router.push(ROUTES.room(roomId))
+      router.push(ROUTES.room(roomId)).catch(handleGenericError)
     }
   }, [game, router])
 

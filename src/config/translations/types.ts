@@ -1,6 +1,7 @@
 import { EnterRoomReason } from "components/rooms/Room/useEnterRoom"
 import { LeaveRoomReason } from "components/rooms/Room/useLeaveRoom"
 import { CreateRoomReason } from "components/rooms/RoomList/useCreateRoom"
+import { Debug } from "lib/utils/debug"
 
 export type TranslationConfig = {
   home: {
@@ -47,9 +48,7 @@ export function replace<T extends string>(entry: string): Replace<T> {
         return String(params[key])
       }
 
-      if (process.env.NODE_ENV !== "production") {
-        console.warn(`Could not replace parameters ${key}`, params)
-      }
+      Debug.warn(`Could not replace parameters ${key}`, params)
 
       return match
     })

@@ -12,6 +12,7 @@ import { useAuth } from "hooks/store/useAuth"
 import { useTranslations } from "hooks/useTranslations"
 import { promptUserName } from "lib/auth/promptUserName"
 import { signInAnonymously, signInWithGoogle } from "lib/firebase/auth"
+import { handleGenericError } from "lib/utils/error"
 import { ROUTES } from "lib/utils/navigation"
 import { getSearchParams } from "lib/utils/search"
 
@@ -38,12 +39,12 @@ export default function LoginPage() {
   useEffect(() => {
     if (isAuthenticated) {
       const callbackUrl = getSearchParams(router).get(CALLBACK_PARAM)
-      router.push(callbackUrl ?? ROUTES.home())
+      router.push(callbackUrl ?? ROUTES.home()).catch(handleGenericError)
     }
   }, [isAuthenticated, router])
 
   const guestSignIn = useCallback(async () => {
-    const userName = await promptUserName()
+    const userName = promptUserName()
     if (userName) {
       await signInAnonymously(persistence)
       await setUserName(userName)
