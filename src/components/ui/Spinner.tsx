@@ -1,13 +1,13 @@
 import React from "react"
 
-export const SPINNER_COLOR = "blue"
-export const SPINNER_TYPE = "RevolvingDot"
+export const DEFAULT_COLOR = "blue"
 
 export type SpinnerProps = {
+  color?: string
   size: number
 }
 
-export default function Spinner({ size }: SpinnerProps) {
+export default function Spinner({ color = DEFAULT_COLOR, size }: SpinnerProps) {
   return (
     <svg
       height={size}
@@ -18,25 +18,17 @@ export default function Spinner({ size }: SpinnerProps) {
     >
       <circle
         fill="none"
-        stroke={SPINNER_COLOR}
+        stroke={color}
         strokeWidth={4}
         cx={50}
         cy={50}
         r={44}
         style={{ opacity: 0.5 }}
       />
-      <circle
-        fill={SPINNER_COLOR}
-        stroke={SPINNER_COLOR}
-        strokeWidth={3}
-        cx={8}
-        cy={54}
-        r={6}
-      >
+      <circle fill={color} stroke={color} strokeWidth={3} cx={8} cy={54} r={6}>
         <animateTransform
           attributeName="transform"
           dur="2s"
-          type="rotate"
           from="0 50 48"
           to="360 50 52"
           repeatCount="indefinite"

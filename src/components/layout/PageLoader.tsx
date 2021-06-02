@@ -1,26 +1,27 @@
 import React from "react"
+import styled from "styled-components"
 
 import Spinner from "components/ui/Spinner"
+
+import PageContent from "./PageContent"
 
 export type PageLoaderProps = {
   message?: string
 }
 
+const PageLoaderContainer = styled(PageContent)`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+
 export default function PageLoader({ message }: PageLoaderProps) {
   return (
-    <div>
+    <PageLoaderContainer>
       <Spinner size={96} />
-      {!!message && <span>{message}</span>}
-      <style jsx>{`
-        div {
-          align-items: center;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          padding: 24px 48px;
-        }
-      `}</style>
-    </div>
+      {!!message && <div>{message}</div>}
+    </PageLoaderContainer>
   )
 }
 

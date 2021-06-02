@@ -1,4 +1,5 @@
 import React from "react"
+import styled from "styled-components"
 
 import { useLocation } from "hooks/useLocation"
 
@@ -14,28 +15,26 @@ export type BreadcrumbsProps = {
   title: string
 }
 
+const Breadcrumb = styled.span`
+  :not(:last-of-type)::after {
+    content: ">";
+    margin: 0px 8px;
+  }
+`
+
 export default function Breadcrumbs({ parents = [], title }: BreadcrumbsProps) {
   const location = useLocation()
 
   return (
-    <div>
+    <>
       {parents.map(parent => (
-        <span key={parent.path}>
+        <Breadcrumb key={parent.path}>
           <Link href={parent.path}>{parent.title}</Link>
-        </span>
+        </Breadcrumb>
       ))}
-      <span>
+      <Breadcrumb>
         <Link href={location}>{title}</Link>
-      </span>
-      <style jsx>{`
-        div {
-          flex: 1 1 auto;
-        }
-        span:not(:last-of-type)::after {
-          content: ">";
-          margin: 0px 8px;
-        }
-      `}</style>
-    </div>
+      </Breadcrumb>
+    </>
   )
 }

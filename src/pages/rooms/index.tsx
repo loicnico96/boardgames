@@ -1,8 +1,8 @@
 import React from "react"
+import styled from "styled-components"
 
-import PageContainer from "components/layout/PageContainer"
 import PageContent from "components/layout/PageContent"
-import PageHeader from "components/layout/PageHeader"
+import PageLayout from "components/layout/PageLayout"
 import PageLoader from "components/layout/PageLoader"
 import RoomList from "components/rooms/RoomList"
 import { useCreateRoom } from "components/rooms/RoomList/useCreateRoom"
@@ -17,6 +17,16 @@ import { isEnum } from "lib/utils/enums"
 import { ROUTES } from "lib/utils/navigation"
 
 export const GAME_PARAM = "game"
+
+const RoomListToolbar = styled.div`
+  column-gap: 24px;
+  display: flex;
+  margin-bottom: 24px;
+`
+
+const StyledGameSelect = styled(GameSelect)`
+  min-width: 240px;
+`
 
 export default function RoomListPage() {
   const isHydrated = useHydrationContext()
@@ -36,11 +46,10 @@ export default function RoomListPage() {
   const [createRoom, createRoomEnabled, createRoomReason] = useCreateRoom(game)
 
   return (
-    <PageContainer>
-      <PageHeader parents={parents} title={t.roomList.pageTitle} />
+    <PageLayout parents={parents} title={t.roomList.pageTitle}>
       <PageContent>
-        <div>
-          <GameSelect
+        <RoomListToolbar>
+          <StyledGameSelect
             disabled={!isHydrated}
             onChange={setGameParam}
             value={game}
@@ -51,18 +60,13 @@ export default function RoomListPage() {
             reason={createRoomReason}
             translations={t.roomList.createRoom}
           />
-        </div>
+        </RoomListToolbar>
         {isHydrated ? (
           <RoomList game={game} />
         ) : (
           <PageLoader message={t.roomList.pageLoading} />
         )}
-        <style jsx>{`
-          div {
-            margin-bottom: 24px;
-          }
-        `}</style>
       </PageContent>
-    </PageContainer>
+    </PageLayout>
   )
 }

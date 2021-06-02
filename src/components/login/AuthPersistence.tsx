@@ -1,4 +1,5 @@
 import React from "react"
+import styled from "styled-components"
 
 import { useTranslations } from "hooks/useTranslations"
 
@@ -9,6 +10,16 @@ export type AuthPersistenceProps = Pick<InputProps, "disabled"> & {
   value: boolean
 }
 
+const AuthPersistenceContainer = styled.div`
+  align-items: center;
+  display: flex;
+  padding-top: 8px;
+`
+
+const AuthPersistenceCheckbox = styled.input.attrs({ type: "checkbox" })`
+  margin-right: 8px;
+`
+
 export default function AuthPersistence({
   disabled = false,
   onChange,
@@ -17,26 +28,14 @@ export default function AuthPersistence({
   const t = useTranslations()
 
   return (
-    <div>
-      <input
+    <AuthPersistenceContainer>
+      <AuthPersistenceCheckbox
         checked={value}
         disabled={disabled}
         name={t.login.rememberMe}
         onChange={e => onChange(e.target.checked)}
-        type="checkbox"
       />
       <span>{t.login.rememberMe}</span>
-      <style jsx>{`
-        div {
-          align-items: center;
-          display: flex;
-          padding-top: 8px;
-        }
-
-        input {
-          margin-right: 8px;
-        }
-      `}</style>
-    </div>
+    </AuthPersistenceContainer>
   )
 }

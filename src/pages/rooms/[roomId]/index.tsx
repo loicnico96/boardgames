@@ -1,7 +1,6 @@
 import React from "react"
 
-import PageContainer from "components/layout/PageContainer"
-import PageHeader from "components/layout/PageHeader"
+import PageLayout from "components/layout/PageLayout"
 import Room from "components/rooms/Room"
 import RoomProvider from "components/rooms/RoomProvider"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
@@ -26,11 +25,10 @@ export default function RoomPage() {
   ]
 
   return (
-    <PageContainer>
-      <PageHeader parents={parents} title={t.roomPage.pageTitle} />
+    <PageLayout parents={parents} title={t.roomPage.pageTitle}>
       <RoomProvider roomId={roomId}>
         <Room />
       </RoomProvider>
-    </PageContainer>
+    </PageLayout>
   )
 }

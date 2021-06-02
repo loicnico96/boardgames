@@ -1,9 +1,9 @@
 import { useRouter } from "next/router"
 import React, { useCallback, useEffect, useState } from "react"
+import styled from "styled-components"
 
-import PageContainer from "components/layout/PageContainer"
 import PageContent from "components/layout/PageContent"
-import PageHeader from "components/layout/PageHeader"
+import PageLayout from "components/layout/PageLayout"
 import AuthPersistence from "components/login/AuthPersistence"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
 import Button from "components/ui/Button"
@@ -18,6 +18,16 @@ import { getSearchParams } from "lib/utils/search"
 
 const CALLBACK_PARAM = "callback"
 const DEFAULT_PERSISTENCE = false
+
+const LoginToolbar = styled.div`
+  column-gap: 24px;
+  display: flex;
+
+  > button {
+    height: 32px;
+    width: 240px;
+  }
+`
 
 export default function LoginPage() {
   const { setUserName } = useActions()
@@ -58,10 +68,9 @@ export default function LoginPage() {
   }, [persistence])
 
   return (
-    <PageContainer>
-      <PageHeader parents={parents} title={t.login.pageTitle} />
+    <PageLayout parents={parents} title={t.login.pageTitle}>
       <PageContent>
-        <div>
+        <LoginToolbar>
           <Button
             disabled={isAuthenticated}
             onClick={guestSignIn}
@@ -72,13 +81,13 @@ export default function LoginPage() {
             onClick={googleSignIn}
             translations={t.login.signInWithGoogle}
           />
-        </div>
+        </LoginToolbar>
         <AuthPersistence
           disabled={isAuthenticated}
           onChange={setPersistence}
           value={persistence}
         />
       </PageContent>
-    </PageContainer>
+    </PageLayout>
   )
 }

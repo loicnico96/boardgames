@@ -1,22 +1,24 @@
 import React from "react"
+import styled from "styled-components"
+
+import PageContent from "./PageContent"
 
 export type PageErrorProps = {
   error: Error
 }
 
+const PageErrorContainer = styled(PageContent)`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+
 export default function PageError({ error }: PageErrorProps) {
   return (
-    <div>
-      <span>Error: {error.message}</span>
-      <style jsx>{`
-        div {
-          align-items: center;
-          display: flex;
-          justify-content: center;
-          padding: 24px 48px;
-        }
-      `}</style>
-    </div>
+    <PageErrorContainer>
+      <div>Error: {error.message}</div>
+    </PageErrorContainer>
   )
 }
 

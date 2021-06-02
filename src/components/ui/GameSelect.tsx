@@ -37,12 +37,6 @@ export default function GameSelect({
           {game /* t.games[game].name */}
         </option>
       ))}
-      <style jsx>{`
-        select {
-          margin-right: 16px;
-          min-width: 240px;
-        }
-      `}</style>
     </select>
   )
 }

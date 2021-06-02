@@ -1,10 +1,15 @@
 import React, { useCallback } from "react"
+import styled from "styled-components"
 
 import { useActions } from "hooks/store/useActions"
 import { useAuth } from "hooks/store/useAuth"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { useTranslations } from "hooks/useTranslations"
 import { promptUserName } from "lib/auth/promptUserName"
+
+const UserInfoContainer = styled.div`
+  cursor: pointer;
+`
 
 export default function UserInfo() {
   const { setUserName } = useActions()
@@ -29,13 +34,11 @@ export default function UserInfo() {
   }
 
   return (
-    <div onClick={changeUserNameAsync} title={t.login.setUserName}>
+    <UserInfoContainer
+      onClick={changeUserNameAsync}
+      title={t.login.setUserName}
+    >
       {user.userInfo.userName ?? "..."}
-      <style jsx>{`
-        div {
-          cursor: pointer;
-        }
-      `}</style>
-    </div>
+    </UserInfoContainer>
   )
 }
