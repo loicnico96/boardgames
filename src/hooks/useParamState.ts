@@ -3,28 +3,29 @@ import { useCallback } from "react"
 
 import { handleGenericError } from "lib/utils/error"
 
-export type ParamState = string | null
-export type SetParamState = (newState: ParamState) => void
+export type UseParamStateResult = [
+  string | null,
+  (newState: string | null) => Promise<void>
+]
 
-export function getParam(router: NextRouter, key: string): ParamState {
+export function getParam(router: NextRouter, key: string): string | null {
   const rawParam = router.query[key]
-  const strParam = Array.isArray(rawParam) ? rawParam[0] : rawParam
-  return strParam ?? null
+  return (Array.isArray(rawParam) ? rawParam[0] : rawParam) ?? null
 }
 
-export function useParamState(key: string): [ParamState, SetParamState] {
+export function useParamState(key: string): UseParamStateResult {
   const router = useRouter()
 
   const setState = useCallback(
-    (newState: ParamState) => {
+    async (newState: string | null) => {
       const oldState = getParam(router, key)
       if (router.isReady && newState !== oldState) {
-        router
-          .replace(
+        try {
+          await router.replace(
             {
               query: {
                 ...router.query,
-                [key]: newState,
+                [key]: newState ?? undefined,
               },
             },
             undefined,
@@ -32,7 +33,9 @@ export function useParamState(key: string): [ParamState, SetParamState] {
               shallow: true,
             }
           )
-          .catch(handleGenericError)
+        } catch (error) {
+          handleGenericError(error)
+        }
       }
     },
     [key, router]

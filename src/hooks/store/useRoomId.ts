@@ -1,10 +1,10 @@
 import { useRouter } from "next/router"
 
-import { getParam, ParamState } from "hooks/useParamState"
+import { getParam } from "hooks/useParamState"
 
 export const ROOM_ID_PARAM = "roomId"
 
-export function useRoomIdParam(): ParamState {
+export function useRoomIdParam(): string | null {
   return getParam(useRouter(), ROOM_ID_PARAM)
 }
 
