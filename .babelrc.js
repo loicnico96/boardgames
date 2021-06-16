@@ -1,4 +1,12 @@
 module.exports = {
   plugins: ["@emotion"],
-  presets: ["next/babel"],
+  presets:
+    [
+      "next/babel",
+      {
+        "preset-react": {
+          "runtime": "automatic"
+        }
+      }
+  ],
 }

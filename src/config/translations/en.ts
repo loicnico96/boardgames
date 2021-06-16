@@ -17,6 +17,9 @@ const CONFIG: TranslationConfig = {
     listSeparator: ", ",
   },
   home: {
+    gameTile: {
+      tooltip: "Click to show rooms",
+    },
     pageTitle: "Home",
   },
   login: {

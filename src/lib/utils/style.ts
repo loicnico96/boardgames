@@ -1,6 +1,4 @@
-import React from "react"
-
-export type Style = React.CSSProperties
+import { CSSProperties } from "react"
 
 export type CSSDimension<Unit extends string> = `${number}${Unit}` | number
 
@@ -28,14 +26,14 @@ export type StyleProps = {
   paddingBottom?: CSSDimension<"%">
 
   // Others
-  style?: Style
+  style?: CSSProperties
 }
 
 export type ComputedStyleProps<T extends StyleProps> = Omit<
   T,
   keyof StyleProps
 > & {
-  style: Style
+  style: CSSProperties
 }
 
 export function computeStyleProps<T extends StyleProps>(

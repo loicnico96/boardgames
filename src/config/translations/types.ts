@@ -20,6 +20,9 @@ export type TranslationConfig = {
     listSeparator: string
   }
   home: {
+    gameTile: {
+      tooltip: string
+    }
     pageTitle: string
   }
   login: {
