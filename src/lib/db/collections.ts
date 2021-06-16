@@ -1,4 +1,4 @@
-import { GameType } from "lib/model/RoomData"
+import { GameType } from "lib/games/GameType"
 
 const SEPARATOR = "/"
 

@@ -1,7 +1,4 @@
-export enum GameType {
-  METROPOLYS = "metropolys",
-  ROBORALLY = "roborally",
-}
+import { GameType } from "lib/games/GameType"
 
 export type UserInfo = {
   name: string

@@ -12,7 +12,7 @@ import GameSelect from "components/ui/GameSelect"
 import { useParamState } from "hooks/useParamState"
 import { useTranslations } from "hooks/useTranslations"
 import { useHydrationContext } from "lib/context/HydrationContext"
-import { GameType } from "lib/model/RoomData"
+import { GameType } from "lib/games/GameType"
 import { isEnum } from "lib/utils/enums"
 import { ROUTES } from "lib/utils/navigation"
 

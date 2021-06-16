@@ -1,7 +1,7 @@
 import React, { useCallback } from "react"
 
 import { useTranslations } from "hooks/useTranslations"
-import { GameType } from "lib/model/RoomData"
+import { GameType } from "lib/games/GameType"
 import { enumValues, isEnum } from "lib/utils/enums"
 
 export type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement>
@@ -34,7 +34,7 @@ export default function GameSelect({
       </option>
       {enumValues(GameType).map(game => (
         <option key={game} value={game}>
-          {game /* t.games[game].name */}
+          {t.games[game].name}
         </option>
       ))}
     </select>

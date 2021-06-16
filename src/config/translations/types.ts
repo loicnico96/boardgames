@@ -1,9 +1,23 @@
 import { EnterRoomReason } from "components/rooms/Room/useEnterRoom"
 import { LeaveRoomReason } from "components/rooms/Room/useLeaveRoom"
 import { CreateRoomReason } from "components/rooms/RoomList/useCreateRoom"
+import { RoomStatus } from "lib/model/RoomData"
 import { Debug } from "lib/utils/debug"
 
 export type TranslationConfig = {
+  games: {
+    metropolys: {
+      name: string
+    }
+    roborally: {
+      boards: Record<string, { name: string }>
+      name: string
+      roomBoards: Replace<"boardNames">
+    }
+  }
+  general: {
+    listSeparator: string
+  }
   home: {
     pageTitle: string
   }
@@ -28,7 +42,10 @@ export type TranslationConfig = {
     leaveRoom: ButtonTranslation<LeaveRoomReason>
     pageLoading: string
     pageTitle: string
+    roomPlayers: Replace<"playerNames">
+    roomTitle: Replace<"gameType" | "roomStatus">
   }
+  roomStatus: Record<RoomStatus, string>
 }
 
 export type ButtonTranslation<Reason extends string = never> = {

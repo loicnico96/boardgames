@@ -5,7 +5,7 @@ import { useAuth } from "hooks/store/useAuth"
 import { AsyncHandler } from "hooks/useAsyncHandler"
 import { trigger } from "lib/api/client"
 import { ApiTrigger } from "lib/api/triggers"
-import { GameType } from "lib/model/RoomData"
+import { GameType } from "lib/games/GameType"
 import { handleGenericError } from "lib/utils/error"
 import { ROUTES } from "lib/utils/navigation"
 

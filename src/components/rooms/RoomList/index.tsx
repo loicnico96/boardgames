@@ -3,7 +3,7 @@ import React from "react"
 import PageError from "components/layout/PageError"
 import PageLoader from "components/layout/PageLoader"
 import { useTranslations } from "hooks/useTranslations"
-import { GameType } from "lib/model/RoomData"
+import { GameType } from "lib/games/GameType"
 
 import RoomListItem from "./RoomListItem"
 import { useRoomList } from "./useRoomList"

@@ -3,7 +3,8 @@ import { ApiError } from "lib/api/error"
 import { HttpStatus } from "lib/api/types"
 import { Collection } from "lib/db/collections"
 import { firestore } from "lib/firebase/admin"
-import { GameType, RoomData, RoomStatus } from "lib/model/RoomData"
+import { GameType } from "lib/games/GameType"
+import { RoomData, RoomStatus } from "lib/model/RoomData"
 
 export type ApiRequestCreateRoom = {
   game: GameType

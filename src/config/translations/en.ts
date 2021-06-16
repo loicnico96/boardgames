@@ -1,6 +1,21 @@
-import { TranslationConfig } from "./types"
+import { replace, TranslationConfig } from "./types"
 
 const CONFIG: TranslationConfig = {
+  games: {
+    metropolys: {
+      name: "Metropolys",
+    },
+    roborally: {
+      boards: {
+        // TODO
+      },
+      name: "Roborally",
+      roomBoards: replace("Boards: {{boardNames}}"),
+    },
+  },
+  general: {
+    listSeparator: ", ",
+  },
   home: {
     pageTitle: "Home",
   },
@@ -61,6 +76,13 @@ const CONFIG: TranslationConfig = {
     },
     pageLoading: "Loading room...",
     pageTitle: "Room",
+    roomPlayers: replace("Players: {{playerNames}}"),
+    roomTitle: replace("{{gameType}} - {{roomStatus}}"),
+  },
+  roomStatus: {
+    finished: "Finished",
+    ongoing: "Ongoing",
+    opened: "Opened",
   },
 }
 
