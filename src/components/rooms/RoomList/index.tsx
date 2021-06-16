@@ -23,6 +23,10 @@ export default function RoomList({ game }: RoomListProps) {
     return <PageLoader message={t.roomList.pageLoading} />
   }
 
+  if (resource.data.length === 0) {
+    return <div>{t.roomList.noRooms}</div>
+  }
+
   return (
     <div>
       {resource.data.map(room => (
