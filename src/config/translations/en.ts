@@ -76,8 +76,17 @@ const CONFIG: TranslationConfig = {
     },
     pageLoading: "Loading room...",
     pageTitle: "Room",
+    roomOwner: replace("{{playerName}} (owner)"),
     roomPlayers: replace("Players: {{playerNames}}"),
     roomTitle: replace("{{gameType}} - {{roomStatus}}"),
+    startGame: {
+      label: "Start",
+      reason: {
+        notAuthenticated: "The game can only be started by the room's owner",
+        notOwner: "The game can only be started by the room's owner",
+      },
+      tooltip: "Start the game",
+    },
   },
   roomStatus: {
     finished: "Finished",

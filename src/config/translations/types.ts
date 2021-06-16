@@ -1,5 +1,6 @@
 import { EnterRoomReason } from "components/rooms/Room/useEnterRoom"
 import { LeaveRoomReason } from "components/rooms/Room/useLeaveRoom"
+import { StartGameReason } from "components/rooms/Room/useStartGame"
 import { CreateRoomReason } from "components/rooms/RoomList/useCreateRoom"
 import { RoomStatus } from "lib/model/RoomData"
 import { Debug } from "lib/utils/debug"
@@ -42,8 +43,10 @@ export type TranslationConfig = {
     leaveRoom: ButtonTranslation<LeaveRoomReason>
     pageLoading: string
     pageTitle: string
+    roomOwner: Replace<"playerName">
     roomPlayers: Replace<"playerNames">
     roomTitle: Replace<"gameType" | "roomStatus">
+    startGame: ButtonTranslation<StartGameReason>
   }
   roomStatus: Record<RoomStatus, string>
 }
