@@ -1,9 +1,9 @@
-import React, { createContext } from "react"
+import { createContext, ReactNode } from "react"
 
 import CONFIG_EN from "config/translations/en"
 
 export type TranslationProviderProps = {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export const TranslationContext = createContext(CONFIG_EN)

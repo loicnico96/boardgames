@@ -1,4 +1,4 @@
 module.exports = {
-  plugins: ["styled-components"],
+  plugins: ["@emotion"],
   presets: ["next/babel"],
 }

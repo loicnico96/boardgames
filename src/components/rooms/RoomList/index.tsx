@@ -1,5 +1,3 @@
-import React from "react"
-
 import PageError from "components/layout/PageError"
 import PageLoader from "components/layout/PageLoader"
 import { useTranslations } from "hooks/useTranslations"

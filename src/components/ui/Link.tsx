@@ -1,5 +1,4 @@
 import NextLink from "next/link"
-import React from "react"
 
 export type HtmlAnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement>
 

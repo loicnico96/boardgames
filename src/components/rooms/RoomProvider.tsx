@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import { ReactNode, useCallback } from "react"
 
 import PageError from "components/layout/PageError"
 import PageLoader from "components/layout/PageLoader"
@@ -10,7 +10,7 @@ import { getRoomRef } from "lib/db/collections"
 import { getResourceError, isLoading } from "lib/utils/resources"
 
 export type RoomProviderProps = {
-  children: React.ReactNode
+  children: ReactNode
   roomId: string | null
 }
 

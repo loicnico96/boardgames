@@ -1,5 +1,3 @@
-import React from "react"
-
 import PageContent from "components/layout/PageContent"
 import PageLayout from "components/layout/PageLayout"
 import Link from "components/ui/Link"

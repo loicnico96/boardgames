@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import { Component } from "react"
 
 import { isDev } from "lib/utils/debug"
 import { ErrorHandler, toError } from "lib/utils/error"

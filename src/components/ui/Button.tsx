@@ -1,5 +1,3 @@
-import React from "react"
-
 import { ButtonTranslation } from "config/translations/types"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { ErrorHandler } from "lib/utils/error"

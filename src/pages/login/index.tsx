@@ -1,6 +1,6 @@
+import styled from "@emotion/styled"
 import { useRouter } from "next/router"
-import React, { useCallback, useEffect, useState } from "react"
-import styled from "styled-components"
+import { useCallback, useEffect, useState } from "react"
 
 import PageContent from "components/layout/PageContent"
 import PageLayout from "components/layout/PageLayout"

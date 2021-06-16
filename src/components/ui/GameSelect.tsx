@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import { useCallback } from "react"
 
 import { useTranslations } from "hooks/useTranslations"
 import { GameType } from "lib/games/GameType"

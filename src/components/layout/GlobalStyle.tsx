@@ -1,29 +1,37 @@
-import { createGlobalStyle } from "styled-components"
+import { Global, useTheme } from "@emotion/react"
 
-export const GlobalStyle = createGlobalStyle`
-  html,
-  body,
-  #__next {
-    font-family: ${({ theme }) => theme.fonts.join(", ")};
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
+export function GlobalStyle() {
+  const theme = useTheme()
 
-  * {
-    box-sizing: border-box;
-  }
+  return (
+    <Global
+      styles={`
+        html,
+        body,
+        #__next {
+          font-family: ${theme.fonts.join(", ")};
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
 
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
+        * {
+          box-sizing: border-box;
+        }
 
-  button {
-    cursor: pointer;
-  }
+        a {
+          color: inherit;
+          text-decoration: none;
+        }
 
-  button:disabled {
-    cursor: not-allowed;
-  }
-`
+        button {
+          cursor: pointer;
+        }
+
+        button:disabled {
+          cursor: not-allowed;
+        }
+        `}
+    />
+  )
+}

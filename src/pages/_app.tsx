@@ -1,6 +1,5 @@
+import { ThemeProvider } from "@emotion/react"
 import { AppProps } from "next/app"
-import React from "react"
-import { ThemeProvider } from "styled-components"
 
 import { GlobalStyle } from "components/layout/GlobalStyle"
 import AuthProvider from "components/providers/AuthProvider"

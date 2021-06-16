@@ -1,11 +1,11 @@
-import React, { useEffect } from "react"
+import { ReactNode, useEffect } from "react"
 
 import { useActions } from "hooks/store/useActions"
 import { onAuthStateChanged } from "lib/firebase/auth"
 import { handleGenericError } from "lib/utils/error"
 
 export type AuthProviderProps = {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export default function AuthProvider({ children }: AuthProviderProps) {

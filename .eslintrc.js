@@ -159,6 +159,9 @@ module.exports = {
     "prefer-template": ["error"],
     "symbol-description": ["error"],
 
+    // React
+    "react/react-in-jsx-scope": ["off"],
+
     // React hooks
     "react-hooks/exhaustive-deps": ["error"],
     "react-hooks/rules-of-hooks": ["error"],

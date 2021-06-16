@@ -1,5 +1,4 @@
-import React from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 
 import { useTranslations } from "hooks/useTranslations"
 
@@ -16,7 +15,7 @@ const AuthPersistenceContainer = styled.div`
   padding-top: 8px;
 `
 
-const AuthPersistenceCheckbox = styled.input.attrs({ type: "checkbox" })`
+const AuthPersistenceCheckbox = styled.input`
   margin-right: 8px;
 `
 
@@ -34,6 +33,7 @@ export default function AuthPersistence({
         disabled={disabled}
         name={t.login.rememberMe}
         onChange={e => onChange(e.target.checked)}
+        type="checkbox"
       />
       <span>{t.login.rememberMe}</span>
     </AuthPersistenceContainer>

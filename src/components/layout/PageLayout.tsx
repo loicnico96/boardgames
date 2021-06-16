@@ -1,5 +1,5 @@
-import React from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
+import { ReactNode } from "react"
 
 import ErrorBoundary from "components/ui/ErrorBoundary"
 import { handleGenericError } from "lib/utils/error"
@@ -8,7 +8,7 @@ import { renderError } from "./PageError"
 import PageHeader, { PageHeaderProps } from "./PageHeader"
 
 export type PageLayoutProps = PageHeaderProps & {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export const PageContainer = styled.div`

@@ -1,5 +1,3 @@
-import React from "react"
-
 export const DEFAULT_COLOR = "blue"
 
 export type SpinnerProps = {

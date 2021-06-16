@@ -1,5 +1,4 @@
-import React from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 
 import PageContent from "components/layout/PageContent"
 import PageLayout from "components/layout/PageLayout"

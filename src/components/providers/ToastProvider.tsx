@@ -1,9 +1,9 @@
-import React from "react"
+import { ReactNode } from "react"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 
 export type ToastProviderProps = {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const ToastProvider = ({ children }: ToastProviderProps) => (

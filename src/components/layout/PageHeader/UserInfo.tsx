@@ -1,5 +1,5 @@
-import React, { useCallback } from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
+import { useCallback } from "react"
 
 import { useActions } from "hooks/store/useActions"
 import { useAuth } from "hooks/store/useAuth"

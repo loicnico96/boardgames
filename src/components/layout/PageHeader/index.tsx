@@ -1,5 +1,4 @@
-import React from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 
 import Breadcrumbs, { BreadcrumbsProps } from "components/ui/Breadcrumbs"
 import Button from "components/ui/Button"

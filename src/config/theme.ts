@@ -1,12 +1,12 @@
-import { DefaultTheme } from "styled-components"
+import { Theme } from "@emotion/react"
 
-declare module "styled-components" {
-  export interface DefaultTheme {
+declare module "@emotion/react" {
+  export interface Theme {
     fonts: string[]
   }
 }
 
-export const defaultTheme: DefaultTheme = {
+export const defaultTheme: Theme = {
   fonts: [
     "-apple-system",
     "BlinkMacSystemFont",

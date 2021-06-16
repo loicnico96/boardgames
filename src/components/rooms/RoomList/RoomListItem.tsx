@@ -1,5 +1,4 @@
-import React from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 
 import Box from "components/ui/Box"
 import Link from "components/ui/Link"

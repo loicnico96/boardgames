@@ -1,5 +1,4 @@
 import Head from "next/head"
-import React from "react"
 
 export type PageHeadProps = {
   title: string
