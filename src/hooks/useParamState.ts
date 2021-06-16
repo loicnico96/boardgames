@@ -1,3 +1,4 @@
+import update from "immutability-helper"
 import { NextRouter, useRouter } from "next/router"
 import { useCallback } from "react"
 
@@ -21,18 +22,20 @@ export function useParamState(key: string): UseParamStateResult {
       const oldState = getParam(router, key)
       if (router.isReady && newState !== oldState) {
         try {
-          await router.replace(
-            {
-              query: {
-                ...router.query,
-                [key]: newState ?? undefined,
-              },
-            },
-            undefined,
-            {
-              shallow: true,
-            }
+          const query = update(
+            router.query,
+            newState
+              ? {
+                  $merge: {
+                    [key]: newState,
+                  },
+                }
+              : {
+                  $unset: [key],
+                }
           )
+
+          await router.replace({ query }, undefined, { shallow: true })
         } catch (error) {
           handleGenericError(error)
         }
