@@ -3,6 +3,7 @@ import { ApiError } from "lib/api/error"
 import { HttpStatus } from "lib/api/types"
 import { Collection } from "lib/db/collections"
 import { firestore } from "lib/firebase/admin"
+import { getGameSettings } from "lib/games/GameSettings"
 import { GameType } from "lib/games/GameType"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 
@@ -27,10 +28,12 @@ export async function createRoom(
     )
   }
 
+  const { defaultOptions } = getGameSettings(game)
+
   const roomData: RoomData = {
     createdAt: Date.now(),
     game,
-    options: {},
+    options: defaultOptions,
     ownerId: userId,
     playerOrder: [userId],
     players: { [userId]: { name: userName } },

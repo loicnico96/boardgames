@@ -28,3 +28,10 @@ export function isObject(value: unknown): value is ObjectRecord {
 export function isString(value: unknown): value is string {
   return typeof value === "string"
 }
+
+export function namedFunction<T extends Fn>(name: string, fn: T): T {
+  return Object.defineProperty(fn, "name", {
+    configurable: true,
+    value: name,
+  })
+}

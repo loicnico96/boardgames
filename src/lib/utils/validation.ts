@@ -1,35 +1,68 @@
+import { ArrayOfMinSize, ArrayValue } from "./arrays"
 import { Enum, EnumKey, EnumValue, enumValues, isEnum } from "./enums"
-import { Key, keys, ObjectRecord } from "./objects"
-import { isArray, isBoolean, isNumber, isObject, isString } from "./types"
+import { keys, ObjectRecord } from "./objects"
+import {
+  isArray,
+  isBoolean,
+  isFunction,
+  isNumber,
+  isObject,
+  isString,
+} from "./types"
+
+export type Scalar = string | number | boolean | null | undefined
 
 export type Validator<T> = (data: unknown) => T
 
-export type FieldValidators<T extends ObjectRecord> = {
-  [K in Key<T>]: Validator<T[K]>
+export type ValidatorValue<T> = T extends Validator<infer U> ? U : T
+
+export function validate<T>(
+  value: unknown,
+  validator: Validator<T> | Extract<T, Scalar>
+): T {
+  if (isFunction(validator)) {
+    return validator(value)
+  }
+
+  if (value === validator) {
+    return value as Extract<T, Scalar>
+  }
+
+  throw Error(`Not equal to ${JSON.stringify(validator)}`)
 }
 
-export function nullable<T>(validator: Validator<T>): Validator<T | null> {
+export function nullable<T>(
+  validator: Validator<T> | Extract<T, Scalar>
+): Validator<T | null> {
+  return data => (data === null ? data : validate(data, validator))
+}
+
+export function optional<T>(
+  validator: Validator<T> | Extract<T, Scalar>
+): Validator<T | undefined> {
+  return data => (data === undefined ? data : validate(data, validator))
+}
+
+export function oneOf<T extends ArrayOfMinSize<Validator<any> | Scalar, 2>>(
+  ...validators: T
+): Validator<ValidatorValue<ArrayValue<T>>> {
+  const errors: string[] = []
+
   return data => {
-    if (data === null) {
-      return null
-    } else {
-      return validator(data)
+    for (const validator of validators) {
+      try {
+        return validate(data, validator)
+      } catch (error) {
+        errors.push(error.message)
+      }
     }
+
+    throw Error(errors.join(", "))
   }
 }
 
-export function optional<T>(validator: Validator<T>): Validator<T | undefined> {
-  return data => {
-    if (data === undefined) {
-      return undefined
-    } else {
-      return validator(data)
-    }
-  }
-}
-
-export function validateArray<T>(
-  validator: Validator<T>,
+export function array<T>(
+  validator: Validator<T> | Extract<T, Scalar>,
   options: {
     minLength?: number
     maxLength?: number
@@ -54,7 +87,7 @@ export function validateArray<T>(
 
     return data.map((value, index) => {
       try {
-        return validator(value)
+        return validate(value, validator)
       } catch (error) {
         throw Error(`Invalid index ${index} - ${error.message}`)
       }
@@ -62,7 +95,7 @@ export function validateArray<T>(
   }
 }
 
-export function validateBoolean(): Validator<boolean> {
+export function boolean(): Validator<boolean> {
   return data => {
     if (!isBoolean(data)) {
       throw Error("Not a boolean")
@@ -72,22 +105,21 @@ export function validateBoolean(): Validator<boolean> {
   }
 }
 
-export function validateEnum<E extends EnumValue, K extends EnumKey>(
+export function enumValue<E extends EnumValue, K extends EnumKey>(
   enumObj: Enum<E, K>
 ): Validator<E> {
   return data => {
     if (!isEnum(data, enumObj)) {
       const values = enumValues(enumObj).map(value => JSON.stringify(value))
-      throw Error(`Not one of [ ${values.join(", ")} ]`)
+      throw Error(`Not one of ${values.join(", ")}`)
     }
 
     return data
   }
 }
 
-export function validateNumber(
+export function float(
   options: {
-    int?: boolean
     min?: number
     max?: number
   } = {}
@@ -95,10 +127,6 @@ export function validateNumber(
   return data => {
     if (!isNumber(data)) {
       throw Error("Not a number")
-    }
-
-    if (options.int && !Number.isInteger(data)) {
-      throw Error("Not an integer")
     }
 
     if (isNumber(options.min) && data > options.min) {
@@ -113,8 +141,29 @@ export function validateNumber(
   }
 }
 
-export function validateObject<T extends ObjectRecord>(
-  validators: FieldValidators<T>
+export function int(
+  options: {
+    min?: number
+    max?: number
+  } = {}
+): Validator<number> {
+  return data => {
+    const asNumber = float(options)(data)
+
+    if (!Number.isInteger(asNumber)) {
+      throw Error("Not an integer")
+    }
+
+    return asNumber
+  }
+}
+
+export type ObjectValidators<T extends ObjectRecord> = {
+  [K in keyof T]: Validator<T[K]> | Extract<T[K], Scalar>
+}
+
+export function object<T extends ObjectRecord>(
+  validators: ObjectValidators<T>
 ): Validator<T> {
   return data => {
     if (!isObject(data)) {
@@ -123,21 +172,21 @@ export function validateObject<T extends ObjectRecord>(
 
     return keys(validators).reduce((result, key) => {
       try {
-        result[key] = validators[key](data[key])
+        result[key] = validate(data[key], validators[key])
         return result
       } catch (error) {
-        if (data[key] === undefined) {
-          throw Error(`Missing field '${key}'`)
-        } else {
-          throw Error(`Invalid field '${key}' - ${error.message}`)
-        }
+        throw Error(
+          data[key] === undefined
+            ? `Missing field '${key}'`
+            : `Invalid field '${key}' - ${error.message}`
+        )
       }
     }, {} as T)
   }
 }
 
-export function validateRecordt<T>(
-  validator: Validator<T>
+export function record<T>(
+  validator: Validator<T> | Extract<T, Scalar>
 ): Validator<ObjectRecord<T>> {
   return data => {
     if (!isObject(data)) {
@@ -146,7 +195,7 @@ export function validateRecordt<T>(
 
     return keys(data).reduce((result, key) => {
       try {
-        result[key] = validator(data[key])
+        result[key] = validate(data[key], validator)
         return result
       } catch (error) {
         throw Error(`Invalid field '${key}' - ${error.message}`)
@@ -155,7 +204,7 @@ export function validateRecordt<T>(
   }
 }
 
-export function validateString(
+export function string(
   options: {
     minLength?: number
     maxLength?: number

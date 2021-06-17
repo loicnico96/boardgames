@@ -13,9 +13,9 @@ export enum RoomStatus {
   OPENED = "opened",
 }
 
-export type RoomData = {
+export type RoomData<T extends GameType = GameType> = {
   createdAt: number
-  game: GameType
+  game: T
   options: RoomOptions
   ownerId: string
   playerOrder: string[]

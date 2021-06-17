@@ -1,7 +1,9 @@
 import { ApiError } from "lib/api/error"
 import { HttpStatus } from "lib/api/types"
 import { getClientRef, getRoomRef, getServerRef } from "lib/db/collections"
+import { DocumentData } from "lib/db/types"
 import { firestore } from "lib/firebase/admin"
+import { getGameSettings } from "lib/games/GameSettings"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 
 export type ApiRequestStartGame = {
@@ -41,7 +43,12 @@ export async function startGame(
       )
     }
 
-    const initialGameData = {}
+    const { getInitialGameState } = getGameSettings(roomData.game)
+
+    const fetchData = <D extends DocumentData>(docId: string): Promise<D> =>
+      transaction.get(firestore.doc(docId)).then(doc => doc.data() as D)
+
+    const initialGameData = getInitialGameState(roomData, fetchData)
     const clientRef = getClientRef(roomData.game, roomId)
     const serverRef = getServerRef(roomData.game, roomId)
 

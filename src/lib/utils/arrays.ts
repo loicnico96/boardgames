@@ -2,6 +2,16 @@ import { randomInt } from "./math"
 import { ObjectKey } from "./objects"
 import { Fn, isFunction } from "./types"
 
+export type Length<T extends unknown[]> = T["length"]
+
+export type ArrayOfMinSize<T, I extends number, A extends unknown[] = []> =
+  I extends Length<A> ? [...A, ...T[]] : ArrayOfMinSize<T, I, [...A, T]>
+
+export type ArrayOfSize<T, I extends number, A extends unknown[] = []> =
+  I extends Length<A> ? A : ArrayOfSize<T, I, [...A, T]>
+
+export type ArrayValue<T extends unknown[]> = T[number]
+
 export type ArrayMapFn<T, U> = (value: T, index: number, list: T[]) => U
 
 export function fill<T>(length: number, value: (index: number) => T): T[]
