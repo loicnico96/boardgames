@@ -9,7 +9,7 @@
     "format": "prettier --write **/*.{ts,tsx}",
     "format:check": "prettier --check **/*.{ts,tsx}",
     "lint": "eslint . --ext .ts,.tsx",
-    "lint:fix": "yarn lint --fix",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "prepare": "husky install",
     "start": "next start",
     "test": "jest --watch",
