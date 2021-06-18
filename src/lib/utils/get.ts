@@ -3,13 +3,11 @@ export type AnyPath = AnyKey[]
 
 export type Path<T> = (any extends T ? true : false) extends true
   ? AnyPath
-  :
-      | []
-      | (T extends any[]
-          ? [number, ...Path<number>]
-          : T extends Record<any, any>
-          ? { [K in keyof T]-?: [K, ...Path<T[K]>] }[keyof T]
-          : never)
+  : T extends any[]
+  ? [] | [number, ...Path<T[number]>]
+  : T extends Record<any, any>
+  ? [] | { [K in keyof T]-?: [K, ...Path<T[K]>] }[keyof T]
+  : []
 
 export type Get<T, P extends AnyPath, D = undefined> = (
   any extends T ? true : false
