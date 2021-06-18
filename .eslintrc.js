@@ -10,6 +10,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
+    "plugin:@next/next/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
   ],
@@ -168,10 +169,12 @@ module.exports = {
   },
   settings: {
     "import/resolver": {
-      "typescript": {},
+      "typescript": {
+        "alwaysTryTypes": true,
+      },
     },
     "react": {
       "version": "detect",
-    }
-  }
+    },
+  },
 }
