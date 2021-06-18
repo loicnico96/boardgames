@@ -4,11 +4,28 @@ import { Fn, isFunction } from "./types"
 
 export type Length<T extends unknown[]> = T["length"]
 
-export type ArrayOfMinSize<T, I extends number, A extends unknown[] = []> =
-  I extends Length<A> ? [...A, ...T[]] : ArrayOfMinSize<T, I, [...A, T]>
+export type IntegerLessThan<
+  I extends number,
+  A extends unknown[] = []
+> = Length<A> extends I ? never : Length<A> | IntegerLessThan<I, [...A, I]>
 
-export type ArrayOfSize<T, I extends number, A extends unknown[] = []> =
-  I extends Length<A> ? A : ArrayOfSize<T, I, [...A, T]>
+export type Indexes<A extends unknown[]> = number extends Length<A>
+  ? number
+  : {
+      [I in Length<A>]: IntegerLessThan<I>
+    }[Length<A>]
+
+export type ArrayOfMinSize<
+  T,
+  I extends number,
+  A extends unknown[] = []
+> = I extends Length<A> ? [...A, ...T[]] : ArrayOfMinSize<T, I, [...A, T]>
+
+export type ArrayOfSize<
+  T,
+  I extends number,
+  A extends unknown[] = []
+> = I extends Length<A> ? A : ArrayOfSize<T, I, [...A, T]>
 
 export type ArrayValue<T extends unknown[]> = T[number]
 
