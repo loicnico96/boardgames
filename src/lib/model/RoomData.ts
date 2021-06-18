@@ -1,3 +1,4 @@
+import { GameOptions } from "lib/games/GameSettings"
 import { GameType } from "lib/games/GameType"
 
 export type UserInfo = {
@@ -16,7 +17,7 @@ export enum RoomStatus {
 export type RoomData<T extends GameType = GameType> = {
   createdAt: number
   game: T
-  options: RoomOptions
+  options: GameOptions<T>
   ownerId: string
   playerOrder: string[]
   players: Record<string, UserInfo>

@@ -48,7 +48,7 @@ export async function startGame(
     const fetchData = <D extends DocumentData>(docId: string): Promise<D> =>
       transaction.get(firestore.doc(docId)).then(doc => doc.data() as D)
 
-    const initialGameData = getInitialGameState(roomData, fetchData)
+    const initialGameData = await getInitialGameState(roomData, fetchData)
     const clientRef = getClientRef(roomData.game, roomId)
     const serverRef = getServerRef(roomData.game, roomId)
 
