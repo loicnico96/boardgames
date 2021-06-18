@@ -34,6 +34,11 @@ export type GameState<T extends GameType = GameType> = {
   roborally: RoborallyState
 }[T]
 
+export type StateChangeHandler<T extends GameType> = (
+  newState: GameState<T>,
+  event: GameEvent<T>
+) => Promise<void>
+
 export type GameSettings<T extends GameType = GameType> = {
   defaultOptions: GameOptions<T>
   minPlayers: number
@@ -52,10 +57,7 @@ export type GameSettings<T extends GameType = GameType> = {
 
   resolveState: (
     gameState: GameState<T>,
-    onStateChanged?: (
-      newState: GameState<T>,
-      event: GameEvent<T>
-    ) => Promise<void>
+    onStateChanged?: StateChangeHandler<T>
   ) => Promise<GameState<T>>
 
   validateAction: (
