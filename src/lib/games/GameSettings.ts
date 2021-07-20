@@ -3,6 +3,11 @@ import { RoomData } from "lib/model/RoomData"
 import { Validator } from "lib/utils/validation"
 
 import { GameType } from "./GameType"
+import { MajestySettings } from "./majesty/MajestySettings"
+import { MajestyAction } from "./majesty/model/MajestyAction"
+import { MajestyEvent } from "./majesty/model/MajestyEvent"
+import { MajestyOptions } from "./majesty/model/MajestyOptions"
+import { MajestyState } from "./majesty/model/MajestyState"
 import { MetropolysSettings } from "./metropolys/MetropolysSettings"
 import { MetropolysAction } from "./metropolys/model/MetropolysAction"
 import { MetropolysEvent } from "./metropolys/model/MetropolysEvent"
@@ -15,21 +20,25 @@ import { RoborallyState } from "./roborally/model/RoborallyState"
 import { RoborallySettings } from "./roborally/RoborallySettings"
 
 export type GameAction<T extends GameType = GameType> = {
+  majesty: MajestyAction
   metropolys: MetropolysAction
   roborally: RoborallyAction
 }[T]
 
 export type GameEvent<T extends GameType = GameType> = {
+  majesty: MajestyEvent
   metropolys: MetropolysEvent
   roborally: RoborallyEvent
 }[T]
 
 export type GameOptions<T extends GameType = GameType> = {
+  majesty: MajestyOptions
   metropolys: MetropolysOptions
   roborally: RoborallyOptions
 }[T]
 
 export type GameState<T extends GameType = GameType> = {
+  majesty: MajestyState
   metropolys: MetropolysState
   roborally: RoborallyState
 }[T]
@@ -70,6 +79,7 @@ export type GameSettings<T extends GameType = GameType> = {
 const SETTINGS: {
   [T in GameType]: GameSettings<T>
 } = {
+  [GameType.MAJESTY]: MajestySettings,
   [GameType.METROPOLYS]: MetropolysSettings,
   [GameType.ROBORALLY]: RoborallySettings,
 }

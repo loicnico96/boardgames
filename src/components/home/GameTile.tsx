@@ -1,8 +1,8 @@
 import styled from "@emotion/styled"
-import Image from "next/image"
-
 import HomeImageMetropolys from "assets/metropolys/home.jpg"
 import HomeImageRoborally from "assets/roborally/home.jpg"
+import Image from "next/image"
+
 import Box from "components/ui/Box"
 import Link from "components/ui/Link"
 import { useTranslations } from "hooks/useTranslations"
@@ -15,6 +15,8 @@ export type GameTileProps = {
 }
 
 const GAME_TILE_IMAGES = {
+  // TODO: Find picture
+  [GameType.MAJESTY]: HomeImageMetropolys,
   [GameType.METROPOLYS]: HomeImageMetropolys,
   [GameType.ROBORALLY]: HomeImageRoborally,
 }

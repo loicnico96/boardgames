@@ -2,6 +2,9 @@ import { replace, TranslationConfig } from "./types"
 
 const CONFIG: TranslationConfig = {
   games: {
+    majesty: {
+      name: "Majesty",
+    },
     metropolys: {
       name: "Metropolys",
     },

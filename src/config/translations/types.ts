@@ -2,17 +2,14 @@ import { EnterRoomReason } from "components/rooms/Room/useEnterRoom"
 import { LeaveRoomReason } from "components/rooms/Room/useLeaveRoom"
 import { StartGameReason } from "components/rooms/Room/useStartGame"
 import { CreateRoomReason } from "components/rooms/RoomList/useCreateRoom"
+import { GameType } from "lib/games/GameType"
 import { RoomStatus } from "lib/model/RoomData"
 import { Debug } from "lib/utils/debug"
 
 export type TranslationConfig = {
-  games: {
-    metropolys: {
-      name: string
-    }
+  games: Record<GameType, { name: string }> & {
     roborally: {
       boards: Record<string, { name: string }>
-      name: string
       roomBoards: Replace<"boardNames">
     }
   }

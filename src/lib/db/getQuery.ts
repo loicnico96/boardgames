@@ -27,7 +27,8 @@ export function getQuery<T extends DocumentData>(
 
   if (options.sort) {
     options.sort.forEach(sort => {
-      constraints.push(orderBy(sort.field, sort.direction > 0 ? "asc" : "desc"))
+      const direction = sort.direction > 0 ? "asc" : "desc"
+      constraints.push(orderBy(sort.field, direction))
     })
   }
 
