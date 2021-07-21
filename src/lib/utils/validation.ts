@@ -61,6 +61,10 @@ export function oneOf<T extends ArrayOfMinSize<Validator<any> | Scalar, 2>>(
   }
 }
 
+export function any(): Validator<unknown> {
+  return data => data
+}
+
 export function array<T>(
   validator: Validator<T> | Extract<T, Scalar>,
   options: {
