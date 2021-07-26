@@ -2,7 +2,6 @@ import styled from "@emotion/styled"
 
 import PageContent from "components/layout/PageContent"
 import PageLayout from "components/layout/PageLayout"
-import PageLoader from "components/layout/PageLoader"
 import RoomList from "components/rooms/RoomList"
 import { useCreateRoom } from "components/rooms/RoomList/useCreateRoom"
 import { BreadcrumbsParent } from "components/ui/Breadcrumbs"
@@ -10,10 +9,10 @@ import Button from "components/ui/Button"
 import GameSelect from "components/ui/GameSelect"
 import { useParamState } from "hooks/useParamState"
 import { useTranslations } from "hooks/useTranslations"
-import { useHydrationContext } from "lib/context/HydrationContext"
 import { GameType } from "lib/games/GameType"
 import { isEnum } from "lib/utils/enums"
 import { Param, ROUTES } from "lib/utils/navigation"
+import { SSR } from "lib/utils/ssr"
 
 export const GAME_PARAM = "game"
 
@@ -28,7 +27,6 @@ const StyledGameSelect = styled(GameSelect)`
 `
 
 export default function RoomListPage() {
-  const isHydrated = useHydrationContext()
   const t = useTranslations()
 
   const parents: BreadcrumbsParent[] = [
@@ -51,11 +49,7 @@ export default function RoomListPage() {
     >
       <PageContent>
         <RoomListToolbar>
-          <StyledGameSelect
-            disabled={!isHydrated}
-            onChange={setGameParam}
-            value={game}
-          />
+          <StyledGameSelect onChange={setGameParam} value={game} />
           <Button
             disabled={!createRoomEnabled}
             onClick={createRoom}
@@ -63,12 +57,10 @@ export default function RoomListPage() {
             translations={t.roomList.createRoom}
           />
         </RoomListToolbar>
-        {isHydrated ? (
-          <RoomList game={game} />
-        ) : (
-          <PageLoader message={t.roomList.pageLoading} />
-        )}
+        <RoomList game={game} />
       </PageContent>
     </PageLayout>
   )
 }
+
+export const getServerSideProps = SSR()
