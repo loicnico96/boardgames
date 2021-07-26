@@ -52,7 +52,7 @@ export default function RoomListItem({ room }: RoomListItemProps) {
   const t = useTranslations()
 
   return (
-    <Link href={ROUTES.room(room.id)}>
+    <Link href={ROUTES.room(room.game, room.id)}>
       <RoomListItemContainer>{formatRoomInfo(room, t)}</RoomListItemContainer>
     </Link>
   )

@@ -1,25 +1,24 @@
 import update from "immutability-helper"
-import { NextRouter, useRouter } from "next/router"
+import { useRouter } from "next/router"
 import { useCallback } from "react"
 
 import { handleGenericError } from "lib/utils/error"
+import { Param } from "lib/utils/navigation"
+
+import { getParam } from "./useParam"
 
 export type UseParamStateResult = [
-  string | null,
-  (newState: string | null) => Promise<void>
+  state: string | null,
+  setState: (newState: string | null) => Promise<void>,
+  isReady: boolean
 ]
 
-export function getParam(router: NextRouter, key: string): string | null {
-  const rawParam = router.query[key]
-  return (Array.isArray(rawParam) ? rawParam[0] : rawParam) ?? null
-}
-
-export function useParamState(key: string): UseParamStateResult {
+export function useParamState(param: Param): UseParamStateResult {
   const router = useRouter()
 
   const setState = useCallback(
     async (newState: string | null) => {
-      const oldState = getParam(router, key)
+      const oldState = getParam(router, param)
       if (router.isReady && newState !== oldState) {
         try {
           const query = update(
@@ -27,11 +26,11 @@ export function useParamState(key: string): UseParamStateResult {
             newState
               ? {
                   $merge: {
-                    [key]: newState,
+                    [param]: newState,
                   },
                 }
               : {
-                  $unset: [key],
+                  $unset: [param],
                 }
           )
 
@@ -41,8 +40,8 @@ export function useParamState(key: string): UseParamStateResult {
         }
       }
     },
-    [key, router]
+    [param, router]
   )
 
-  return [getParam(router, key), setState]
+  return [getParam(router, param), setState, router.isReady]
 }

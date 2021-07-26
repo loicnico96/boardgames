@@ -25,7 +25,7 @@ export function useCreateRoom(
   const createRoom = useCallback(async () => {
     if (game) {
       const { roomId } = await trigger(ApiTrigger.CREATE_ROOM, { game })
-      router.push(ROUTES.room(roomId)).catch(handleGenericError)
+      router.push(ROUTES.room(game, roomId)).catch(handleGenericError)
     }
   }, [game, router])
 

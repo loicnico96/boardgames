@@ -56,7 +56,7 @@ const CONFIG: TranslationConfig = {
     },
     noRooms: "No rooms are available.",
     pageLoading: "Loading rooms...",
-    pageTitle: "Rooms",
+    pageTitle: "All games",
   },
   roomPage: {
     enterRoom: {

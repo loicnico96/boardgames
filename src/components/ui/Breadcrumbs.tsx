@@ -1,7 +1,5 @@
 import styled from "@emotion/styled"
 
-import { useLocation } from "hooks/useLocation"
-
 import Link from "./Link"
 
 export type BreadcrumbsParent = {
@@ -22,8 +20,6 @@ const Breadcrumb = styled.span`
 `
 
 export default function Breadcrumbs({ parents = [], title }: BreadcrumbsProps) {
-  const location = useLocation()
-
   return (
     <>
       {parents.map(parent => (
@@ -31,9 +27,7 @@ export default function Breadcrumbs({ parents = [], title }: BreadcrumbsProps) {
           <Link href={parent.path}>{parent.title}</Link>
         </Breadcrumb>
       ))}
-      <Breadcrumb>
-        <Link href={location}>{title}</Link>
-      </Breadcrumb>
+      <Breadcrumb>{title}</Breadcrumb>
     </>
   )
 }

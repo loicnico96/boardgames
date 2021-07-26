@@ -13,7 +13,7 @@ import { useTranslations } from "hooks/useTranslations"
 import { useHydrationContext } from "lib/context/HydrationContext"
 import { GameType } from "lib/games/GameType"
 import { isEnum } from "lib/utils/enums"
-import { ROUTES } from "lib/utils/navigation"
+import { Param, ROUTES } from "lib/utils/navigation"
 
 export const GAME_PARAM = "game"
 
@@ -38,14 +38,17 @@ export default function RoomListPage() {
     },
   ]
 
-  const [gameParam, setGameParam] = useParamState(GAME_PARAM)
+  const [gameParam, setGameParam] = useParamState(Param.GAME_TYPE)
 
   const game = isEnum(gameParam, GameType) ? gameParam : null
 
   const [createRoom, createRoomEnabled, createRoomReason] = useCreateRoom(game)
 
   return (
-    <PageLayout parents={parents} title={t.roomList.pageTitle}>
+    <PageLayout
+      parents={parents}
+      title={game ? t.games[game].name : t.roomList.pageTitle}
+    >
       <PageContent>
         <RoomListToolbar>
           <StyledGameSelect

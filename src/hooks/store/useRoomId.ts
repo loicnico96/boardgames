@@ -1,18 +1,11 @@
-import { useRouter } from "next/router"
-
-import { getParam } from "hooks/useParamState"
-
-export const ROOM_ID_PARAM = "roomId"
-
-export function useRoomIdParam(): string | null {
-  return getParam(useRouter(), ROOM_ID_PARAM)
-}
+import { useParam } from "hooks/useParam"
+import { Param } from "lib/utils/navigation"
 
 export function useRoomId(): string {
-  const roomId = useRoomIdParam()
+  const roomId = useParam(Param.ROOM_ID)
   if (roomId) {
     return roomId
   } else {
-    throw Error("Invalid room context - Room ID is not defined")
+    throw Error("Invalid room path - Room ID is not defined")
   }
 }

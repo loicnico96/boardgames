@@ -1,7 +1,16 @@
+import { GameType } from "lib/games/GameType"
+
 const SEPARATOR = "/"
 
-const PATH_LOGIN = "login"
-const PATH_ROOMS = "rooms"
+export enum Path {
+  LOGIN = "login",
+  ROOMS = "rooms",
+}
+
+export enum Param {
+  GAME_TYPE = "game",
+  ROOM_ID = "room",
+}
 
 export function route(...paths: string[]): string {
   return `${SEPARATOR}${paths.join(SEPARATOR)}`
@@ -9,9 +18,9 @@ export function route(...paths: string[]): string {
 
 export const ROUTES = {
   home: () => route(),
-  login: () => route(PATH_LOGIN),
-  room: (roomId: string) => route(PATH_ROOMS, roomId),
-  roomList: () => route(PATH_ROOMS),
+  login: () => route(Path.LOGIN),
+  room: (game: GameType, roomId: string) => route(game, roomId),
+  roomList: () => route(Path.ROOMS),
 }
 
 export const isBrowser = typeof window !== "undefined"
