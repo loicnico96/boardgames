@@ -35,7 +35,14 @@ export async function startGame(userId: string, roomId: string): Promise<void> {
       )
     }
 
-    const { getInitialGameState } = getGameSettings(roomData.game)
+    const { getInitialGameState, minPlayers } = getGameSettings(roomData.game)
+
+    if (roomData.playerOrder.length < minPlayers) {
+      throw new ApiError(
+        HttpStatus.FAILED_PRECONDITION,
+        "This room does not have enough players"
+      )
+    }
 
     const fetchData = <D extends DocumentData>(docId: string): Promise<D> =>
       transaction.get(firestore.doc(docId)).then(doc => doc.data() as D)

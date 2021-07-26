@@ -42,9 +42,7 @@ export const HttpClient = generate(enumValues(HttpMethod), method => [
 
     if (response.status !== HttpStatus.OK) {
       const message = await response.text()
-      const error = new ApiError(response.status, message)
-      logger.error(error)
-      throw error
+      throw new ApiError(response.status, message)
     }
 
     const data = await response.json()

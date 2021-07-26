@@ -4,6 +4,7 @@ import { getUserId, getUserInfo } from "lib/api/server/auth"
 import { HttpMethod, HttpStatus } from "lib/api/types"
 import { getRoomRef } from "lib/db/collections"
 import { FieldValue, firestore } from "lib/firebase/admin"
+import { getGameSettings } from "lib/games/GameSettings"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 import { Param } from "lib/utils/navigation"
 
@@ -39,6 +40,15 @@ export async function enterRoom(userId: string, roomId: string): Promise<void> {
       throw new ApiError(
         HttpStatus.FAILED_PRECONDITION,
         "You are already a player in this room"
+      )
+    }
+
+    const { maxPlayers } = getGameSettings(roomData.game)
+
+    if (roomData.playerOrder.length >= maxPlayers) {
+      throw new ApiError(
+        HttpStatus.FAILED_PRECONDITION,
+        "This room is already full"
       )
     }
 
