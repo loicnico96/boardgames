@@ -1,5 +1,3 @@
-import { GetServerSidePropsContext } from "next"
-
 import PageLayout from "components/layout/PageLayout"
 import Room from "components/rooms/Room"
 import RoomProvider from "components/rooms/RoomProvider"
@@ -11,6 +9,7 @@ import { GameType } from "lib/games/GameType"
 import { isEnum } from "lib/utils/enums"
 import { Param, ROUTES } from "lib/utils/navigation"
 import { withSearchParams } from "lib/utils/search"
+import { SSR } from "lib/utils/ssr"
 import NotFoundPage from "pages/404"
 
 export default function RoomPage() {
@@ -43,12 +42,4 @@ export default function RoomPage() {
   )
 }
 
-export async function getServerSideProps({
-  params,
-}: GetServerSidePropsContext) {
-  return {
-    props: {
-      params,
-    },
-  }
-}
+export const getServerSideProps = SSR()

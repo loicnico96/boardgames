@@ -1,9 +1,11 @@
 import styled from "@emotion/styled"
 
+import { isError } from "lib/utils/error"
+
 import PageContent from "./PageContent"
 
 export type PageErrorProps = {
-  error: Error
+  error: Error | string
 }
 
 const PageErrorContainer = styled(PageContent)`
@@ -16,11 +18,11 @@ const PageErrorContainer = styled(PageContent)`
 export default function PageError({ error }: PageErrorProps) {
   return (
     <PageErrorContainer>
-      <div>Error: {error.message}</div>
+      <div>Error: {isError(error) ? error.message : error}</div>
     </PageErrorContainer>
   )
 }
 
-export function renderError(error: Error): JSX.Element {
+export function renderError(error: Error | string): JSX.Element {
   return <PageError error={error} />
 }

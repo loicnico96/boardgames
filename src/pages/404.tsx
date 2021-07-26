@@ -16,7 +16,7 @@ export default function NotFoundPage() {
 
   return (
     <PageLayout parents={parents} title="Are you lost?">
-      <PageError error={Error("The page you're looking for doesn't exist.")} />
+      <PageError error="The page you're looking for doesn't exist." />
     </PageLayout>
   )
 }
