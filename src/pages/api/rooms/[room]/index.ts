@@ -22,7 +22,7 @@ export async function closeRoom(userId: string, roomId: string): Promise<void> {
       )
     }
 
-    if (roomData.status !== RoomStatus.ONGOING) {
+    if (roomData.status !== RoomStatus.OPENED) {
       throw new ApiError(
         HttpStatus.FAILED_PRECONDITION,
         "The game has already started"

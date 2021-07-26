@@ -1,3 +1,4 @@
+import { CloseRoomReason } from "components/rooms/Room/useCloseRoom"
 import { EnterRoomReason } from "components/rooms/Room/useEnterRoom"
 import { LeaveRoomReason } from "components/rooms/Room/useLeaveRoom"
 import { StartGameReason } from "components/rooms/Room/useStartGame"
@@ -42,6 +43,7 @@ export type TranslationConfig = {
     pageTitle: string
   }
   roomPage: {
+    closeRoom: ButtonTranslation<CloseRoomReason>
     enterRoom: ButtonTranslation<EnterRoomReason>
     leaveRoom: ButtonTranslation<LeaveRoomReason>
     pageLoading: string

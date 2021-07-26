@@ -59,6 +59,14 @@ const CONFIG: TranslationConfig = {
     pageTitle: "All games",
   },
   roomPage: {
+    closeRoom: {
+      label: "Close",
+      reason: {
+        notAuthenticated: "The room can only be closed by the room's owner",
+        notOwner: "The room can only be closed by the room's owner",
+      },
+      tooltip: "Close this room",
+    },
     enterRoom: {
       label: "Join",
       reason: {

@@ -7,6 +7,7 @@ import { useRoomId } from "hooks/store/useRoomId"
 import { useTranslations } from "hooks/useTranslations"
 
 import RoomPlayerItem from "./RoomPlayerItem"
+import { useCloseRoom } from "./useCloseRoom"
 import { useEnterRoom } from "./useEnterRoom"
 import { useLeaveRoom } from "./useLeaveRoom"
 import { useStartGame } from "./useStartGame"
@@ -29,6 +30,7 @@ export default function Room() {
   const roomId = useRoomId()
   const playerOrder = useRoomData(roomId, room => room.playerOrder)
 
+  const [closeRoom, closeRoomEnabled] = useCloseRoom(roomId)
   const [enterRoom, enterRoomEnabled] = useEnterRoom(roomId)
   const [leaveRoom, leaveRoomEnabled] = useLeaveRoom(roomId)
   const [startGame, startGameEnabled] = useStartGame(roomId)
@@ -47,6 +49,9 @@ export default function Room() {
         )}
         {startGameEnabled && (
           <Button onClick={startGame} translations={t.roomPage.startGame} />
+        )}
+        {closeRoomEnabled && (
+          <Button onClick={closeRoom} translations={t.roomPage.closeRoom} />
         )}
       </RoomPageColumn>
       <RoomPageColumn>Options</RoomPageColumn>
