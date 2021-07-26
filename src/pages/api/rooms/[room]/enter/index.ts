@@ -1,23 +1,13 @@
 import { ApiError } from "lib/api/error"
-import { HttpStatus } from "lib/api/types"
+import { handle, readParam } from "lib/api/server"
+import { getUserId, getUserInfo } from "lib/api/server/auth"
+import { HttpMethod, HttpStatus } from "lib/api/types"
 import { getRoomRef } from "lib/db/collections"
 import { FieldValue, firestore } from "lib/firebase/admin"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
+import { Param } from "lib/utils/navigation"
 
-import { getUserInfo } from "../auth"
-
-export type ApiRequestEnterRoom = {
-  roomId: string
-}
-
-export type ApiResponseEnterRoom = {
-  success: true
-}
-
-export async function enterRoom(
-  roomId: string,
-  userId: string
-): Promise<ApiResponseEnterRoom> {
+export async function enterRoom(userId: string, roomId: string): Promise<void> {
   await firestore.runTransaction(async transaction => {
     const { userName } = await getUserInfo(userId)
 
@@ -47,7 +37,7 @@ export async function enterRoom(
 
     if (roomData.playerOrder.includes(userId)) {
       throw new ApiError(
-        HttpStatus.NOT_AUTHORIZED,
+        HttpStatus.FAILED_PRECONDITION,
         "You are already a player in this room"
       )
     }
@@ -61,6 +51,13 @@ export async function enterRoom(
       },
     })
   })
-
-  return { success: true }
 }
+
+export default handle({
+  [HttpMethod.POST]: async (request, logger) => {
+    const userId = await getUserId(request, logger)
+    const roomId = readParam(request, Param.ROOM_ID)
+    await enterRoom(userId, roomId)
+    return { success: true }
+  },
+})

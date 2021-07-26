@@ -3,8 +3,7 @@ import { useCallback } from "react"
 import { getAuth } from "hooks/store/useAuth"
 import { getRoomData } from "hooks/store/useRoomData"
 import { AsyncHandler } from "hooks/useAsyncHandler"
-import { trigger } from "lib/api/client"
-import { ApiTrigger } from "lib/api/triggers"
+import { enterRoom } from "lib/api/client/enterRoom"
 import { useStore } from "lib/store/context"
 
 export enum EnterRoomReason {
@@ -35,9 +34,7 @@ export function useEnterRoom(
     )
   )
 
-  const enterRoom = useCallback(async () => {
-    await trigger(ApiTrigger.ENTER_ROOM, { roomId })
-  }, [roomId])
+  const trigger = useCallback(async () => enterRoom(roomId), [roomId])
 
-  return [enterRoom, !reason, reason]
+  return [trigger, !reason, reason]
 }

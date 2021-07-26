@@ -1,3 +1,7 @@
+export type GenericHttpResponse = {
+  success: boolean
+}
+
 export enum HttpHeader {
   ALLOW = "Allow",
   AUTHORIZATION = "Authorization",

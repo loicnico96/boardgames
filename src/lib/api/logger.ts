@@ -1,23 +1,50 @@
 /* eslint-disable no-console */
 
-import { NextApiRequest } from "next"
+import { isDev } from "lib/utils/env"
+
+import { HttpMethod } from "./types"
+
+export enum LogLevel {
+  NONE = 0,
+  ERROR = 1,
+  WARNING = 2,
+  DEBUG = 3,
+}
 
 export class ApiLogger {
-  public readonly prefix: string
+  public api: string
+  public level: LogLevel
+  public method: string
 
-  public constructor(req: NextApiRequest) {
-    this.prefix = `[${req.method} ${req.url}]`
+  public constructor(
+    method: HttpMethod,
+    api: string,
+    level: LogLevel = isDev ? LogLevel.DEBUG : LogLevel.NONE
+  ) {
+    this.api = api
+    this.level = level
+    this.method = method
+  }
+
+  public get prefix() {
+    return `[${this.method} ${this.api}]`
   }
 
   public log(message: string, ...params: unknown[]): void {
-    console.log(`${this.prefix} ${message}`, ...params)
+    if (this.level >= LogLevel.DEBUG) {
+      console.log(`${this.prefix} ${message}`, ...params)
+    }
   }
 
   public warn(message: string, ...params: unknown[]): void {
-    console.warn(`${this.prefix} ${message}`, ...params)
+    if (this.level >= LogLevel.WARNING) {
+      console.warn(`${this.prefix} ${message}`, ...params)
+    }
   }
 
   public error(error: Error): void {
-    console.error(this.prefix, error)
+    if (this.level >= LogLevel.ERROR) {
+      console.error(`${this.prefix} Error:`, error)
+    }
   }
 }

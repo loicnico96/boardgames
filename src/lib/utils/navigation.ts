@@ -22,6 +22,3 @@ export const ROUTES = {
   room: (game: GameType, roomId: string) => route(game, roomId),
   roomList: () => route(Path.ROOMS),
 }
-
-export const isBrowser = typeof window !== "undefined"
-export const isServer = typeof window === "undefined"

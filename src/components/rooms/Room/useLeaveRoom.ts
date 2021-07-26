@@ -3,8 +3,7 @@ import { useCallback } from "react"
 import { getAuth } from "hooks/store/useAuth"
 import { getRoomData } from "hooks/store/useRoomData"
 import { AsyncHandler } from "hooks/useAsyncHandler"
-import { trigger } from "lib/api/client"
-import { ApiTrigger } from "lib/api/triggers"
+import { leaveRoom } from "lib/api/client/leaveRoom"
 import { useStore } from "lib/store/context"
 
 export enum LeaveRoomReason {
@@ -35,9 +34,7 @@ export function useLeaveRoom(
     )
   )
 
-  const leaveRoom = useCallback(async () => {
-    await trigger(ApiTrigger.LEAVE_ROOM, { roomId })
-  }, [roomId])
+  const trigger = useCallback(async () => leaveRoom(roomId), [roomId])
 
-  return [leaveRoom, !reason, reason]
+  return [trigger, !reason, reason]
 }

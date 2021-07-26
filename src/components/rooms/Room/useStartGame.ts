@@ -3,8 +3,7 @@ import { useCallback } from "react"
 import { getAuth } from "hooks/store/useAuth"
 import { getRoomData } from "hooks/store/useRoomData"
 import { AsyncHandler } from "hooks/useAsyncHandler"
-import { trigger } from "lib/api/client"
-import { ApiTrigger } from "lib/api/triggers"
+import { startGame } from "lib/api/client/startGame"
 import { useStore } from "lib/store/context"
 
 export enum StartGameReason {
@@ -32,9 +31,7 @@ export function useStartGame(
     )
   )
 
-  const startGame = useCallback(async () => {
-    await trigger(ApiTrigger.START_GAME, { roomId })
-  }, [roomId])
+  const trigger = useCallback(async () => startGame(roomId), [roomId])
 
-  return [startGame, !reason, reason]
+  return [trigger, !reason, reason]
 }

@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react"
 
 import cache, { Loader } from "lib/utils/cache"
-import { isServer } from "lib/utils/navigation"
+import { isServer } from "lib/utils/env"
 import { LOADING, Resource } from "lib/utils/resources"
 
 import { useForceRender } from "./useForceRender"

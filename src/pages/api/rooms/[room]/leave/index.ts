@@ -1,21 +1,13 @@
 import { ApiError } from "lib/api/error"
-import { HttpStatus } from "lib/api/types"
+import { handle, readParam } from "lib/api/server"
+import { getUserId } from "lib/api/server/auth"
+import { HttpMethod, HttpStatus } from "lib/api/types"
 import { getRoomRef } from "lib/db/collections"
 import { FieldValue, firestore } from "lib/firebase/admin"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
+import { Param } from "lib/utils/navigation"
 
-export type ApiRequestLeaveRoom = {
-  roomId: string
-}
-
-export type ApiResponseLeaveRoom = {
-  success: true
-}
-
-export async function leaveRoom(
-  roomId: string,
-  userId: string
-): Promise<ApiResponseLeaveRoom> {
+export async function leaveRoom(userId: string, roomId: string): Promise<void> {
   await firestore.runTransaction(async transaction => {
     const roomRef = firestore.doc(getRoomRef(roomId))
     const roomDoc = await transaction.get(roomRef)
@@ -43,7 +35,7 @@ export async function leaveRoom(
 
     if (!roomData.playerOrder.includes(userId)) {
       throw new ApiError(
-        HttpStatus.NOT_AUTHORIZED,
+        HttpStatus.FAILED_PRECONDITION,
         "You are not a player in this room"
       )
     }
@@ -53,6 +45,13 @@ export async function leaveRoom(
       [`players.${userId}`]: FieldValue.delete(),
     })
   })
-
-  return { success: true }
 }
+
+export default handle({
+  [HttpMethod.POST]: async (request, logger) => {
+    const userId = await getUserId(request, logger)
+    const roomId = readParam(request, Param.ROOM_ID)
+    await leaveRoom(userId, roomId)
+    return { success: true }
+  },
+})

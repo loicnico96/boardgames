@@ -1,11 +1,10 @@
 import { NextApiRequest } from "next"
 
+import { ApiError } from "lib/api/error"
+import { ApiLogger } from "lib/api/logger"
+import { HttpStatus } from "lib/api/types"
 import { AuthUserInfo } from "lib/auth/types"
 import { auth } from "lib/firebase/admin"
-
-import { ApiError } from "./error"
-import { ApiLogger } from "./logger"
-import { HttpStatus } from "./types"
 
 const AUTH_PREFIX = "Bearer "
 
@@ -27,10 +26,8 @@ export async function getUserId(
 
   const authToken = authHeader.slice(AUTH_PREFIX.length)
 
-  let userId: string
-
   try {
-    userId = await auth.verifyIdToken(authToken).then(decoded => decoded.uid)
+    const { uid: userId } = await auth.verifyIdToken(authToken)
     logger.log(`Authenticated as ${userId}`)
     return userId
   } catch (error) {

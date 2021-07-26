@@ -16,9 +16,11 @@ export type UseParamStateResult = [
 export function useParamState(param: Param): UseParamStateResult {
   const router = useRouter()
 
+  const state = getParam(router.query, param)
+
   const setState = useCallback(
     async (newState: string | null) => {
-      const oldState = getParam(router, param)
+      const oldState = getParam(router.query, param)
       if (router.isReady && newState !== oldState) {
         try {
           const query = update(
@@ -43,5 +45,5 @@ export function useParamState(param: Param): UseParamStateResult {
     [param, router]
   )
 
-  return [getParam(router, param), setState, router.isReady]
+  return [state, setState, router.isReady]
 }

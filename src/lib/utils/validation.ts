@@ -31,6 +31,10 @@ export function validate<T>(
   throw Error(`Not equal to ${JSON.stringify(validator)}`)
 }
 
+export function any(): Validator<unknown> {
+  return data => data
+}
+
 export function nullable<T>(
   validator: Validator<T> | Extract<T, Scalar>
 ): Validator<T | null> {
@@ -185,17 +189,21 @@ export function object<T extends ObjectRecord>(
   }
 }
 
-export function record<T>(
-  validator: Validator<T> | Extract<T, Scalar>
-): Validator<ObjectRecord<T>> {
-  return data => {
+export function record(): Validator<ObjectRecord<unknown>>
+export function record<T>(validator: Validator<T>): Validator<ObjectRecord<T>>
+export function record<T>(validator?: Validator<T>) {
+  return (data: unknown) => {
     if (!isObject(data)) {
       throw Error("Not an object")
     }
 
+    if (!validator) {
+      return data
+    }
+
     return keys(data).reduce((result, key) => {
       try {
-        result[key] = validate(data[key], validator)
+        result[key] = validator(data[key])
         return result
       } catch (error) {
         throw Error(`Invalid field '${key}' - ${error.message}`)

@@ -1,23 +1,15 @@
 import { ApiError } from "lib/api/error"
-import { HttpStatus } from "lib/api/types"
+import { handle, readParam } from "lib/api/server"
+import { getUserId } from "lib/api/server/auth"
+import { HttpMethod, HttpStatus } from "lib/api/types"
 import { getClientRef, getRoomRef, getServerRef } from "lib/db/collections"
 import { DocumentData } from "lib/db/types"
 import { firestore } from "lib/firebase/admin"
 import { getGameSettings } from "lib/games/GameSettings"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
+import { Param } from "lib/utils/navigation"
 
-export type ApiRequestStartGame = {
-  roomId: string
-}
-
-export type ApiResponseStartGame = {
-  success: true
-}
-
-export async function startGame(
-  roomId: string,
-  userId: string
-): Promise<ApiResponseStartGame> {
+export async function startGame(userId: string, roomId: string): Promise<void> {
   await firestore.runTransaction(async transaction => {
     const roomRef = firestore.doc(getRoomRef(roomId))
     const roomDoc = await transaction.get(roomRef)
@@ -36,7 +28,7 @@ export async function startGame(
       )
     }
 
-    if (roomData.ownerId === userId) {
+    if (roomData.ownerId !== userId) {
       throw new ApiError(
         HttpStatus.NOT_AUTHORIZED,
         "You are not the owner of this room"
@@ -56,6 +48,13 @@ export async function startGame(
     transaction.create(firestore.doc(serverRef), initialGameData)
     transaction.update(roomRef, { status: RoomStatus.ONGOING })
   })
-
-  return { success: true }
 }
+
+export default handle({
+  [HttpMethod.POST]: async (request, logger) => {
+    const userId = await getUserId(request, logger)
+    const roomId = readParam(request, Param.ROOM_ID)
+    await startGame(userId, roomId)
+    return { success: true }
+  },
+})

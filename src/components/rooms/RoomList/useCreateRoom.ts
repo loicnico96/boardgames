@@ -1,11 +1,11 @@
 import { useRouter } from "next/router"
 import { useCallback } from "react"
 
-import { useAuth } from "hooks/store/useAuth"
+import { getAuth } from "hooks/store/useAuth"
 import { AsyncHandler } from "hooks/useAsyncHandler"
-import { trigger } from "lib/api/client"
-import { ApiTrigger } from "lib/api/triggers"
+import { createRoom } from "lib/api/client/createRoom"
 import { GameType } from "lib/games/GameType"
+import { useStore } from "lib/store/context"
 import { handleGenericError } from "lib/utils/error"
 import { ROUTES } from "lib/utils/navigation"
 
@@ -20,22 +20,30 @@ export function useCreateRoom(
 ): [AsyncHandler<[]>, boolean, CreateRoomReason?] {
   const router = useRouter()
 
-  const { user } = useAuth()
+  const reason = useStore(
+    useCallback(
+      store => {
+        const { user } = getAuth(store)
+        if (!user) {
+          return CreateRoomReason.NOT_AUTHENTICATED
+        } else if (!user.userInfo.userName) {
+          return CreateRoomReason.NO_USERNAME
+        } else if (!game) {
+          return CreateRoomReason.NO_GAME_SELECTED
+        } else {
+          return undefined
+        }
+      },
+      [game]
+    )
+  )
 
-  const createRoom = useCallback(async () => {
+  const trigger = useCallback(async () => {
     if (game) {
-      const { roomId } = await trigger(ApiTrigger.CREATE_ROOM, { game })
+      const { roomId } = await createRoom(game)
       router.push(ROUTES.room(game, roomId)).catch(handleGenericError)
     }
   }, [game, router])
 
-  if (!user) {
-    return [createRoom, false, CreateRoomReason.NOT_AUTHENTICATED]
-  } else if (!user.userInfo.userName) {
-    return [createRoom, false, CreateRoomReason.NO_USERNAME]
-  } else if (!game) {
-    return [createRoom, false, CreateRoomReason.NO_GAME_SELECTED]
-  } else {
-    return [createRoom, true]
-  }
+  return [trigger, !reason, reason]
 }

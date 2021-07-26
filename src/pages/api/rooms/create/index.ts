@@ -1,24 +1,18 @@
-import { getUserInfo } from "lib/api/auth"
 import { ApiError } from "lib/api/error"
-import { HttpStatus } from "lib/api/types"
+import { handle, readBody } from "lib/api/server"
+import { getUserId, getUserInfo } from "lib/api/server/auth"
+import { HttpMethod, HttpStatus } from "lib/api/types"
 import { Collection } from "lib/db/collections"
 import { firestore } from "lib/firebase/admin"
 import { getGameSettings } from "lib/games/GameSettings"
 import { GameType } from "lib/games/GameType"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
+import { enumValue, object } from "lib/utils/validation"
 
-export type ApiRequestCreateRoom = {
-  game: GameType
-}
-
-export type ApiResponseCreateRoom = {
-  roomId: string
-}
-
-export async function createRoom(
-  game: GameType,
-  userId: string
-): Promise<ApiResponseCreateRoom> {
+export async function createRoom<T extends GameType>(
+  userId: string,
+  game: T
+): Promise<string> {
   const { userName } = await getUserInfo(userId)
 
   if (!userName) {
@@ -30,7 +24,7 @@ export async function createRoom(
 
   const { defaultOptions } = getGameSettings(game)
 
-  const roomData: RoomData = {
+  const roomData: RoomData<T> = {
     createdAt: Date.now(),
     game,
     options: defaultOptions,
@@ -42,5 +36,14 @@ export async function createRoom(
 
   const doc = await firestore.collection(Collection.ROOMS).add(roomData)
 
-  return { roomId: doc.id }
+  return doc.id
 }
+
+export default handle({
+  [HttpMethod.POST]: async (request, logger) => {
+    const userId = await getUserId(request, logger)
+    const { game } = readBody(request, object({ game: enumValue(GameType) }))
+    const roomId = await createRoom(userId, game)
+    return { roomId }
+  },
+})
