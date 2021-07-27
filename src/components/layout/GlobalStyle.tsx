@@ -23,14 +23,6 @@ export function GlobalStyle() {
           color: inherit;
           text-decoration: none;
         }
-
-        button {
-          cursor: pointer;
-        }
-
-        button:disabled {
-          cursor: not-allowed;
-        }
         `}
     />
   )

@@ -24,6 +24,10 @@ const RoomPageColumn = styled.div`
   flex: 1 1 0;
 `
 
+const RoomPageButton = styled(Button)`
+  margin-bottom: 8px;
+`
+
 export default function Room() {
   const t = useTranslations()
 
@@ -42,16 +46,28 @@ export default function Room() {
           <RoomPlayerItem key={playerId} playerId={playerId} />
         ))}
         {enterRoomEnabled && (
-          <Button onClick={enterRoom} translations={t.roomPage.enterRoom} />
+          <RoomPageButton
+            onClick={enterRoom}
+            translations={t.roomPage.enterRoom}
+          />
         )}
         {leaveRoomEnabled && (
-          <Button onClick={leaveRoom} translations={t.roomPage.leaveRoom} />
+          <RoomPageButton
+            onClick={leaveRoom}
+            translations={t.roomPage.leaveRoom}
+          />
         )}
         {startGameEnabled && (
-          <Button onClick={startGame} translations={t.roomPage.startGame} />
+          <RoomPageButton
+            onClick={startGame}
+            translations={t.roomPage.startGame}
+          />
         )}
         {closeRoomEnabled && (
-          <Button onClick={closeRoom} translations={t.roomPage.closeRoom} />
+          <RoomPageButton
+            onClick={closeRoom}
+            translations={t.roomPage.closeRoom}
+          />
         )}
       </RoomPageColumn>
       <RoomPageColumn>Options</RoomPageColumn>
