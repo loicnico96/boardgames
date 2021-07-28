@@ -77,12 +77,9 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": ["error", { "args": "none" }],
     "@typescript-eslint/no-use-before-define": ["error"],
     "@typescript-eslint/no-useless-constructor": ["error"],
-    "@typescript-eslint/require-await": ["warn"],
     "@typescript-eslint/return-await": ["error", "in-try-catch"],
 
     // Possible Errors
-    "no-await-in-loop": ["warn"],
-    "no-console": ["warn"],
     "no-promise-executor-return": ["error"],
     "no-unreachable-loop": ["error"],
     "require-atomic-updates": ["error"],
