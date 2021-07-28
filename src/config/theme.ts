@@ -10,8 +10,8 @@ export const defaultTheme: Theme = {
   fonts: [
     "-apple-system",
     "BlinkMacSystemFont",
-    "Segoe UI",
     "Roboto",
+    "Segoe UI",
     "Oxygen",
     "Ubuntu",
     "Cantarell",
