@@ -1,5 +1,5 @@
 import update from "immutability-helper"
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import create, { UseStore } from "zustand"
 import createContext from "zustand/context"
 import { combine } from "zustand/middleware"
@@ -41,4 +41,21 @@ export function StoreProvider({ children }: StoreProviderProps) {
   )
 }
 
-export const { useStore } = StoreContext
+export function useStore<T>(selector: (store: Store) => T): T {
+  return StoreContext.useStore(selector)
+}
+
+export function useComplexStore<T, U, P extends any[]>(
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  selector: (store: Store, ...args: P) => T,
+  reselector: (state: T) => U,
+  ...args: P
+): U {
+  return StoreContext.useStore(
+    useCallback(
+      store => reselector(selector(store, ...args)),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [reselector, selector, ...args]
+    )
+  )
+}

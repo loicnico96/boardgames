@@ -1,7 +1,5 @@
-import { useCallback } from "react"
-
 import { RoomData } from "lib/model/RoomData"
-import { Store, useStore } from "lib/store/context"
+import { Store, useComplexStore } from "lib/store/context"
 
 import { getRoomResource } from "./useRoomResource"
 
@@ -19,10 +17,5 @@ export function useRoomData<T>(
   roomId: string,
   selector: (room: RoomData) => T
 ): T {
-  return useStore(
-    useCallback(
-      store => selector(getRoomData(store, roomId)),
-      [roomId, selector]
-    )
-  )
+  return useComplexStore(getRoomData, selector, roomId)
 }

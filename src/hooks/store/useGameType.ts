@@ -3,7 +3,7 @@ import { GameType } from "lib/games/GameType"
 import { isEnum } from "lib/utils/enums"
 import { Param } from "lib/utils/navigation"
 
-export function useRoomGameType(): GameType {
+export function useGameType(): GameType {
   const game = useParam(Param.GAME_TYPE)
   if (isEnum(game, GameType)) {
     return game

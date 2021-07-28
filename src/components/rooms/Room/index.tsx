@@ -4,8 +4,8 @@ import { ComponentType } from "react"
 import GameComponentLoader from "components/games/GameComponentLoader"
 import GameProvider from "components/games/GameProvider"
 import RoomLobby from "components/rooms/RoomLobby"
+import { useGameType } from "hooks/store/useGameType"
 import { useRoomData } from "hooks/store/useRoomData"
-import { useRoomGameType } from "hooks/store/useRoomGameType"
 import { useRoomId } from "hooks/store/useRoomId"
 import { GameType } from "lib/games/GameType"
 import { RoomStatus } from "lib/model/RoomData"
@@ -28,7 +28,7 @@ const GAME_COMPONENTS: Record<GameType, ComponentType> = {
 
 export default function Room() {
   const roomId = useRoomId()
-  const game = useRoomGameType()
+  const game = useGameType()
   const roomStatus = useRoomData(roomId, room => room.status)
 
   if (roomStatus === RoomStatus.OPENED) {

@@ -1,13 +1,14 @@
-import { ReactNode, useState } from "react"
+import { ReactNode, useCallback } from "react"
 
 import PageError from "components/layout/PageError"
 import PageLoader from "components/layout/PageLoader"
 import { useDocumentListener } from "hooks/db/useDocumentListener"
+import { useActions } from "hooks/store/useActions"
+import { useGameResource } from "hooks/store/useGameResource"
 import { useTranslations } from "hooks/useTranslations"
 import { getClientRef } from "lib/db/collections"
 import { GameState } from "lib/games/GameSettings"
 import { GameType } from "lib/games/GameType"
-import { LOADING, Resource } from "lib/utils/resources"
 
 export type GameProviderProps<T extends GameType> = {
   children: ReactNode
@@ -22,21 +23,29 @@ export default function GameProvider<T extends GameType>({
 }: GameProviderProps<T>) {
   const t = useTranslations()
 
-  const [resource, setResource] = useState<Resource<GameState<T>>>(LOADING)
+  const { setGameResource } = useActions()
 
-  useDocumentListener<GameState<T>>(getClientRef(game, roomId), setResource)
+  const { data, error, loading } = useGameResource(game, r => r)
 
-  if (resource.loading) {
+  useDocumentListener<GameState<T>>(
+    getClientRef(game, roomId),
+    useCallback(
+      resource => setGameResource(game, roomId, resource),
+      [game, roomId, setGameResource]
+    )
+  )
+
+  if (loading) {
     return <PageLoader message={t.gamePage.pageLoading} />
   }
 
-  if (resource.error) {
-    return <PageError error={resource.error} />
+  if (error) {
+    return <PageError error={error} />
   }
 
   return (
     <div>
-      {game} - {roomId}: {JSON.stringify(resource)}
+      {game} - {roomId}: {JSON.stringify(data)}
       <div>{children}</div>
     </div>
   )
