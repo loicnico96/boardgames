@@ -1,3 +1,5 @@
+import React from "react"
+
 import PageLayout from "components/layout/PageLayout"
 import Room from "components/rooms/Room"
 import RoomProvider from "components/rooms/RoomProvider"

@@ -1,12 +1,15 @@
-import { CloseRoomReason } from "components/rooms/Room/useCloseRoom"
-import { EnterRoomReason } from "components/rooms/Room/useEnterRoom"
-import { LeaveRoomReason } from "components/rooms/Room/useLeaveRoom"
-import { StartGameReason } from "components/rooms/Room/useStartGame"
 import { CreateRoomReason } from "components/rooms/RoomList/useCreateRoom"
+import { CloseRoomReason } from "components/rooms/RoomLobby/useCloseRoom"
+import { EnterRoomReason } from "components/rooms/RoomLobby/useEnterRoom"
+import { LeaveRoomReason } from "components/rooms/RoomLobby/useLeaveRoom"
+import { StartGameReason } from "components/rooms/RoomLobby/useStartGame"
 import { RoomStatus } from "lib/model/RoomData"
 import { Debug } from "lib/utils/debug"
 
 export type TranslationConfig = {
+  gamePage: {
+    pageLoading: string
+  }
   games: {
     metropolys: {
       name: string

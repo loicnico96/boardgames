@@ -1,6 +1,9 @@
 import { replace, TranslationConfig } from "./types"
 
 const CONFIG: TranslationConfig = {
+  gamePage: {
+    pageLoading: "Loading game...",
+  },
   games: {
     metropolys: {
       name: "Metropolys",
