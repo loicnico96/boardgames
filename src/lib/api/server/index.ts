@@ -6,7 +6,7 @@ import { ApiLogger, LogLevel } from "lib/api/logger"
 import { HttpHeader, HttpMethod, HttpStatus } from "lib/api/types"
 import { isEnum } from "lib/utils/enums"
 import { Param } from "lib/utils/navigation"
-import { getTime, getTimeDiff } from "lib/utils/performance"
+import { getTime, getTimeDiff } from "lib/utils/time"
 import { Validator } from "lib/utils/validation"
 
 export type ApiHandler<T = unknown> = (

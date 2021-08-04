@@ -41,6 +41,18 @@ export function StoreProvider({ children }: StoreProviderProps) {
   )
 }
 
+export function arrayEqChecker<T>(a: T, b: T): boolean {
+  if (a === b) {
+    return true
+  }
+
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return a.length === b.length && a.every((v, i) => v === b[i])
+  }
+
+  return false
+}
+
 export function useStore<T>(selector: (store: Store) => T): T {
   return StoreContext.useStore(selector)
 }
@@ -56,6 +68,7 @@ export function useComplexStore<T, U, P extends any[]>(
       store => reselector(selector(store, ...args)),
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [reselector, selector, ...args]
-    )
+    ),
+    arrayEqChecker
   )
 }
