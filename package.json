@@ -21,7 +21,7 @@
     "firebase": "^9.0.0-beta.2",
     "firebase-admin": "^9.8.0",
     "immutability-helper": "^3.1.1",
-    "next": "^11.0.0",
+    "next": "^11.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-toastify": "^7.0.4",
