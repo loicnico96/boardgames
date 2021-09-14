@@ -1,0 +1,17 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "all": "yarn workspaces foreach -pi run",
+    "build": "yarn workspaces foreach -tpi run build",
+    "precommit": "yarn workspaces foreach -tpi run precommit",
+    "prepare": "husky install",
+    "web": "yarn workspace web run"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "husky": "7.0.2"
+  }
+}
