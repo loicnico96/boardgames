@@ -42,5 +42,14 @@
     "lint-staged": "11.1.2",
     "prettier": "2.4.0",
     "typescript": "4.4.3"
+  },
+  "jest": {
+    "collectCoverageFrom": ["src/**/*.{ts,tsx}"],
+    "coverageReporters": ["html", "text-summary"],
+    "moduleNameMapper": {
+      "^lib(.*)$": "<rootDir>/src/lib$1",
+      "^pages(.*)$": "<rootDir>/src/pages$1"
+    },
+    "testEnvironment": "jsdom"
   }
 }
