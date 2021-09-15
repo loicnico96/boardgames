@@ -3,7 +3,10 @@
 # dependencies
 /node_modules
 
-# yarn 2
+# vercel
+/.vercel
+
+# yarn
 /.yarn
 
 # debug
