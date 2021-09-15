@@ -1,12 +1,13 @@
 {
-  "name": "root",
+  "name": "@boardgames/root",
   "private": true,
   "scripts": {
-    "all": "yarn workspaces foreach -pi run",
-    "build": "yarn workspaces foreach -tpi run build",
-    "precommit": "yarn workspaces foreach -tpi run precommit",
+    "all": "yarn workspaces foreach -vpi run",
+    "build": "yarn workspaces foreach -vpi --topological-dev run build",
+    "common": "yarn workspace @boardgames/common",
+    "precommit": "yarn workspaces foreach -v run precommit",
     "prepare": "husky install",
-    "web": "yarn workspace web run"
+    "web": "yarn workspace @boardgames/web"
   },
   "workspaces": [
     "packages/*"
