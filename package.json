@@ -1,6 +1,15 @@
 {
   "name": "@boardgames/root",
+  "version": "0.1.0",
+  "author": "Loïc Nicolas <loicnico96@gmail.com>",
+  "license": "UNLICENSED",
   "private": true,
+  "bugs": "https://github.com/loicnico96/boardgames",
+  "homepage": "https://github.com/loicnico96/boardgames#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loicnico96/boardgames"
+  },
   "scripts": {
     "all": "yarn workspaces foreach -vpi run",
     "build": "yarn workspaces foreach -vpi --topological-dev run build",

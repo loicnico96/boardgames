@@ -1,7 +1,16 @@
 {
   "name": "@boardgames/web",
   "version": "0.1.0",
+  "author": "Loïc Nicolas <loicnico96@gmail.com>",
+  "license": "UNLICENSED",
   "private": true,
+  "bugs": "https://github.com/loicnico96/boardgames",
+  "homepage": "https://github.com/loicnico96/boardgames/tree/main/package/web#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loicnico96/boardgames",
+    "directory": "packages/web"
+  },
   "scripts": {
     "build": "next build",
     "format": "prettier --write **/*.{ts,tsx}",
