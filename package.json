@@ -5,6 +5,7 @@
     "all": "yarn workspaces foreach -vpi run",
     "build": "yarn workspaces foreach -vpi --topological-dev run build",
     "common": "yarn workspace @boardgames/common",
+    "components": "yarn workspace @boardgames/components",
     "deploy": "vercel",
     "precommit": "yarn workspaces foreach -v run precommit",
     "prepare": "husky install",

@@ -1,3 +1,4 @@
+import { Button } from "@boardgames/components"
 import Head from "next/head"
 
 export default function Home() {
@@ -13,6 +14,8 @@ export default function Home() {
         <h1>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
+
+        <Button />
 
         <p>
           Get started by editing <code>pages/index.js</code>

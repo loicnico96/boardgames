@@ -163,5 +163,8 @@ module.exports = {
     "jest": {
       "version": "detect",
     },
+    "react": {
+      "version": "detect",
+    },
   },
 }

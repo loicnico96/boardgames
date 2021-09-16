@@ -1,8 +1,9 @@
 {
   "name": "@boardgames/common",
-  "version": "1.0.0",
-  "license": "MIT",
+  "version": "0.1.0",
   "author": "Loïc Nicolas <loicnico96@gmail.com>",
+  "license": "MIT",
+  "private": true,
   "sideEffects": false,
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
