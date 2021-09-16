@@ -15,7 +15,9 @@ export default function Home() {
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
-        <Button />
+        <Button onClick={console.log} primary="black" secondary="white">
+          Text
+        </Button>
 
         <p>
           Get started by editing <code>pages/index.js</code>

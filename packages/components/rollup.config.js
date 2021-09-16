@@ -32,7 +32,13 @@ export default build(
   SRC_DIRECTORY,
   OUTPUT_DIRECTORY,
   {
-    dependencies: ["react", "react/jsx-runtime", "react-dom"],
+    dependencies: [
+      "@emotion/react",
+      "@emotion/styled",
+      "react",
+      "react/jsx-runtime",
+      "react-dom"
+    ],
     sourcemap: true,
     types: true,
   }

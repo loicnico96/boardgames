@@ -13,8 +13,8 @@
   },
   "scripts": {
     "build": "next build",
-    "format": "prettier --write **/*.{ts,tsx}",
-    "format:check": "prettier --check **/*.{ts,tsx}",
+    "format": "prettier --write '**/*.{ts,tsx}'",
+    "format:check": "prettier --check '**/*.{ts,tsx}'",
     "dev": "next dev",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
