@@ -20,7 +20,7 @@ export default meta(Button, {
   },
 })
 
-export const All = stories(Button, {
+export const Stories = stories(Button, {
   Default: {},
   Fill: {
     fill: true,

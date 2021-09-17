@@ -33,22 +33,26 @@ export function meta<T extends ComponentType<ComponentProps<T>>>(
   for (const name in controls) {
     const control = controls[name]
 
-    if (Array.isArray(control)) {
+    if (control === "fn") {
+      argTypes[name] = {
+        action: name,
+        table: { disable: true },
+      }
+    } else if (Array.isArray(control)) {
       argTypes[name] = {
         control: {
           options: control,
           type: control.length > 3 ? "select" : "radio",
         },
       }
-    } else if (control === "fn") {
-      argTypes[name] = { action: name }
     } else {
-      argTypes[name] = { control }
+      argTypes[name] = {
+        control,
+      }
     }
   }
 
   return {
-    component: Component,
     title: `${group}/${Component.name}`,
     args: defaults,
     argTypes,
