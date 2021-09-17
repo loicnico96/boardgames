@@ -1,19 +1,16 @@
 import styled from "@emotion/styled"
 import { useCallback } from "react"
 
-import { computeStyleProps, StyleProps } from "../utils/style"
+import { ErrorHandler, useAsyncHandler } from "utils/hooks/useAsyncHandler"
+import { computeStyleProps, StyleProps } from "utils/style"
 
-import { ErrorHandler, useAsyncHandler } from "./useAsyncHandler"
-
-export type ButtonClickEvent = React.MouseEvent<HTMLButtonElement>
-export type ButtonClickHandler = (event: ButtonClickEvent) => unknown
+type ButtonClickEvent = React.MouseEvent<HTMLButtonElement>
+type ButtonClickHandler = (event: ButtonClickEvent) => unknown
 
 type BaseButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
 
 type StyledButtonProps = {
   fill?: boolean
-  primary: string
-  secondary: string
 }
 
 export type ButtonProps = Omit<BaseButtonProps, "onClick" | "onError"> &
@@ -24,11 +21,13 @@ export type ButtonProps = Omit<BaseButtonProps, "onClick" | "onError"> &
   }
 
 const StyledButton = styled.button<StyledButtonProps>`
-  background-color: ${props => (props.fill ? props.primary : props.secondary)};
-  border: ${props => props.primary} 2px outset;
+  background-color: ${props =>
+    props.fill ? props.theme.colors.primary : props.theme.colors.secondary};
+  border: ${props => props.theme.colors.primary} 2px outset;
   border-radius: 16px;
   box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.16);
-  color: ${props => (props.fill ? props.secondary : props.primary)};
+  color: ${props =>
+    props.fill ? props.theme.colors.secondary : props.theme.colors.primary};
   cursor: pointer;
   padding: 4px 12px;
   text-decoration: none;
@@ -36,8 +35,8 @@ const StyledButton = styled.button<StyledButtonProps>`
 
   &:active,
   &:hover:not(:disabled) {
-    background-color: ${props => props.primary};
-    color: ${props => props.secondary};
+    background-color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme.colors.secondary};
   }
 
   &:active {
@@ -47,7 +46,8 @@ const StyledButton = styled.button<StyledButtonProps>`
 
   &:disabled {
     box-shadow: none;
-    color: ${props => (props.fill ? props.secondary : props.primary)};
+    //color: ${props =>
+      props.fill ? props.theme.colors.secondary : props.theme.colors.primary};
     cursor: not-allowed;
     opacity: 0.48;
   }

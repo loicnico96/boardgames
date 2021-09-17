@@ -1,4 +1,4 @@
-import { render, screen, userEvent, wait, waitFor } from "../test-utils"
+import { render, screen, userEvent, wait, waitFor } from "test-utils"
 
 import { Button } from "./Button"
 
@@ -6,11 +6,7 @@ describe("Button", () => {
   it("is disabled while asynchronous onClick is resolving", async () => {
     const onClick = jest.fn().mockImplementation(() => wait(300))
 
-    render(
-      <Button onClick={onClick} primary="black" secondary="white">
-        Click
-      </Button>
-    )
+    render(<Button onClick={onClick}>Click</Button>)
 
     const button = screen.getByRole("button", { name: "Click" })
 
@@ -37,7 +33,7 @@ describe("Button", () => {
     const onClick = jest.fn()
 
     render(
-      <Button disabled onClick={onClick} primary="black" secondary="white">
+      <Button disabled onClick={onClick}>
         Click
       </Button>
     )

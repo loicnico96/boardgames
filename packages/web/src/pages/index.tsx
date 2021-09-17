@@ -1,4 +1,4 @@
-import { Button } from "@boardgames/components"
+import { Button, Spinner } from "@boardgames/components"
 import Head from "next/head"
 
 export default function Home() {
@@ -15,9 +15,9 @@ export default function Home() {
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
-        <Button onClick={console.log} primary="black" secondary="white">
-          Text
-        </Button>
+        <Button onClick={() => console.log("click")}>Text</Button>
+
+        <Spinner size={32} />
 
         <p>
           Get started by editing <code>pages/index.js</code>

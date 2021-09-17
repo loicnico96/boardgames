@@ -1,4 +1,5 @@
 import typescript from "rollup-plugin-typescript2"
+import ttypescript from "ttypescript"
 import { posix } from "path"
 
 const SRC_DIRECTORY = "src"
@@ -17,10 +18,19 @@ function build(formats, inputDir, outputDir, options = {}) {
     plugins: [
       ...options.plugins ?? [],
       typescript({
+        typescript: ttypescript,
         tsconfigOverride: {
           compilerOptions: {
             declaration: options.types ?? false,
           },
+          exclude: [
+            "src/**/*.stories.ts",
+            "src/**/*.stories.tsx",
+            "src/**/*.test.ts",
+            "src/**/*.test.tsx",
+            "src/test-utils",
+            "src/utils/storybook",
+          ]
         },
       }),
     ]

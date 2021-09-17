@@ -2,6 +2,8 @@ import styled from "@emotion/styled"
 import { ArgTypes, ComponentMeta, ComponentStory } from "@storybook/react"
 import { ComponentProps, ComponentType } from "react"
 
+import { defaultTheme, ThemeProvider } from "utils/theme"
+
 export type Control<T> = T extends (...args: any[]) => any
   ? "fn"
   : T extends boolean
@@ -9,7 +11,7 @@ export type Control<T> = T extends (...args: any[]) => any
   : T extends number
   ? "number" | "range" | number[]
   : T extends string
-  ? "text" | "date" | "color" | string[]
+  ? "string" | "date" | "color" | "themeColor" | string[]
   : never
 
 export type Controls<T extends Record<string, any>> = {
@@ -38,6 +40,17 @@ export function meta<T extends ComponentType<ComponentProps<T>>>(
         action: name,
         table: { disable: true },
       }
+    } else if (control === "string") {
+      argTypes[name] = {
+        control: "text",
+      }
+    } else if (control === "themeColor") {
+      argTypes[name] = {
+        control: {
+          options: Object.keys(defaultTheme.colors),
+          type: "radio",
+        },
+      }
     } else if (Array.isArray(control)) {
       argTypes[name] = {
         control: {
@@ -64,7 +77,9 @@ export function story<T extends ComponentType<ComponentProps<T>>>(
   props: Partial<ComponentProps<T>> = {}
 ): ComponentStory<T> {
   const result: ComponentStory<T> = (defaultProps: ComponentProps<T>) => (
-    <Component {...defaultProps} />
+    <ThemeProvider>
+      <Component {...defaultProps} />
+    </ThemeProvider>
   )
 
   result.args = props
@@ -75,7 +90,6 @@ export function story<T extends ComponentType<ComponentProps<T>>>(
 const StoriesContainer = styled.div`
   display: flex;
   flex-direction: column;
-  font-family: "Nunito Sans", "Segoe UI", Helvetica, Arial, sans-serif;
 `
 
 export function stories<T extends ComponentType<ComponentProps<T>>>(
@@ -83,14 +97,16 @@ export function stories<T extends ComponentType<ComponentProps<T>>>(
   props: Record<string, Partial<ComponentProps<T>>>
 ): ComponentStory<T> {
   const result: ComponentStory<T> = (defaultProps: ComponentProps<T>) => (
-    <StoriesContainer>
-      {Object.keys(props).map(name => (
-        <div key={name}>
-          <h3>{name}</h3>
-          <Component {...defaultProps} {...props[name]} />
-        </div>
-      ))}
-    </StoriesContainer>
+    <ThemeProvider>
+      <StoriesContainer>
+        {Object.keys(props).map(name => (
+          <div key={name}>
+            <h3>{name}</h3>
+            <Component {...defaultProps} {...props[name]} />
+          </div>
+        ))}
+      </StoriesContainer>
+    </ThemeProvider>
   )
 
   return result

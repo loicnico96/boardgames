@@ -1,22 +1,16 @@
-import { meta, stories } from "../utils/storybook"
+import { meta, stories } from "utils/storybook"
 
 import { Button } from "./Button"
 
 export default meta(Button, {
   group: "Components",
   controls: {
-    children: "text",
-    disabled: "boolean",
-    fill: "boolean",
+    children: "string",
     onClick: "fn",
-    primary: "color",
-    secondary: "color",
-    title: "text",
+    title: "string",
   },
   defaults: {
     children: "Button",
-    primary: "#0088ff",
-    secondary: "white",
   },
 })
 
