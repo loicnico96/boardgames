@@ -1,4 +1,3 @@
-import styled from "@emotion/styled"
 import { ArgTypes, ComponentMeta, ComponentStory } from "@storybook/react"
 import { ComponentProps, ComponentType } from "react"
 
@@ -83,31 +82,6 @@ export function story<T extends ComponentType<ComponentProps<T>>>(
   )
 
   result.args = props
-
-  return result
-}
-
-const StoriesContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-export function stories<T extends ComponentType<ComponentProps<T>>>(
-  Component: T,
-  props: Record<string, Partial<ComponentProps<T>>>
-): ComponentStory<T> {
-  const result: ComponentStory<T> = (defaultProps: ComponentProps<T>) => (
-    <ThemeProvider>
-      <StoriesContainer>
-        {Object.keys(props).map(name => (
-          <div key={name}>
-            <h3>{name}</h3>
-            <Component {...defaultProps} {...props[name]} />
-          </div>
-        ))}
-      </StoriesContainer>
-    </ThemeProvider>
-  )
 
   return result
 }

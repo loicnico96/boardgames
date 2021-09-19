@@ -1,9 +1,9 @@
-import { meta, stories } from "utils/storybook"
+import { meta, story } from "utils/storybook"
 
 import { Spinner } from "./Spinner"
 
 export default meta(Spinner, {
-  group: "Components",
+  group: "Interface",
   controls: {
     size: "number",
   },
@@ -12,6 +12,4 @@ export default meta(Spinner, {
   },
 })
 
-export const Stories = stories(Spinner, {
-  Default: {},
-})
+export const Default = story(Spinner)
