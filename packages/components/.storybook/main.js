@@ -6,13 +6,12 @@ module.exports = {
     "@storybook/addon-essentials",
     "@storybook/addon-links",
     "@storybook/addon-storysource",
-    "@react-theming/storybook-addon",
   ],
   features: {
     postcss: false,
   },
   stories: [
-    "../src/**/*.stories.tsx",
+    "../src/**/stories.tsx",
   ],
   typescript: {
     check: true,

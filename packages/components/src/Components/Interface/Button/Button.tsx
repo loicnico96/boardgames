@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import { useCallback } from "react"
+import { ReactNode, useCallback } from "react"
 
 import { ErrorHandler, useAsyncHandler } from "utils/hooks/useAsyncHandler"
 import { computeStyleProps, StyleProps } from "utils/style"
@@ -16,6 +16,7 @@ type StyledButtonProps = {
 export type ButtonProps = Omit<BaseButtonProps, "onClick" | "onError"> &
   StyledButtonProps &
   StyleProps & {
+    children: ReactNode
     onClick: ButtonClickHandler
     onError?: ErrorHandler
   }

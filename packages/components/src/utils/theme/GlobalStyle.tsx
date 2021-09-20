@@ -10,6 +10,7 @@ export function GlobalStyle() {
       styles={`
         html,
         body,
+        #root,
         #__next {
           font-family: ${theme.fonts.join(", ")};
           height: 100%;

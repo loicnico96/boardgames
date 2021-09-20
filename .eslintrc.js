@@ -39,6 +39,7 @@ module.exports = {
 
     // TypeScript
     "@typescript-eslint/await-thenable": ["error"],
+    "@typescript-eslint/ban-types": ["off"],
     "@typescript-eslint/class-literal-property-style": ["error", "fields"],
     "@typescript-eslint/explicit-module-boundary-types": ["off"],
     "@typescript-eslint/method-signature-style": ["error", "property"],
