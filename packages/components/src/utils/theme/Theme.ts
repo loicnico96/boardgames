@@ -5,6 +5,7 @@ declare module "@emotion/react" {
     colors: {
       primary: string
       secondary: string
+      background: string
     }
     fonts: string[]
   }
@@ -15,7 +16,8 @@ export type ThemeColor = keyof Theme["colors"]
 export const defaultTheme: Theme = {
   colors: {
     primary: "#0088ff",
-    secondary: "#ffffff",
+    secondary: "#44aaff",
+    background: "#ffffff",
   },
   fonts: [
     "-apple-system",

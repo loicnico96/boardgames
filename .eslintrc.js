@@ -44,6 +44,7 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": ["off"],
     "@typescript-eslint/method-signature-style": ["error", "property"],
     "@typescript-eslint/no-confusing-non-null-assertion": ["error"],
+    "@typescript-eslint/no-explicit-any": ["off"],
     "@typescript-eslint/no-floating-promises": ["error"],
     "@typescript-eslint/no-inferrable-types": ["error", {
       "ignoreParameters": true,

@@ -23,12 +23,12 @@ export type ButtonProps = Omit<BaseButtonProps, "onClick" | "onError"> &
 
 const StyledButton = styled.button<StyledButtonProps>`
   background-color: ${props =>
-    props.fill ? props.theme.colors.primary : props.theme.colors.secondary};
+    props.fill ? props.theme.colors.primary : props.theme.colors.background};
   border: ${props => props.theme.colors.primary} 2px outset;
   border-radius: 16px;
   box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.16);
   color: ${props =>
-    props.fill ? props.theme.colors.secondary : props.theme.colors.primary};
+    props.fill ? props.theme.colors.background : props.theme.colors.primary};
   cursor: pointer;
   padding: 4px 12px;
   text-decoration: none;
@@ -37,7 +37,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   &:active,
   &:hover:not(:disabled) {
     background-color: ${props => props.theme.colors.primary};
-    color: ${props => props.theme.colors.secondary};
+    color: ${props => props.theme.colors.background};
   }
 
   &:active {
@@ -47,8 +47,6 @@ const StyledButton = styled.button<StyledButtonProps>`
 
   &:disabled {
     box-shadow: none;
-    //color: ${props =>
-      props.fill ? props.theme.colors.secondary : props.theme.colors.primary};
     cursor: not-allowed;
     opacity: 0.48;
   }

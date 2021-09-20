@@ -25,6 +25,9 @@ export type StyleProps = {
   paddingTop?: CSSDimension<"%">
   paddingBottom?: CSSDimension<"%">
 
+  // Flex
+  flex?: number
+
   // Others
   style?: CSSProperties
 }
@@ -59,6 +62,8 @@ export function computeStyleProps<T extends StyleProps>(
     paddingRight,
     paddingTop,
     paddingBottom,
+    // Flex
+    flex,
     // Others
     style,
     ...rest
@@ -81,6 +86,8 @@ export function computeStyleProps<T extends StyleProps>(
       paddingRight: paddingRight ?? paddingHorizontal,
       paddingTop: paddingTop ?? paddingVertical,
       paddingBottom: paddingBottom ?? paddingVertical,
+      // Flex
+      flex,
       // Others
       ...style,
     },

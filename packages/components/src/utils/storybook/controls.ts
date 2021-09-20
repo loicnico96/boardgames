@@ -7,12 +7,13 @@ export type ControlType =
   | "color"
   | "date"
   | "number"
+  | "object"
   | "string"
   | "themeColor"
 
 export type ControlOption = number | string
 
-export type Control = ControlType | ControlOption[] | "fn"
+export type Control = ControlType | ReadonlyArray<ControlOption> | "fn"
 
 export type Controls = Record<string, Control>
 
@@ -21,6 +22,7 @@ export type ControlProp<T extends ControlType> = {
   color: string
   date: string
   number: number
+  object: any
   string: string
   themeColor: ThemeColor
 }[T]

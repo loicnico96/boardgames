@@ -1,18 +1,12 @@
 import { meta, story } from "utils/storybook"
 
-import { PageLoader } from "./PageLoader"
+import { PageLoader as Component } from "./PageLoader"
 
-export default meta(PageLoader, {
+export default meta(Component, {
   group: "Layout",
 })
 
-export const Default = story(PageLoader, {
-  controls: {
-    message: "string",
-  },
-})
-
-export const Message = story(PageLoader, {
+export const PageLoader = story(Component, {
   controls: {
     message: "string",
   },

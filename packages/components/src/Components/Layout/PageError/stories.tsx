@@ -1,12 +1,12 @@
 import { meta, story } from "utils/storybook"
 
-import { PageError } from "./PageError"
+import { PageError as Component } from "./PageError"
 
-export default meta(PageError, {
+export default meta(Component, {
   group: "Layout",
 })
 
-export const Default = story(PageError, {
+export const PageError = story(Component, {
   controls: {
     error: "string",
   },

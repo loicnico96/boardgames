@@ -1,18 +1,12 @@
 import styled from "@emotion/styled"
-import { ReactNode } from "react"
 
-export interface HeadlineProps {
-  children: ReactNode
-}
+import { TextProps } from "Components/Typography/Text"
 
-const StyledHeadline = styled.h3`
+export const Headline = styled.h3<TextProps>`
   font-size: 1em;
   font-weight: 700;
   line-height: 1.5;
   margin-block-start: 0.5em;
   margin-block-end: 0.5em;
+  text-align: ${props => props.alignment ?? "left"};
 `
-
-export function Headline({ children }: HeadlineProps) {
-  return <StyledHeadline>{children}</StyledHeadline>
-}

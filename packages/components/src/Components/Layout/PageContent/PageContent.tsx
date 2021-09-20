@@ -1,6 +1,11 @@
 import styled from "@emotion/styled"
+import { ReactNode } from "react"
 
-export const PageContent = styled.div`
+export type PageContentProps = {
+  children: ReactNode
+}
+
+export const PageContent = styled.div<PageContentProps>`
   flex: 1;
   padding: 24px 48px;
 `

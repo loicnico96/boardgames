@@ -1,4 +1,5 @@
+export * from "./PageContainer"
 export * from "./PageContent"
 export * from "./PageError"
-export * from "./PageLayout"
+export * from "./PageHeader"
 export * from "./PageLoader"

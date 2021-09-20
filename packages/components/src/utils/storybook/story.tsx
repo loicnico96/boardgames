@@ -1,5 +1,5 @@
 import { ComponentStory } from "@storybook/react"
-import { ComponentType } from "react"
+import { ComponentProps, ComponentType } from "react"
 
 import { ThemeProvider } from "utils/theme"
 
@@ -12,39 +12,70 @@ import {
 } from "./controls"
 import { getParameters, ParameterOptions } from "./parameters"
 
-export type StoryOptions<
-  T extends Controls = {},
-  P extends ControlProps<T> = {}
-> = ParameterOptions & {
-  controls?: T
-  defaults?: P
+export type StoryOptions = ParameterOptions & {
   name?: string
-} & ({} extends T ? {} : { controls: T }) &
-  ({} extends P ? {} : { defaults: P })
+}
 
 export type Story<
-  T extends Controls = {},
+  C extends ComponentType<ControlProps<T> & ActionProps<T> & P>,
+  T extends Controls,
   P extends ControlProps<T> = {}
-> = ComponentStory<ComponentType<ControlProps<T>>> & {
+> = ComponentStory<
+  ComponentType<Partial<ComponentProps<C> & ControlProps<T> & ActionProps<T>>>
+> & {
   controls: T
   defaults: P
 }
 
-export function story<T extends Controls = {}, P extends ControlProps<T> = {}>(
+export function story<
+  C extends ComponentType<ControlProps<T> & ActionProps<T> & P>,
+  T extends Controls,
+  P extends ControlProps<T>
+>(
+  Component: C,
+  options: StoryOptions & {
+    controls: T
+    defaults: P
+  }
+): Story<C, T, P>
+
+export function story<
+  C extends ComponentType<ControlProps<T> & ActionProps<T>>,
+  T extends Controls
+>(
+  Component: C,
+  options: StoryOptions & {
+    controls: T
+  }
+): Story<C, T>
+
+export function story<C extends ComponentType<P>, P>(
+  Component: C,
+  options: StoryOptions & {
+    defaults: P
+  }
+): Story<C, {}, P>
+
+export function story<C extends ComponentType<{}>>(
+  Component: C,
+  options?: StoryOptions
+): Story<C, {}>
+
+export function story<T extends Controls, P extends ControlProps<T>>(
   Component: ComponentType<ControlProps<T> & ActionProps<T> & P>,
   {
     controls = {} as T,
     defaults = {} as P,
-    name,
+    name = Component.name,
     ...options
-  }: StoryOptions<T, P>
-): Story<T, P> {
-  const result = (props: ControlProps<T>) => (
+  }: StoryOptions & {
+    controls?: T
+    defaults?: P
+  } = {}
+) {
+  const result = (props: ControlProps<T> & ActionProps<T>) => (
     <ThemeProvider>
-      <Component
-        {...defaults}
-        {...(props as ControlProps<T> & ActionProps<T>)}
-      />
+      <Component {...defaults} {...props} />
     </ThemeProvider>
   )
 

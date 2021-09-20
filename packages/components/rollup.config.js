@@ -24,8 +24,8 @@ function build(formats, inputDir, outputDir, options = {}) {
             declaration: options.types ?? false,
           },
           exclude: [
-            "src/**/*.stories.ts",
-            "src/**/*.stories.tsx",
+            "src/**/stories.ts",
+            "src/**/stories.tsx",
             "src/**/*.test.ts",
             "src/**/*.test.tsx",
             "src/test-utils",

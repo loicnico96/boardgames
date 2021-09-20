@@ -1,6 +1,7 @@
 import styled from "@emotion/styled"
 
 import { PageContent } from "Components/Layout/PageContent"
+import { Text } from "Components/Typography/Text"
 
 export type PageErrorProps = {
   error: Error | string
@@ -16,7 +17,7 @@ const PageErrorContainer = styled(PageContent)`
 export function PageError({ error }: PageErrorProps) {
   return (
     <PageErrorContainer>
-      <div>Error: {error instanceof Error ? error.message : error}</div>
+      <Text>Error: {error instanceof Error ? error.message : error}</Text>
     </PageErrorContainer>
   )
 }

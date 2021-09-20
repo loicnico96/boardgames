@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 
-import { Spinner } from "Components/Interface/Spinner"
 import { PageContent } from "Components/Layout/PageContent"
+import { Spinner } from "Components/Primitives/Spinner"
 import { Text } from "Components/Typography/Text"
 
 export type PageLoaderProps = {

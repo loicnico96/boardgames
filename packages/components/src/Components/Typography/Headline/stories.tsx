@@ -1,27 +1,28 @@
-import { Default as TextStory } from "Components/Typography/Text/stories"
+import { Text } from "Components/Typography/Text/stories"
 import { meta, story } from "utils/storybook"
 
-import { Headline } from "./Headline"
+import { Headline as Component } from "./Headline"
 
-export default meta(Headline, {
+export default meta(Component, {
   group: "Typography",
+  name: "Headline",
 })
 
-export const Default = story(
+export const Headline = story(
   props => (
     <>
-      <Headline>{props.headline}</Headline>
-      <TextStory {...props} />
+      <Component {...props}>{props.headline}</Component>
+      <Text {...props} />
     </>
   ),
   {
     controls: {
       headline: "string",
-      ...TextStory.controls,
+      ...Text.controls,
     },
     defaults: {
-      headline: "Headline",
-      ...TextStory.defaults,
+      headline: "Component",
+      ...Text.defaults,
     },
   }
 )
