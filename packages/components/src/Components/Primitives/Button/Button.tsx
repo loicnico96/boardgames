@@ -1,8 +1,9 @@
 import styled from "@emotion/styled"
-import { ReactNode, useCallback } from "react"
+import { useCallback } from "react"
 
 import { ErrorHandler, useAsyncHandler } from "utils/hooks/useAsyncHandler"
 import { computeStyleProps, StyleProps } from "utils/style"
+import { If, IsNever } from "utils/types"
 
 type ButtonClickEvent = React.MouseEvent<HTMLButtonElement>
 type ButtonClickHandler = (event: ButtonClickEvent) => unknown
@@ -13,12 +14,30 @@ type StyledButtonProps = {
   fill?: boolean
 }
 
-export type ButtonProps = Omit<BaseButtonProps, "onClick" | "onError"> &
+export type ButtonTranslations<T extends string = never> = If<
+  IsNever<T>,
+  {
+    label: string
+    reason?: never
+    tooltip?: string
+  },
+  {
+    label: string
+    reason: Record<T, string>
+    tooltip?: string
+  }
+>
+
+export type ButtonProps<T extends string = never> = Omit<
+  BaseButtonProps,
+  "onClick" | "onError" | "title"
+> &
   StyledButtonProps &
   StyleProps & {
-    children: ReactNode
     onClick: ButtonClickHandler
     onError?: ErrorHandler
+    reason?: T
+    translations: ButtonTranslations<T>
   }
 
 const StyledButton = styled.button<StyledButtonProps>`
@@ -56,11 +75,14 @@ const StyledButton = styled.button<StyledButtonProps>`
   }
 `
 
-export function Button(props: ButtonProps) {
+export function Button<T extends string = never>(props: ButtonProps<T>) {
   const {
+    children,
     disabled = false,
     onClick,
     onError,
+    reason,
+    translations,
     ...buttonProps
   } = computeStyleProps(props)
 
@@ -78,7 +100,14 @@ export function Button(props: ButtonProps) {
     <StyledButton
       disabled={disabled || isRunning}
       onClick={onClickAsync}
+      title={
+        translations.reason && reason
+          ? translations.reason[reason]
+          : translations.tooltip ?? translations.label
+      }
       {...buttonProps}
-    />
+    >
+      {children ?? translations.label}
+    </StyledButton>
   )
 }

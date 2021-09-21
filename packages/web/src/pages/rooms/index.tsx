@@ -1,10 +1,4 @@
-import {
-  Button,
-  Headline,
-  Text,
-  PageContent,
-  Box,
-} from "@boardgames/components"
+import { Headline, Text, PageContent } from "@boardgames/components"
 
 import { PageLayout } from "components/PageLayout"
 import { useTranslations } from "config/translations/useTranslations"
@@ -26,10 +20,6 @@ export default function RoomListPage() {
         <Headline>Title</Headline>
         <Text>Paragraph 1</Text>
         <Text>Paragraph 2</Text>
-        <Box gap={8}>
-          <Button onClick={console.log}>Button 1</Button>
-          <Button onClick={console.log}>Button 2</Button>
-        </Box>
       </PageContent>
     </PageLayout>
   )

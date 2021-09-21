@@ -8,10 +8,14 @@ import {
 
 import { PageLayout } from "components/PageLayout"
 import { useTranslations } from "config/translations/useTranslations"
+import { useAuth } from "hooks/store/useAuth"
+import { signInAnonymously, signInWithGoogle } from "lib/firebase/auth"
 import { ROUTES } from "lib/utils/navigation"
 
 export default function LoginPage() {
   const t = useTranslations()
+
+  const { user } = useAuth()
 
   const parents = [
     {
@@ -27,8 +31,18 @@ export default function LoginPage() {
         <Text>Paragraph 1</Text>
         <Text>Paragraph 2</Text>
         <Box gap={8}>
-          <Button onClick={console.log}>Button 1</Button>
-          <Button onClick={console.log}>Button 2</Button>
+          <Button
+            disabled={user !== null}
+            onClick={signInAnonymously}
+            reason={user !== null ? "alreadyLoggedIn" : undefined}
+            translations={t.login.signInAnonymously}
+          />
+          <Button
+            disabled={user !== null}
+            onClick={signInWithGoogle}
+            reason={user !== null ? "alreadyLoggedIn" : undefined}
+            translations={t.login.signInWithGoogle}
+          />
         </Box>
       </PageContent>
     </PageLayout>

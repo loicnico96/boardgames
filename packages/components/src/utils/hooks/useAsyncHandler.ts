@@ -19,9 +19,7 @@ export function useAsyncHandler<P extends unknown[]>(
         setIsRunning(true)
         await handler(...args)
       } catch (error) {
-        if (onError) {
-          onError(error instanceof Error ? error : Error(String(error)))
-        }
+        onError(error instanceof Error ? error : Error(String(error)))
       } finally {
         if (mountedRef.current) {
           setIsRunning(false)

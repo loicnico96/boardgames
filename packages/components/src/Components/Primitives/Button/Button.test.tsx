@@ -6,7 +6,7 @@ describe("Button", () => {
   it("is disabled while asynchronous onClick is resolving", async () => {
     const onClick = jest.fn().mockImplementation(() => wait(300))
 
-    render(<Button onClick={onClick}>Click</Button>)
+    render(<Button onClick={onClick} translations={{ label: "Click" }} />)
 
     const button = screen.getByRole("button", { name: "Click" })
 
@@ -33,9 +33,7 @@ describe("Button", () => {
     const onClick = jest.fn()
 
     render(
-      <Button disabled onClick={onClick}>
-        Click
-      </Button>
+      <Button disabled onClick={onClick} translations={{ label: "Click" }} />
     )
 
     const button = screen.getByRole("button", { name: "Click" })
