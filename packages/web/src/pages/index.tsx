@@ -1,39 +1,26 @@
-import {
-  Button,
-  Headline,
-  Text,
-  PageContent,
-  Box,
-  Link,
-} from "@boardgames/components"
+import { Text, PageContent, Link } from "@boardgames/components"
 import NextLink from "next/link"
 
 import { PageLayout } from "components/PageLayout"
+import { useTranslations } from "config/translations/useTranslations"
 import { ROUTES } from "lib/utils/navigation"
 
 export default function HomePage() {
-  const title = "Home"
+  const t = useTranslations()
 
   return (
-    <PageLayout title={title}>
+    <PageLayout title={t.home.pageTitle}>
       <PageContent>
-        <Headline>Title</Headline>
-        <Text>Paragraph 1</Text>
-        <Text>Paragraph 2</Text>
         <Text>
           <Link component={NextLink} href={ROUTES.login()}>
-            Login
+            {t.login.pageTitle}
           </Link>
         </Text>
         <Text>
           <Link component={NextLink} href={ROUTES.roomList()}>
-            Rooms
+            {t.roomList.pageTitle}
           </Link>
         </Text>
-        <Box gap={8}>
-          <Button onClick={console.log}>Button 1</Button>
-          <Button onClick={console.log}>Button 2</Button>
-        </Box>
       </PageContent>
     </PageLayout>
   )

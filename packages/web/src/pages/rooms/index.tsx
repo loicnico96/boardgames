@@ -7,20 +7,21 @@ import {
 } from "@boardgames/components"
 
 import { PageLayout } from "components/PageLayout"
+import { useTranslations } from "config/translations/useTranslations"
 import { ROUTES } from "lib/utils/navigation"
 
 export default function RoomListPage() {
+  const t = useTranslations()
+
   const parents = [
     {
       path: ROUTES.home(),
-      title: "Home",
+      title: t.home.pageTitle,
     },
   ]
 
-  const title = "Rooms"
-
   return (
-    <PageLayout parents={parents} title={title}>
+    <PageLayout parents={parents} title={t.roomList.pageTitle}>
       <PageContent>
         <Headline>Title</Headline>
         <Text>Paragraph 1</Text>

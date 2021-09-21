@@ -8,6 +8,8 @@ import {
 import NextLink from "next/link"
 import { ReactNode } from "react"
 
+import { PageHead } from "./PageHead"
+
 export type PageLayoutProps = BreadcrumbsProps & {
   children: ReactNode
 }
@@ -15,6 +17,7 @@ export type PageLayoutProps = BreadcrumbsProps & {
 export function PageLayout({ children, parents, title }: PageLayoutProps) {
   return (
     <PageContainer>
+      <PageHead title={title} />
       <PageHeader>
         <Breadcrumbs
           flex={1}
