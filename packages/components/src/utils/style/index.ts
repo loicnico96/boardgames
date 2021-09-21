@@ -87,7 +87,7 @@ export function computeStyleProps<T extends StyleProps>(
       paddingTop: paddingTop ?? paddingVertical,
       paddingBottom: paddingBottom ?? paddingVertical,
       // Flex
-      flex,
+      flex: `${flex} ${flex} auto`,
       // Others
       ...style,
     },

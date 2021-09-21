@@ -1,7 +1,7 @@
 import { ComponentStory } from "@storybook/react"
 import { ComponentProps, ComponentType } from "react"
 
-import { ThemeProvider } from "utils/theme"
+import { defaultTheme, ThemeProvider } from "utils/theme"
 
 import {
   Controls,
@@ -74,7 +74,7 @@ export function story<T extends Controls, P extends ControlProps<T>>(
   } = {}
 ) {
   const result = (props: ControlProps<T> & ActionProps<T>) => (
-    <ThemeProvider>
+    <ThemeProvider theme={defaultTheme}>
       <Component {...defaults} {...props} />
     </ThemeProvider>
   )

@@ -1,9 +1,9 @@
-import { ThemeProvider } from "@boardgames/components"
+import { defaultTheme, ThemeProvider } from "@boardgames/components"
 import { AppProps } from "next/app"
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider>
+    <ThemeProvider theme={defaultTheme}>
       <Component {...pageProps} />
     </ThemeProvider>
   )

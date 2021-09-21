@@ -11,7 +11,7 @@ export default meta(Component, {
 export const PageHeader = story(
   ({ parents, title, onClick, userName }) => (
     <Component>
-      <Breadcrumbs parents={parents} title={title} flex={1} />
+      <Breadcrumbs flex={1} parents={parents} title={title} />
       <UserInfo onClick={onClick} userName={userName} />
     </Component>
   ),

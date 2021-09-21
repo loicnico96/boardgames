@@ -1,16 +1,16 @@
-import { ThemeProvider as BaseThemeProvider } from "@emotion/react"
+import { Theme, ThemeProvider as BaseThemeProvider } from "@emotion/react"
 import { ReactNode } from "react"
 
 import { GlobalStyle } from "./GlobalStyle"
-import { defaultTheme } from "./Theme"
 
 export interface ThemeProviderProps {
   children: ReactNode
+  theme: Theme
 }
 
-export function ThemeProvider({ children }: ThemeProviderProps) {
+export function ThemeProvider({ children, theme }: ThemeProviderProps) {
   return (
-    <BaseThemeProvider theme={defaultTheme}>
+    <BaseThemeProvider theme={theme}>
       <GlobalStyle />
       {children}
     </BaseThemeProvider>
