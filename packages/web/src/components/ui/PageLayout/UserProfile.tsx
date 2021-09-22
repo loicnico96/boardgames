@@ -1,15 +1,15 @@
-import { Box, Spinner, Text, UserInfo } from "@boardgames/components"
+import { Box, Spinner, UserInfo } from "@boardgames/components"
 import { useCallback } from "react"
 
 import { AsyncButton } from "components/ui/AsyncButton"
-import { RouterLink } from "components/ui/RouterLink"
 import { useTranslations } from "config/translations/useTranslations"
 import { useActions } from "hooks/store/useActions"
 import { useAuth } from "hooks/store/useAuth"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { promptUserName } from "lib/auth/promptUserName"
 import { changeUserName, signOut } from "lib/firebase/auth"
-import { ROUTES } from "lib/utils/navigation"
+
+import { LoginLink } from "./LoginLink"
 
 export function UserProfile() {
   const { loading, user } = useAuth()
@@ -33,24 +33,18 @@ export function UserProfile() {
     return <Spinner size={28} />
   }
 
-  if (user) {
-    return (
-      <Box gap={8}>
-        <UserInfo
-          onClick={onClick}
-          title={t.userProfile.userName.tooltip}
-          userName={
-            user.userInfo.userName ?? t.userProfile.userName.defaultValue
-          }
-        />
-        <AsyncButton onClick={signOut} translations={t.userProfile.signOut} />
-      </Box>
-    )
+  if (!user) {
+    return <LoginLink />
   }
 
   return (
-    <Text>
-      <RouterLink href={ROUTES.login()}>{t.login.pageTitle}</RouterLink>
-    </Text>
+    <Box gap={8}>
+      <UserInfo
+        onClick={onClick}
+        title={t.userProfile.userName.tooltip}
+        userName={user.userInfo.userName ?? t.userProfile.userName.defaultValue}
+      />
+      <AsyncButton onClick={signOut} translations={t.userProfile.signOut} />
+    </Box>
   )
 }

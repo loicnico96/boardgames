@@ -13,8 +13,7 @@ export type BoxProps = BaseBoxProps &
 
 const StyledDiv = styled.div<BoxProps>`
   align-items: center;
-  cursor: ${props =>
-    props.onClick ? (props.disabled ? "not-allowed" : "pointer") : "default"};
+  cursor: ${props => (props.onClick ? "pointer" : "default")};
   display: flex;
   flex-direction: ${props => props.direction ?? "row"};
   gap: ${props => props.gap ?? 0}px;

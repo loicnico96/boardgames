@@ -1,20 +1,32 @@
 import { Headline, Text, PageContent, Box } from "@boardgames/components"
-import { useCallback } from "react"
+import { useRouter } from "next/router"
+import { useCallback, useEffect } from "react"
 
 import { AsyncButton } from "components/ui/AsyncButton"
 import { PageLayout } from "components/ui/PageLayout"
 import { useTranslations } from "config/translations/useTranslations"
 import { useActions } from "hooks/store/useActions"
 import { useAuth } from "hooks/store/useAuth"
+import { useSearchParam } from "hooks/useSearchParams"
 import { promptUserName } from "lib/auth/promptUserName"
 import { signInAnonymously, signInWithGoogle } from "lib/firebase/auth"
-import { ROUTES } from "lib/utils/navigation"
+import { handleGenericError } from "lib/utils/error"
+import { Param, ROUTES } from "lib/utils/navigation"
 
 export default function LoginPage() {
   const t = useTranslations()
 
+  const router = useRouter()
   const { setUserName } = useActions()
   const { user } = useAuth()
+
+  const redirectTo = useSearchParam(Param.REDIRECT) ?? ROUTES.home()
+
+  useEffect(() => {
+    if (user) {
+      router.replace(redirectTo).catch(handleGenericError)
+    }
+  }, [redirectTo, router, user])
 
   const parents = [
     {

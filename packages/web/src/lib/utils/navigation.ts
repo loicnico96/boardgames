@@ -2,6 +2,10 @@ import { GameType } from "lib/games"
 
 export const SEPARATOR = "/"
 
+export enum Param {
+  REDIRECT = "redirect",
+}
+
 export enum Path {
   LOGIN = "login",
   ROOMS = "rooms",
