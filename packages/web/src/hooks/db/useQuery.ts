@@ -1,5 +1,5 @@
 import { useCallback } from "react"
-import useSWRImmutable from "swr/immutable"
+import useSWR from "swr"
 
 import { query } from "lib/db/query"
 import { DocumentData, QueryOptions, WithId } from "lib/db/types"
@@ -52,7 +52,7 @@ export function useQuery<T extends DocumentData>(
   colRef: string,
   options: QueryOptions = {}
 ): UseQueryResult<T> {
-  const { data, isValidating, mutate } = useSWRImmutable<Resource<WithId<T>[]>>(
+  const { data, isValidating, mutate } = useSWR<Resource<WithId<T>[]>>(
     getQueryKey(colRef, options),
     async () => {
       if (process.env.NODE_ENV === "development") {
@@ -73,6 +73,11 @@ export function useQuery<T extends DocumentData>(
 
         return getErrorResource(toError(error))
       }
+    },
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
     }
   )
 

@@ -1,19 +1,16 @@
 import { useQuery, UseQueryResult } from "hooks/db/useQuery"
-import { useSearchParam } from "hooks/useSearchParams"
 import { Collection } from "lib/db/collections"
 import { SortDirection } from "lib/db/types"
+import { GameType } from "lib/games"
 import { RoomData } from "lib/model/RoomData"
-import { Param } from "lib/utils/navigation"
 
-export function useRoomList(): UseQueryResult<RoomData> {
-  const gameParam = useSearchParam(Param.GAME)
-
+export function useRoomList(game: GameType | null): UseQueryResult<RoomData> {
   return useQuery<RoomData>(Collection.ROOMS, {
-    filter: gameParam
+    filter: game
       ? [
           {
             field: "game",
-            value: gameParam,
+            value: game,
           },
         ]
       : [],

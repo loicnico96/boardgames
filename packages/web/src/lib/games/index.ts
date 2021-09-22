@@ -24,3 +24,7 @@ export function getGameSettings<T extends GameType>(
 ): GameSettings<Games[T]> {
   return GAMES[gameType]
 }
+
+export function isGameType(value: unknown): value is GameType {
+  return Object.keys(GAMES).includes(value as string)
+}

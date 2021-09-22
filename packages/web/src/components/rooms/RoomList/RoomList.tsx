@@ -1,12 +1,17 @@
 import { PageError, PageLoader } from "@boardgames/components"
 
 import { useTranslations } from "hooks/useTranslations"
+import { GameType } from "lib/games"
 
 import { RoomListItem } from "./RoomListItem"
 import { useRoomList } from "./useRoomList"
 
-export function RoomList() {
-  const { resource } = useRoomList()
+export type RoomListProps = {
+  game: GameType | null
+}
+
+export function RoomList({ game }: RoomListProps) {
+  const { resource } = useRoomList(game)
   const t = useTranslations()
 
   if (resource.loading) {

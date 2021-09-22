@@ -1,7 +1,9 @@
 import styled from "@emotion/styled"
 
+import { RouterLink } from "components/ui/RouterLink"
 import { WithId } from "lib/db/types"
 import { RoomData } from "lib/model/RoomData"
+import { ROUTES } from "lib/utils/navigation"
 
 export type RoomListItemProps = {
   room: WithId<RoomData>
@@ -17,8 +19,10 @@ const Container = styled.div`
 
 export function RoomListItem({ room }: RoomListItemProps) {
   return (
-    <Container>
-      {room.id} - {room.createdAt}
-    </Container>
+    <RouterLink href={ROUTES.room(room.game, room.id)}>
+      <Container>
+        {room.id} - {room.createdAt}
+      </Container>
+    </RouterLink>
   )
 }
