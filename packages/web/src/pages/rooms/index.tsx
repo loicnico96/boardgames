@@ -4,6 +4,7 @@ import { RoomList } from "components/rooms/RoomList"
 import { PageLayout } from "components/ui/PageLayout"
 import { useTranslations } from "hooks/useTranslations"
 import { ROUTES } from "lib/utils/navigation"
+import { SSR } from "lib/utils/ssr"
 
 export default function RoomListPage() {
   const t = useTranslations()
@@ -23,3 +24,5 @@ export default function RoomListPage() {
     </PageLayout>
   )
 }
+
+export const getServerSideProps = SSR()

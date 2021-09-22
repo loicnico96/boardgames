@@ -24,6 +24,8 @@ export default {
     pageTitle: "Are you lost?",
   },
   roomList: {
+    noRooms: "No rooms are available.",
+    pageLoading: "Loading rooms...",
     pageTitle: "Rooms",
   },
   userProfile: {

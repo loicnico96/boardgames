@@ -1,7 +1,10 @@
 import styled from "@emotion/styled"
 
+import { WithId } from "lib/db/types"
+import { RoomData } from "lib/model/RoomData"
+
 export type RoomListItemProps = {
-  roomId: string
+  room: WithId<RoomData>
 }
 
 const Container = styled.div`
@@ -12,6 +15,10 @@ const Container = styled.div`
   padding: 16px 24px;
 `
 
-export function RoomListItem({ roomId }: RoomListItemProps) {
-  return <Container>{roomId}</Container>
+export function RoomListItem({ room }: RoomListItemProps) {
+  return (
+    <Container>
+      {room.id} - {room.createdAt}
+    </Container>
+  )
 }

@@ -1,12 +1,30 @@
-import { RoomListItem } from "./RoomListItem"
+import { PageError, PageLoader } from "@boardgames/components"
 
-const rooms = ["id0", "id1", "id2"]
+import { useTranslations } from "hooks/useTranslations"
+
+import { RoomListItem } from "./RoomListItem"
+import { useRoomList } from "./useRoomList"
 
 export function RoomList() {
+  const { resource } = useRoomList()
+  const t = useTranslations()
+
+  if (resource.loading) {
+    return <PageLoader message={t.roomList.pageLoading} />
+  }
+
+  if (resource.error) {
+    return <PageError error={resource.error} />
+  }
+
+  if (resource.data.length === 0) {
+    return <div>{t.roomList.noRooms}</div>
+  }
+
   return (
     <>
-      {rooms.map(roomId => (
-        <RoomListItem key={roomId} roomId={roomId} />
+      {resource.data.map(room => (
+        <RoomListItem key={room.id} room={room} />
       ))}
     </>
   )

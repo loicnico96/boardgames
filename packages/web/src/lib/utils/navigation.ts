@@ -3,6 +3,7 @@ import { GameType } from "lib/games"
 export const SEPARATOR = "/"
 
 export enum Param {
+  GAME = "game",
   REDIRECT = "redirect",
 }
 
