@@ -3,9 +3,12 @@ import {
   BreadcrumbsProps,
   PageContainer,
   PageHeader,
+  renderError,
 } from "@boardgames/components"
-import NextLink from "next/link"
 import { ReactNode } from "react"
+
+import { ErrorBoundary } from "components/ui/ErrorBoundary"
+import { RouterLink } from "components/ui/RouterLink"
 
 import { PageHead } from "./PageHead"
 import { UserProfile } from "./UserProfile"
@@ -21,13 +24,13 @@ export function PageLayout({ children, parents, title }: PageLayoutProps) {
         <PageHead title={title} />
         <Breadcrumbs
           flex={1}
-          linkComponent={NextLink}
+          linkComponent={RouterLink}
           parents={parents}
           title={title}
         />
         <UserProfile />
       </PageHeader>
-      {children}
+      <ErrorBoundary renderError={renderError}>{children}</ErrorBoundary>
     </PageContainer>
   )
 }

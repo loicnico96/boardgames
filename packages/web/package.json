@@ -27,11 +27,12 @@
   "dependencies": {
     "@boardgames/common": "workspace:*",
     "@boardgames/components": "workspace:*",
-    "firebase": "9",
+    "firebase": "9.0.2",
     "next": "11.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "zustand": "^3.5.10"
+    "react-toastify": "8.0.2",
+    "zustand": "3.5.10"
   },
   "devDependencies": {
     "@babel/core": "7.15.5",

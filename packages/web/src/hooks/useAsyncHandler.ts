@@ -1,14 +1,13 @@
 import { useCallback, useState } from "react"
 
+import { handleGenericError, toError } from "lib/utils/error"
+
 import { useMountedRef } from "./useMountedRef"
 
-export type AsyncHandler<P extends unknown[]> = (...args: P) => Promise<void>
-export type ErrorHandler = (error: Error) => void
-
 export function useAsyncHandler<P extends unknown[]>(
-  handler: AsyncHandler<P>,
-  onError: ErrorHandler = console.error
-): [AsyncHandler<P>, boolean] {
+  handler: (...args: P) => Promise<unknown>,
+  onError: (error: Error) => unknown = handleGenericError
+): [(...args: P) => Promise<void>, boolean] {
   const [isRunning, setIsRunning] = useState(false)
 
   const mountedRef = useMountedRef()
@@ -19,7 +18,7 @@ export function useAsyncHandler<P extends unknown[]>(
         setIsRunning(true)
         await handler(...args)
       } catch (error) {
-        onError(error instanceof Error ? error : Error(String(error)))
+        onError(toError(error))
       } finally {
         if (mountedRef.current) {
           setIsRunning(false)

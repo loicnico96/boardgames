@@ -1,18 +1,12 @@
-import {
-  Box,
-  Button,
-  Link,
-  Spinner,
-  Text,
-  useAsyncHandler,
-  UserInfo,
-} from "@boardgames/components"
-import NextLink from "next/link"
+import { Box, Spinner, Text, UserInfo } from "@boardgames/components"
 import { useCallback } from "react"
 
+import { AsyncButton } from "components/ui/AsyncButton"
+import { RouterLink } from "components/ui/RouterLink"
 import { useTranslations } from "config/translations/useTranslations"
 import { useActions } from "hooks/store/useActions"
 import { useAuth } from "hooks/store/useAuth"
+import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { promptUserName } from "lib/auth/promptUserName"
 import { changeUserName, signOut } from "lib/firebase/auth"
 import { ROUTES } from "lib/utils/navigation"
@@ -45,18 +39,18 @@ export function UserProfile() {
         <UserInfo
           onClick={onClick}
           title={t.userProfile.userName.tooltip}
-          userName={user.userInfo.userName ?? t.userProfile.userName.empty}
+          userName={
+            user.userInfo.userName ?? t.userProfile.userName.defaultValue
+          }
         />
-        <Button onClick={signOut} translations={t.userProfile.signOut} />
+        <AsyncButton onClick={signOut} translations={t.userProfile.signOut} />
       </Box>
     )
   }
 
   return (
     <Text>
-      <Link component={NextLink} href={ROUTES.login()}>
-        {t.login.pageTitle}
-      </Link>
+      <RouterLink href={ROUTES.login()}>{t.login.pageTitle}</RouterLink>
     </Text>
   )
 }

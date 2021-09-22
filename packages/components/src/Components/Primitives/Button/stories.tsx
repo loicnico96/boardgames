@@ -7,7 +7,7 @@ export default meta(Component, {
 })
 
 export const Button = story(
-  ({ label, ...props }) => <Component {...props} translations={{ label }} />,
+  ({ label, ...props }) => <Component {...props}>{label}</Component>,
   {
     controls: {
       disabled: "boolean",

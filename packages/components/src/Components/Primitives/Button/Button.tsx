@@ -1,12 +1,6 @@
 import styled from "@emotion/styled"
-import { useCallback } from "react"
 
-import { ErrorHandler, useAsyncHandler } from "utils/hooks/useAsyncHandler"
 import { computeStyleProps, StyleProps } from "utils/style"
-import { If, IsNever } from "utils/types"
-
-type ButtonClickEvent = React.MouseEvent<HTMLButtonElement>
-type ButtonClickHandler = (event: ButtonClickEvent) => unknown
 
 type BaseButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
 
@@ -14,31 +8,9 @@ type StyledButtonProps = {
   fill?: boolean
 }
 
-export type ButtonTranslations<T extends string = never> = If<
-  IsNever<T>,
-  {
-    label: string
-    reason?: never
-    tooltip?: string
-  },
-  {
-    label: string
-    reason: Record<T, string>
-    tooltip?: string
-  }
->
+export type ButtonClickEvent = React.MouseEvent<HTMLButtonElement>
 
-export type ButtonProps<T extends string = never> = Omit<
-  BaseButtonProps,
-  "onClick" | "onError" | "title"
-> &
-  StyledButtonProps &
-  StyleProps & {
-    onClick: ButtonClickHandler
-    onError?: ErrorHandler
-    reason?: T
-    translations: ButtonTranslations<T>
-  }
+export type ButtonProps = BaseButtonProps & StyledButtonProps & StyleProps
 
 const StyledButton = styled.button<StyledButtonProps>`
   background-color: ${props =>
@@ -75,39 +47,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   }
 `
 
-export function Button<T extends string = never>(props: ButtonProps<T>) {
-  const {
-    children,
-    disabled = false,
-    onClick,
-    onError,
-    reason,
-    translations,
-    ...buttonProps
-  } = computeStyleProps(props)
-
-  const [onClickAsync, isRunning] = useAsyncHandler(
-    useCallback(
-      async (event: ButtonClickEvent) => {
-        await onClick(event)
-      },
-      [onClick]
-    ),
-    onError
-  )
-
-  return (
-    <StyledButton
-      disabled={disabled || isRunning}
-      onClick={onClickAsync}
-      title={
-        translations.reason && reason
-          ? translations.reason[reason]
-          : translations.tooltip ?? translations.label
-      }
-      {...buttonProps}
-    >
-      {children ?? translations.label}
-    </StyledButton>
-  )
+export function Button(props: ButtonProps) {
+  const styledProps = computeStyleProps(props)
+  return <StyledButton {...styledProps} />
 }

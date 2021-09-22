@@ -11,12 +11,12 @@
     "url": "https://github.com/loicnico96/boardgames"
   },
   "scripts": {
-    "all": "yarn workspaces foreach -vpi run",
-    "build": "yarn workspaces foreach -vpi --topological-dev run build",
+    "all": "yarn workspaces foreach -vpi --exclude @boardgames/root run",
+    "build": "yarn workspaces foreach -vpi --exclude @boardgames/root --topological-dev run build",
     "common": "yarn workspace @boardgames/common",
     "components": "yarn workspace @boardgames/components",
     "deploy": "vercel",
-    "precommit": "yarn workspaces foreach -v run precommit",
+    "precommit": "yarn workspaces foreach -v --exclude @boardgames/root run precommit",
     "prepare": "husky install",
     "web": "yarn workspace @boardgames/web"
   },

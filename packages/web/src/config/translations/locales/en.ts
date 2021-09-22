@@ -6,12 +6,14 @@ export default {
     pageTitle: "Login",
     signInAnonymously: {
       label: "Sign in as guest",
+      labelLoading: "Signing in...",
       reason: {
         alreadyLoggedIn: "Already logged in",
       },
     },
     signInWithGoogle: {
       label: "Sign in with Google",
+      labelLoading: "Signing in...",
       reason: {
         alreadyLoggedIn: "Already logged in",
       },
@@ -30,7 +32,7 @@ export default {
       tooltip: "Sign out",
     },
     userName: {
-      empty: "...",
+      defaultValue: "...",
       label: "Enter your user name",
       tooltip: "Click to change user name",
       reason: {

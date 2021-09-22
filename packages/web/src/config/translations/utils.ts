@@ -10,6 +10,7 @@ export function replace<T extends ReplaceParams>(entry: string): Replace<T> {
       }
 
       if (process.env.NODE_ENV === "development") {
+        // eslint-disable-next-line no-console
         console.error(`Could not replace parameter '${key}'`, params)
       }
 

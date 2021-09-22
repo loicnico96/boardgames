@@ -1,33 +1,15 @@
-import { ComponentType, ReactNode } from "react"
+import styled from "@emotion/styled"
+import { ReactNode } from "react"
 
-export type HtmlAnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement>
-
-export type BaseLinkProps = {
+export type LinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   children: ReactNode
   href: string
 }
 
-export type LinkComponent = ComponentType<BaseLinkProps>
+export const Link = styled.a<LinkProps>`
+  cursor: pointer;
 
-export type LinkProps = HtmlAnchorProps &
-  BaseLinkProps & {
-    component?: LinkComponent
+  :hover {
+    text-decoration: underline;
   }
-
-export function Link({ children, component, href, ...props }: LinkProps) {
-  if (component) {
-    const Component = component
-
-    return (
-      <Component href={href}>
-        <a {...props}>{children}</a>
-      </Component>
-    )
-  }
-
-  return (
-    <a href={href} {...props}>
-      {children}
-    </a>
-  )
-}
+`

@@ -16,7 +16,7 @@ import firebaseApp from "./app"
 
 const firebaseAuth = getAuth(firebaseApp)
 
-export function formatUser(user: User): AuthUser {
+export function formatUser(user: User, userName?: string): AuthUser {
   const { displayName, email, isAnonymous, photoURL, uid } = user
 
   return {
@@ -25,7 +25,7 @@ export function formatUser(user: User): AuthUser {
     userInfo: {
       email,
       imageUrl: photoURL,
-      userName: displayName,
+      userName: userName ?? displayName,
     },
   }
 }
@@ -41,9 +41,10 @@ export function onAuthStateChange(
   )
 }
 
-export async function signInAnonymously(): Promise<AuthUser> {
+export async function signInAnonymously(userName: string): Promise<AuthUser> {
   const { user } = await _signInAnonymously(firebaseAuth)
-  return formatUser(user)
+  await _updateProfile(user, { displayName: userName })
+  return formatUser(user, userName)
 }
 
 export async function signInWithGoogle(): Promise<AuthUser> {

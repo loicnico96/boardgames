@@ -1,6 +1,6 @@
 import { Headline, Text, PageContent } from "@boardgames/components"
 
-import { PageLayout } from "components/PageLayout"
+import { PageLayout } from "components/ui/PageLayout"
 import { useTranslations } from "config/translations/useTranslations"
 import { ROUTES } from "lib/utils/navigation"
 

@@ -47,7 +47,7 @@ export default build(
       "@emotion/styled",
       "react",
       "react/jsx-runtime",
-      "react-dom"
+      "react-dom",
     ],
     sourcemap: true,
     types: true,
