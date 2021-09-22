@@ -1,5 +1,6 @@
-import { Headline, Text, PageContent } from "@boardgames/components"
+import { PageContent } from "@boardgames/components"
 
+import { RoomList } from "components/rooms/RoomList"
 import { PageLayout } from "components/ui/PageLayout"
 import { useTranslations } from "hooks/useTranslations"
 import { ROUTES } from "lib/utils/navigation"
@@ -17,9 +18,7 @@ export default function RoomListPage() {
   return (
     <PageLayout parents={parents} title={t.roomList.pageTitle}>
       <PageContent>
-        <Headline>Title</Headline>
-        <Text>Paragraph 1</Text>
-        <Text>Paragraph 2</Text>
+        <RoomList />
       </PageContent>
     </PageLayout>
   )
