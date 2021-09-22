@@ -1,11 +1,12 @@
-/* eslint-disable no-alert */
+import { toast } from "react-toastify"
 
-import { TranslationConfig } from "config/translations/useTranslations"
+import { TranslationConfig } from "config/translations"
 
 export function promptUserName(
   t: TranslationConfig,
   oldName?: string
 ): string | null {
+  // eslint-disable-next-line no-alert
   const userName = window.prompt(t.userProfile.userName.label, oldName)?.trim()
 
   if (userName === undefined) {
@@ -13,7 +14,8 @@ export function promptUserName(
   }
 
   if (userName === "") {
-    throw Error(t.userProfile.userName.reason.empty)
+    toast.error(t.userProfile.userName.reason.empty)
+    return null
   }
 
   return userName

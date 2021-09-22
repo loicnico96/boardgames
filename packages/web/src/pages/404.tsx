@@ -1,7 +1,7 @@
 import { PageError } from "@boardgames/components"
 
 import { PageLayout } from "components/ui/PageLayout"
-import { useTranslations } from "config/translations/useTranslations"
+import { useTranslations } from "hooks/useTranslations"
 import { ROUTES } from "lib/utils/navigation"
 
 export default function NotFoundPage() {

@@ -1,9 +1,9 @@
 import { Text } from "@boardgames/components"
 
 import { RouterLink } from "components/ui/RouterLink"
-import { useTranslations } from "config/translations/useTranslations"
 import { useLocation } from "hooks/useLocation"
 import { withSearchParams } from "hooks/useSearchParams"
+import { useTranslations } from "hooks/useTranslations"
 import { Param, ROUTES } from "lib/utils/navigation"
 
 export function LoginLink() {

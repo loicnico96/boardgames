@@ -2,10 +2,10 @@ import { Box, Spinner, UserInfo } from "@boardgames/components"
 import { useCallback } from "react"
 
 import { AsyncButton } from "components/ui/AsyncButton"
-import { useTranslations } from "config/translations/useTranslations"
 import { useActions } from "hooks/store/useActions"
 import { useAuth } from "hooks/store/useAuth"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
+import { useTranslations } from "hooks/useTranslations"
 import { promptUserName } from "lib/auth/promptUserName"
 import { changeUserName, signOut } from "lib/firebase/auth"
 
