@@ -1,6 +1,7 @@
 import { PageContent } from "@boardgames/components"
 import { GetServerSideProps } from "next"
 
+import { RoomProvider } from "components/rooms/RoomProvider"
 import { PageLayout } from "components/ui/PageLayout"
 import { getParam } from "hooks/useParam"
 import { withSearchParams } from "hooks/useSearchParams"
@@ -30,7 +31,9 @@ export default function RoomPage({ game, roomId }: RoomPageProps) {
   return (
     <PageLayout parents={parents} title={game}>
       <PageContent>
-        {game} - {roomId}
+        <RoomProvider roomId={roomId}>
+          {game} - {roomId}
+        </RoomProvider>
       </PageContent>
     </PageLayout>
   )

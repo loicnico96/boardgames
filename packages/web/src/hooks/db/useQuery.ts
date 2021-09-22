@@ -50,7 +50,9 @@ export type UseQueryResult<T extends DocumentData> = {
 
 export function useQuery<T extends DocumentData>(
   colRef: string,
-  options: QueryOptions = {}
+  options: QueryOptions = {},
+  onSuccess?: (data: WithId<T>[]) => void,
+  onError?: (error: Error) => void
 ): UseQueryResult<T> {
   const { data, isValidating, mutate } = useSWR<Resource<WithId<T>[]>>(
     getQueryKey(colRef, options),
@@ -75,6 +77,19 @@ export function useQuery<T extends DocumentData>(
       }
     },
     {
+      onError: error => {
+        if (onError) {
+          onError(toError(error))
+        }
+      },
+      onSuccess: result => {
+        if (result.data && onSuccess) {
+          onSuccess(result.data)
+        }
+        if (result.error && onError) {
+          onError(result.error)
+        }
+      },
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
