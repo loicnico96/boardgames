@@ -1,5 +1,5 @@
-import { Button } from "Components/Primitives/Button/stories"
 import { Box } from "Components/Primitives/Box"
+import { Button } from "Components/Primitives/Button/stories"
 import { Headline } from "Components/Typography/Headline/stories"
 import { meta, story } from "utils/storybook"
 

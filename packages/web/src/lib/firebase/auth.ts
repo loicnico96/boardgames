@@ -30,6 +30,10 @@ export function formatUser(user: User, userName?: string): AuthUser {
   }
 }
 
+export function getCurrentUser(): User | null {
+  return firebaseAuth.currentUser
+}
+
 export function onAuthStateChange(
   onChange: (user: AuthUser | null) => void,
   onError: (error: Error) => void

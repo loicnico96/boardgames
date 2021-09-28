@@ -20,10 +20,10 @@
   ],
   "scripts": {
     "build": "rollup -c",
-    "format": "prettier --write '**/*.{ts,tsx}'",
-    "format:check": "prettier --check '**/*.{ts,tsx}'",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
+    "format": "prettier --write 'src/**/*.{ts,tsx}'",
+    "format:check": "prettier --check 'src/**/*.{ts,tsx}'",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint:fix": "eslint --fix src/**/*.{ts,tsx}",
     "precommit": "lint-staged",
     "typecheck": "tsc --noEmit"
   },
