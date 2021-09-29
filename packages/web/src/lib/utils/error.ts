@@ -1,11 +1,9 @@
 import { toast } from "react-toastify"
 
-export function handleGenericError(error: Error): void {
-  if (process.env.NODE_ENV === "development") {
-    // eslint-disable-next-line no-console
-    console.error(error)
-  }
+import { Console } from "./logger"
 
+export function handleGenericError(error: Error): void {
+  Console.error(error)
   toast.error(error.message)
 }
 

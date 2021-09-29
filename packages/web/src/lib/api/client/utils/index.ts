@@ -1,10 +1,7 @@
 import { ApiError } from "lib/api/error"
-import { ApiLogger, LogLevel } from "lib/api/logger"
+import { ApiLogger } from "lib/api/logger"
 import { HttpHeader, HttpMethod, HttpStatus } from "lib/api/types"
 import { getCurrentUser } from "lib/firebase/auth"
-
-const LOG_LEVEL =
-  process.env.NODE_ENV === "development" ? LogLevel.DEBUG : LogLevel.NONE
 
 export async function getHeaders(): Promise<HeadersInit> {
   const headers: HeadersInit = {
@@ -26,7 +23,7 @@ export async function apiCall<T>(
   api: string,
   body?: Record<string, unknown>
 ): Promise<T> {
-  const logger = new ApiLogger(LOG_LEVEL, method, api)
+  const logger = new ApiLogger(method, api)
 
   const fetchOptions: RequestInit = {
     headers: await getHeaders(),
@@ -52,4 +49,8 @@ export async function apiCall<T>(
   logger.log("Response:", data)
 
   return data as T
+}
+
+export function apiPath(...segments: string[]): string {
+  return `/api/${segments.join("/")}`
 }

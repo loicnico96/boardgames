@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 
 import { ApiError } from "lib/api/error"
-import { ApiLogger, LogLevel } from "lib/api/logger"
+import { ApiLogger } from "lib/api/logger"
 import { HttpHeader, HttpMethod, HttpStatus } from "lib/api/types"
 import { toError } from "lib/utils/error"
 import { getTime, getTimeDiff } from "lib/utils/performance"
@@ -30,11 +30,7 @@ export function handle<
       return
     }
 
-    const logger = new ApiLogger(
-      LogLevel.DEBUG,
-      request.method as HttpMethod,
-      request.url
-    )
+    const logger = new ApiLogger(request.method as HttpMethod, request.url)
 
     try {
       if (request.body) {

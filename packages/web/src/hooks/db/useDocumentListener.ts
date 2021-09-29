@@ -2,6 +2,7 @@ import { useEffect } from "react"
 
 import { subscribe } from "lib/db/subscribe"
 import { DocumentData, WithId } from "lib/db/types"
+import { Logger } from "lib/utils/logger"
 import {
   getErrorResource,
   getLoadedResource,
@@ -14,28 +15,21 @@ export function useDocumentListener<T extends DocumentData>(
 ): void {
   useEffect(() => {
     if (docRef) {
+      const logger = new Logger(`Document /${docRef}`)
+
       return subscribe<T>(
         docRef,
         data => {
           if (data) {
-            if (process.env.NODE_ENV === "development") {
-              console.log(`[Document] Update (${docRef})`, data)
-            }
-
+            logger.log("Update", data)
             onChange(getLoadedResource(data))
           } else {
-            if (process.env.NODE_ENV === "development") {
-              console.error(`[Document] Not found (${docRef})`)
-            }
-
+            logger.error("Not found")
             onChange(getErrorResource(Error("Not found")))
           }
         },
         error => {
-          if (process.env.NODE_ENV === "development") {
-            console.error(`[Document] Error (${docRef})`, error)
-          }
-
+          logger.error(error)
           onChange(getErrorResource(error))
         }
       )

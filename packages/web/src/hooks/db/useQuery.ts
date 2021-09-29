@@ -4,6 +4,7 @@ import useSWR from "swr"
 import { query } from "lib/db/query"
 import { DocumentData, QueryOptions, WithId } from "lib/db/types"
 import { toError } from "lib/utils/error"
+import { Logger } from "lib/utils/logger"
 import {
   getErrorResource,
   getLoadedResource,
@@ -57,22 +58,16 @@ export function useQuery<T extends DocumentData>(
   const { data, isValidating, mutate } = useSWR<Resource<WithId<T>[]>>(
     getQueryKey(colRef, options),
     async () => {
-      if (process.env.NODE_ENV === "development") {
-        console.log(`[Query] Options (${colRef})`, options)
-      }
+      const logger = new Logger(`Query /${colRef}`)
+
+      logger.log("Options", options)
 
       try {
         const result = await query<T>(colRef, options)
-        if (process.env.NODE_ENV === "development") {
-          console.log(`[Query] Result (${colRef})`, result)
-        }
-
+        logger.log("Result", result)
         return getLoadedResource(result)
       } catch (error) {
-        if (process.env.NODE_ENV === "development") {
-          console.error(`[Query] Error (${colRef})`, error)
-        }
-
+        logger.error(toError(error))
         return getErrorResource(toError(error))
       }
     },

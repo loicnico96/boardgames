@@ -6,7 +6,7 @@ import { PageLayout } from "components/ui/PageLayout"
 import { RouterLink } from "components/ui/RouterLink"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { useTranslations } from "hooks/useTranslations"
-import { apiCall } from "lib/api/client"
+import { apiCall, apiPath } from "lib/api/client/utils"
 import { HttpMethod } from "lib/api/types"
 import { AuthUserInfo } from "lib/auth/types"
 import { ROUTES } from "lib/utils/navigation"
@@ -16,7 +16,10 @@ export default function HomePage() {
 
   const [onClick] = useAsyncHandler(
     useCallback(async () => {
-      const result = await apiCall<AuthUserInfo>(HttpMethod.POST, "/api/test")
+      const result = await apiCall<AuthUserInfo>(
+        HttpMethod.POST,
+        apiPath("test")
+      )
       // eslint-disable-next-line no-alert
       window.alert(result.email)
     }, [])

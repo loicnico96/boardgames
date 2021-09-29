@@ -3,6 +3,8 @@ import create, { UseStore } from "zustand"
 import createContext from "zustand/context"
 import { combine } from "zustand/middleware"
 
+import { Logger } from "lib/utils/logger"
+
 import { Actions, createActions } from "./actions"
 import { getInitialState, State } from "./state"
 
@@ -11,13 +13,13 @@ export type Store = State & {
 }
 
 export function createStore(): UseStore<Store> {
+  const logger = new Logger("Store")
+
   return create(
     combine(getInitialState(), (set, get) => ({
       actions: createActions((action, spec) => {
         set(state => update(state, spec))
-        if (process.env.NODE_ENV === "development") {
-          console.log(`[Store] ${action}`, spec, get())
-        }
+        logger.log(action, spec, get())
       }),
     }))
   )
