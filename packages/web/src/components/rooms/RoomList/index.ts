@@ -1,1 +1,1 @@
-export { RoomList } from "./RoomList"
+export * from "./RoomList"

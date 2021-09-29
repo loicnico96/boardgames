@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next"
 
-import { RoomLobby } from "components/rooms/RoomLobby"
-import { RoomProvider } from "components/rooms/RoomProvider"
+import { RoomProvider } from "components/providers/RoomProvider"
+import { Room } from "components/rooms/Room"
 import { PageLayout } from "components/ui/PageLayout"
 import { getParam } from "hooks/useParam"
 import { useTranslations } from "hooks/useTranslations"
@@ -27,8 +27,8 @@ export default function RoomPage({ roomId }: RoomPageProps) {
 
   return (
     <PageLayout parents={parents} title={t.room.pageTitle}>
-      <RoomProvider game={null} roomId={roomId}>
-        <RoomLobby />
+      <RoomProvider roomId={roomId}>
+        <Room />
       </RoomProvider>
     </PageLayout>
   )

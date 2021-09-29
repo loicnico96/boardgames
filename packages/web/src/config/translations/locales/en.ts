@@ -1,4 +1,7 @@
 export default {
+  game: {
+    pageLoading: "Loading game...",
+  },
   games: {
     metropolys: {
       name: "Metropolys",

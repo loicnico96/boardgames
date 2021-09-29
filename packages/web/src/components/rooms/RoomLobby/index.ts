@@ -1,1 +1,1 @@
-export { RoomLobby } from "./RoomLobby"
+export * from "./RoomLobby"

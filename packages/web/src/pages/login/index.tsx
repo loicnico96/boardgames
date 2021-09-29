@@ -10,7 +10,7 @@ import { useSearchParam } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
 import { promptUserName } from "lib/auth/promptUserName"
 import { signInAnonymously, signInWithGoogle } from "lib/firebase/auth"
-import { handleGenericError } from "lib/utils/error"
+import { Console } from "lib/utils/logger"
 import { Param, ROUTES } from "lib/utils/navigation"
 
 export default function LoginPage() {
@@ -24,7 +24,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user) {
-      router.replace(redirectTo).catch(handleGenericError)
+      router.replace(redirectTo).catch(Console.error)
     }
   }, [redirectTo, router, user])
 

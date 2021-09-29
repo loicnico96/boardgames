@@ -33,7 +33,7 @@ export function RoomLobby() {
     <PageContent>
       {room.playerOrder.map(playerId => (
         <Text key={playerId}>
-          {playerId} - {room.players[playerId]?.name ?? ""}
+          {playerId} - {room.players[playerId].name}
         </Text>
       ))}
       <Text>Options: {JSON.stringify(room.options)}</Text>

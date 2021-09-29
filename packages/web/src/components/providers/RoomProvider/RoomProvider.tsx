@@ -19,7 +19,7 @@ import { Resource } from "lib/utils/resource"
 
 export type RoomProviderProps = {
   children: ReactNode
-  game: GameType | null
+  game?: GameType
   roomId: string
 }
 
