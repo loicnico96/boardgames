@@ -7,3 +7,7 @@ export type IsEmpty<A extends Record<any, any>> = Extends<A, Record<any, never>>
 export type IsNever<A> = Extends<A, never>
 
 export type Fn<P extends any[] = any[], R = any> = (...args: P) => R
+
+export function identity<T>(value: T): T {
+  return value
+}

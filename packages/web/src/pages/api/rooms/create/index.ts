@@ -1,5 +1,5 @@
 import { ApiError } from "lib/api/error"
-import { handle } from "lib/api/server"
+import { handle, readBody } from "lib/api/server"
 import { getUserId, getUserInfo } from "lib/api/server/auth"
 import { HttpMethod, HttpStatus } from "lib/api/types"
 import { Collection } from "lib/db/collections"
@@ -17,7 +17,7 @@ export async function createRoom<T extends GameType>(
   if (!userName) {
     throw new ApiError(
       HttpStatus.FAILED_PRECONDITION,
-      "You must set an username in order to create or enter rooms."
+      "You must set an username in order to create or join rooms"
     )
   }
 
@@ -41,7 +41,7 @@ export async function createRoom<T extends GameType>(
 export default handle({
   [HttpMethod.POST]: async request => {
     const userId = await getUserId(request)
-    // TODO - Validate body
-    return createRoom(userId, request.body.game)
+    const { game } = readBody<{ game: GameType }>(request)
+    return createRoom(userId, game)
   },
 })

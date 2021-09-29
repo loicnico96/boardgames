@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next"
 
+import { getParam } from "hooks/useParam"
 import { ApiError } from "lib/api/error"
 import { ApiLogger } from "lib/api/logger"
 import { HttpHeader, HttpMethod, HttpStatus } from "lib/api/types"
 import { toError } from "lib/utils/error"
+import { Param } from "lib/utils/navigation"
 import { getTime, getTimeDiff } from "lib/utils/performance"
 
 import { ApiHandler } from "./types"
@@ -60,4 +62,19 @@ export function handle<
       logger.log(`Responded in ${timeDiff}ms`)
     }
   }
+}
+
+export function readBody<T>(request: NextApiRequest): T {
+  // @TODO - Validate body
+  return request.body as T
+}
+
+export function readParam(request: NextApiRequest, param: Param): string {
+  const value = getParam(request.query, param)
+
+  if (!value) {
+    throw new ApiError(HttpStatus.BAD_REQUEST, `Missing parameter '${param}'`)
+  }
+
+  return value
 }

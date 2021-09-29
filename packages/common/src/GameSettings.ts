@@ -1,6 +1,6 @@
 import { GameModel, GameStateChangeListener, UserInfo } from "./types"
 
-export interface GameSettings<M extends GameModel> {
+export type GameSettings<M extends GameModel> = {
   defaultOptions: M["options"]
   minPlayers: number
   maxPlayers: number

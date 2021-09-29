@@ -10,8 +10,8 @@ export async function updateRoom<T extends GameType>(
   options: Partial<GameOptions<T>>
 ): Promise<WithId<RoomData<T>>> {
   return apiCall<WithId<RoomData<T>>>(
-    HttpMethod.POST,
-    apiPath("rooms", roomId, "options"),
+    HttpMethod.PATCH,
+    apiPath("rooms", roomId),
     { options }
   )
 }

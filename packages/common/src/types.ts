@@ -1,9 +1,9 @@
-export interface GameState {
+export type GameState = {
   playerOrder: string[]
   players: Record<string, unknown>
 }
 
-export interface GameModel {
+export type GameModel = {
   action: Record<string, unknown>
   event: Record<string, unknown>
   options: Record<string, unknown>
@@ -21,6 +21,6 @@ export type ReadonlyDeep<T> = T extends Record<string, any>
     : Readonly<{ [K in keyof T]: ReadonlyDeep<T[K]> }>
   : T
 
-export interface UserInfo {
+export type UserInfo = {
   name: string
 }

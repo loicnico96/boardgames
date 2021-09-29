@@ -12,12 +12,11 @@ export type BoxProps = BaseBoxProps &
   }
 
 const StyledDiv = styled.div<BoxProps>`
-  align-items: center;
+  align-items: ${props => props.alignment ?? "center"};
   cursor: ${props => (props.onClick ? "pointer" : "default")};
   display: flex;
   flex-direction: ${props => props.direction ?? "row"};
   gap: ${props => props.gap ?? 0}px;
-  justify-content: ${props => props.alignment ?? "start"};
 `
 
 export function Box(props: BoxProps) {

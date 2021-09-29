@@ -1,6 +1,5 @@
 import { useRouter } from "next/router"
 import { useCallback } from "react"
-import { toast } from "react-toastify"
 
 import { getAuth } from "hooks/store/useAuth"
 import { createRoom } from "lib/api/client/createRoom"
@@ -34,7 +33,6 @@ export function useCreateRoom(game: GameType | null) {
   const trigger = useCallback(async () => {
     if (game) {
       const data = await createRoom(game)
-      toast.success("Room created")
       router.push(ROUTES.room(game, data.id)).catch(Console.error)
     }
   }, [game, router])

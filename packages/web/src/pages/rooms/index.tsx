@@ -2,14 +2,13 @@ import { PageContent } from "@boardgames/components"
 import { GetServerSideProps } from "next"
 
 import { RoomList } from "components/rooms/RoomList"
+import { useCreateRoom } from "components/rooms/RoomList/useCreateRoom"
 import { AsyncButton } from "components/ui/AsyncButton"
 import { PageLayout } from "components/ui/PageLayout"
 import { useSearchParam } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
 import { isGameType } from "lib/games"
 import { Param, ROUTES } from "lib/utils/navigation"
-
-import { useCreateRoom } from "./useCreateRoom"
 
 export default function RoomListPage() {
   const t = useTranslations()

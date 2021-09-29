@@ -9,7 +9,7 @@ export interface RoborallyModel extends GameModel {
 
 export const RoborallySettings: GameSettings<RoborallyModel> = {
   defaultOptions: { code: "default" },
-  minPlayers: 1,
+  minPlayers: 2,
   maxPlayers: 4,
 
   getInitialGameState(players, playerOrder) {

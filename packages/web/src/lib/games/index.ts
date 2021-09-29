@@ -3,12 +3,14 @@ import { GameSettings } from "@boardgames/common"
 import { RoborallyModel, RoborallySettings } from "./roborally"
 
 type Games = {
+  metropolys: RoborallyModel
   roborally: RoborallyModel
 }
 
 const GAMES: {
   [T in GameType]: GameSettings<Games[T]>
 } = {
+  metropolys: RoborallySettings,
   roborally: RoborallySettings,
 }
 

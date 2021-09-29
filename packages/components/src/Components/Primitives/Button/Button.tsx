@@ -25,24 +25,25 @@ const StyledButton = styled.button<StyledButtonProps>`
   text-decoration: none;
   transition-duration: 0.2s;
 
-  &:active,
-  &:hover:not(:disabled) {
-    background-color: ${props => props.theme.colors.primary};
-    color: ${props => props.theme.colors.background};
-  }
-
-  &:active {
-    border-style: inset;
-    box-shadow: none;
-  }
-
   &:disabled {
     box-shadow: none;
     cursor: not-allowed;
     opacity: 0.48;
   }
 
-  &:hover:not(:active):not(:disabled) {
+  &:active:not(:disabled) {
+    background-color: ${props => props.theme.colors.primary};
+    border-style: inset;
+    box-shadow: none;
+    color: ${props => props.theme.colors.background};
+  }
+
+  &:hover:not(:disabled) {
+    background-color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme.colors.background};
+  }
+
+  &:hover:not(:disabled):not(:active) {
     box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.16);
   }
 `
