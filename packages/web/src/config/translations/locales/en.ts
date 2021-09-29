@@ -24,6 +24,15 @@ export default {
     pageTitle: "Are you lost?",
   },
   roomList: {
+    createRoom: {
+      label: "Create room",
+      tooltip: "Create a new room",
+      reason: {
+        noGameSelected: "You must select a game",
+        notAuthenticated: "You must be signed in to create or join rooms",
+        noUserName: "You must set an username to create or join rooms",
+      },
+    },
     noRooms: "No rooms are available.",
     pageLoading: "Loading rooms...",
     pageTitle: "Rooms",

@@ -40,8 +40,7 @@ export async function apiCall<T>(
   const response = await fetch(api, fetchOptions)
 
   if (response.status !== HttpStatus.OK) {
-    const message = await response.text()
-    throw new ApiError(response.status, message)
+    throw new ApiError(response.status, await response.text())
   }
 
   const data = await response.json()
