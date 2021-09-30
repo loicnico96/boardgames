@@ -5,7 +5,7 @@ import { GameComponentLoader } from "components/games/GameComponentLoader"
 import { RoomLobby } from "components/rooms/RoomLobby"
 import { useRoomData } from "hooks/useRoomData"
 import { useRoomId } from "hooks/useRoomId"
-import { GameType } from "lib/games"
+import { GameType } from "lib/games/types"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 
 const DYNAMIC_OPTIONS: DynamicOptions = {
@@ -15,11 +15,19 @@ const DYNAMIC_OPTIONS: DynamicOptions = {
 
 const GAME_COMPONENTS: Record<GameType, ComponentType> = {
   metropolys: dynamic(
-    () => import("components/games/metropolys"),
+    () =>
+      import(
+        /* webpackChunkName: "metropolys" */
+        "components/games/metropolys"
+      ),
     DYNAMIC_OPTIONS
   ),
   roborally: dynamic(
-    () => import("components/games/roborally"),
+    () =>
+      import(
+        /* webpackChunkName: "roborally" */
+        "components/games/roborally"
+      ),
     DYNAMIC_OPTIONS
   ),
 }

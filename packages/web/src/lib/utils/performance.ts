@@ -7,3 +7,9 @@ export function getTime(): Time {
 export function getTimeDiff(start: Time): number {
   return Number((getTime() - start) / BigInt(1000)) / 1000
 }
+
+export async function wait(ms: number): Promise<void> {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms)
+  })
+}

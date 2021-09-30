@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from "hooks/db/useQuery"
 import { useActions } from "hooks/store/useActions"
 import { Collection } from "lib/db/collections"
 import { SortDirection, WithId } from "lib/db/types"
-import { GameType } from "lib/games"
+import { GameType } from "lib/games/types"
 import { RoomData } from "lib/model/RoomData"
 import { getLoadedResource, Resource } from "lib/utils/resource"
 

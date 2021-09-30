@@ -4,7 +4,7 @@ import { getUserId } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
 import { getClientRef, getRoomRef, getServerRef } from "lib/db/collections"
 import { DocRef, firestore } from "lib/firebase/admin"
-import { getGameSettings } from "lib/games"
+import { getGameSettings } from "lib/games/settings"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 import { Param } from "lib/utils/navigation"
 

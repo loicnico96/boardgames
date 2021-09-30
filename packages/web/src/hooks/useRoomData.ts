@@ -7,7 +7,7 @@ export function getRoomData(store: Store, roomId: string): RoomData {
   const resource = store.rooms[roomId]
 
   if (!resource?.data) {
-    throw Error("Invalid room path - Room is not loaded")
+    throw Error("Invalid context - Room is not loaded")
   }
 
   return resource.data

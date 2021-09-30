@@ -1,4 +1,4 @@
-import { GameOptions, GameType } from "lib/games"
+import { GameOptions, GameType } from "lib/games/types"
 
 import { UserInfo } from "./UserInfo"
 

@@ -6,7 +6,7 @@ import { PageLayout } from "components/ui/PageLayout"
 import { getParam } from "hooks/useParam"
 import { withSearchParams } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
-import { GameType, isGameType } from "lib/games"
+import { GameType, isGameType } from "lib/games/types"
 import { Param, ROUTES } from "lib/utils/navigation"
 
 export type RoomPageProps = {

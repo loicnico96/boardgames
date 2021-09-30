@@ -7,7 +7,7 @@ import { AsyncButton } from "components/ui/AsyncButton"
 import { PageLayout } from "components/ui/PageLayout"
 import { useSearchParam } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
-import { isGameType } from "lib/games"
+import { isGameType } from "lib/games/types"
 import { Param, ROUTES } from "lib/utils/navigation"
 
 export default function RoomListPage() {

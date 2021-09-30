@@ -1,4 +1,4 @@
-import { GameType, isGameType } from "lib/games"
+import { GameType, isGameType } from "lib/games/types"
 import { Param } from "lib/utils/navigation"
 
 import { useParam } from "./useParam"

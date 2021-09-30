@@ -3,7 +3,7 @@ import { useCallback } from "react"
 
 import { getAuth } from "hooks/store/useAuth"
 import { createRoom } from "lib/api/client/createRoom"
-import { GameType } from "lib/games"
+import { GameType } from "lib/games/types"
 import { useStore } from "lib/store/context"
 import { Console } from "lib/utils/logger"
 import { ROUTES } from "lib/utils/navigation"

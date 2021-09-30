@@ -3,7 +3,7 @@ import { useCallback } from "react"
 import { getAuth } from "hooks/store/useAuth"
 import { getRoomData } from "hooks/useRoomData"
 import { enterRoom } from "lib/api/client/enterRoom"
-import { getGameSettings } from "lib/games"
+import { getGameSettings } from "lib/games/settings"
 import { RoomStatus } from "lib/model/RoomData"
 import { useStore } from "lib/store/context"
 

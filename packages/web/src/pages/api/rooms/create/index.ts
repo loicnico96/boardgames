@@ -5,7 +5,8 @@ import { HttpMethod, HttpStatus } from "lib/api/types"
 import { Collection } from "lib/db/collections"
 import { WithId } from "lib/db/types"
 import { firestore } from "lib/firebase/admin"
-import { GameType, getGameSettings } from "lib/games"
+import { getGameSettings } from "lib/games/settings"
+import { GameType } from "lib/games/types"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 
 export async function createRoom<T extends GameType>(

@@ -4,13 +4,8 @@ import { getUserId } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
 import { getClientRef, getServerRef } from "lib/db/collections"
 import { firestore } from "lib/firebase/admin"
-import {
-  GameAction,
-  GameState,
-  GameType,
-  getGameSettings,
-  isGameType,
-} from "lib/games"
+import { getGameSettings } from "lib/games/settings"
+import { GameAction, GameState, GameType, isGameType } from "lib/games/types"
 import { toError } from "lib/utils/error"
 import { Param } from "lib/utils/navigation"
 

@@ -1,4 +1,4 @@
-import { GameType } from "lib/games"
+import { GameType } from "lib/games/types"
 
 export enum Collection {
   GAMES = "games",

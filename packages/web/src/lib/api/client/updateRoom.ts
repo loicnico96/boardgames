@@ -1,6 +1,6 @@
 import { HttpMethod } from "lib/api/types"
 import { WithId } from "lib/db/types"
-import { GameOptions, GameType } from "lib/games"
+import { GameOptions, GameType } from "lib/games/types"
 import { RoomData } from "lib/model/RoomData"
 
 import { apiCall, apiPath } from "./utils"

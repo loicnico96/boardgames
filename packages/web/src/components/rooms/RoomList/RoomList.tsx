@@ -1,7 +1,7 @@
 import { PageError, PageLoader } from "@boardgames/components"
 
 import { useTranslations } from "hooks/useTranslations"
-import { GameType } from "lib/games"
+import { GameType } from "lib/games/types"
 
 import { RoomListItem } from "./RoomListItem"
 import { useRoomList } from "./useRoomList"
