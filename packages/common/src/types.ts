@@ -1,11 +1,19 @@
+export type GameEvent = {
+  code: string
+}
+
+export type GamePlayer = {
+  ready: boolean
+}
+
 export type GameState = {
   playerOrder: string[]
-  players: Record<string, unknown>
+  players: Record<string, GamePlayer>
 }
 
 export type GameModel = {
   action: Record<string, unknown>
-  event: Record<string, unknown>
+  event: GameEvent
   options: Record<string, unknown>
   state: GameState
 }

@@ -22,6 +22,14 @@ const GAME_COMPONENTS: Record<GameType, ComponentType> = {
       ),
     DYNAMIC_OPTIONS
   ),
+  papayoo: dynamic(
+    () =>
+      import(
+        /* webpackChunkName: "papayoo" */
+        "components/games/papayoo"
+      ),
+    DYNAMIC_OPTIONS
+  ),
   roborally: dynamic(
     () =>
       import(

@@ -8,6 +8,39 @@ export type IsNever<A> = Extends<A, never>
 
 export type Fn<P extends any[] = any[], R = any> = (...args: P) => R
 
+export function assert(
+  condition: boolean,
+  message: string = "Assertion failed"
+): asserts condition {
+  if (!condition) {
+    throw Error(message)
+  }
+}
+
 export function identity<T>(value: T): T {
   return value
+}
+
+export function isArray(value: unknown): value is unknown[] {
+  return Array.isArray(value)
+}
+
+export function isBoolean(value: unknown): value is string {
+  return typeof value === "string"
+}
+
+export function isNumber(value: unknown): value is number {
+  return Number.isFinite(value)
+}
+
+export function isFunction(value: unknown): value is Function {
+  return typeof value === "function"
+}
+
+export function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null
+}
+
+export function isString(value: unknown): value is string {
+  return typeof value === "string"
 }

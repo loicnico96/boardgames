@@ -1,11 +1,10 @@
 import { UserInfo } from "lib/model/UserInfo"
 
-import { RoborallyOptions, RoborallyState } from "../model"
+import { RoborallyState } from "../model"
 
 export function getInitialGameState(
   players: Record<string, UserInfo>,
-  playerOrder: string[],
-  options: RoborallyOptions
+  playerOrder: string[]
 ): RoborallyState {
   return {
     count: 0,
@@ -13,6 +12,7 @@ export function getInitialGameState(
       result[playerId] = {
         ...players[playerId],
         count: 0,
+        ready: false,
       }
       return result
     }, {} as RoborallyState["players"]),

@@ -6,6 +6,9 @@ export default {
     metropolys: {
       name: "Metropolys",
     },
+    papayoo: {
+      name: "Papayoo",
+    },
     roborally: {
       name: "Roborally",
     },

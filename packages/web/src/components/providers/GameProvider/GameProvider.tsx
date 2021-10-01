@@ -66,7 +66,7 @@ export function GameProvider<T extends GameType>({
         if (result.data) {
           stateQueue.current.push(result.data)
           if (!isResolving.current) {
-            resolveStateQueue().catch(logger.error)
+            resolveStateQueue().catch(error => logger.error(error))
           }
         } else {
           setGameResource(game, roomId, result)

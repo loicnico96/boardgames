@@ -1,29 +1,31 @@
 import { GameSettings } from "@boardgames/common"
 
-import { MetropolysContext } from "./context"
+import { PapayooContext } from "./context"
 import { getInitialGameState } from "./getInitialGameState"
-import { MetropolysModel } from "./model"
+import { PapayooModel } from "./model"
 import { resolvePlayerAction } from "./resolvePlayerAction"
 import { resolveState } from "./resolveState"
 import { validateOptions } from "./validateOptions"
 import { validatePlayerAction } from "./validatePlayerAction"
 
-export const MetropolysSettings: GameSettings<MetropolysModel> = {
-  defaultOptions: { code: "metropolys/default" },
-  minPlayers: 2,
-  maxPlayers: 4,
+export const PapayooSettings: GameSettings<PapayooModel> = {
+  defaultOptions: {},
+  minPlayers: 3,
+  maxPlayers: 8,
 
   getInitialGameState,
 
   async resolvePlayerAction(state, playerId, action) {
-    const context = new MetropolysContext(state)
+    const context = new PapayooContext(state)
     await resolvePlayerAction(context, playerId, action)
     return context.state
   },
 
   async resolveState(state, onStateChanged) {
-    const context = new MetropolysContext(state, onStateChanged)
-    await resolveState(context)
+    const context = new PapayooContext(state, onStateChanged)
+    if (context.allReady()) {
+      await resolveState(context)
+    }
     return context.state
   },
 

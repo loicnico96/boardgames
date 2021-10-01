@@ -6,8 +6,6 @@ export async function resolveState(context: MetropolysContext) {
       .update({
         state: state => state + 1,
       })
-      .post({
-        code: String(context.state.state),
-      })
+      .post(String(context.state.state))
   }
 }

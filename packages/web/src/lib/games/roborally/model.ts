@@ -4,10 +4,6 @@ export type RoborallyAction = {
   count: number
 }
 
-export type RoborallyEvent = {
-  code: string
-}
-
 export type RoborallyOptions = {
   // Empty
 }
@@ -20,7 +16,6 @@ export type RoborallyState = GameState & {
 
 export type RoborallyModel = GameModel & {
   action: RoborallyAction
-  event: RoborallyEvent
   options: RoborallyOptions
   state: RoborallyState
 }

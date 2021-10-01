@@ -34,6 +34,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-toastify": "8.0.2",
+    "seedrandom": "3.0.5",
     "swr": "1.0.1",
     "zustand": "3.5.10"
   },
@@ -47,6 +48,7 @@
     "@testing-library/user-event": "13.2.1",
     "@types/jest": "27.0.1",
     "@types/react": "17.0.20",
+    "@types/seedrandom": "3.0.1",
     "@typescript-eslint/eslint-plugin": "4.31.1",
     "@typescript-eslint/parser": "4.31.1",
     "babel-jest": "27.2.0",

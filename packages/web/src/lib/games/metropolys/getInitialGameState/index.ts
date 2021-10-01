@@ -1,11 +1,10 @@
 import { UserInfo } from "lib/model/UserInfo"
 
-import { MetropolysOptions, MetropolysState } from "../model"
+import { MetropolysState } from "../model"
 
 export function getInitialGameState(
   players: Record<string, UserInfo>,
-  playerOrder: string[],
-  options: MetropolysOptions
+  playerOrder: string[]
 ): MetropolysState {
   return {
     count: 0,
@@ -13,6 +12,7 @@ export function getInitialGameState(
       result[playerId] = {
         ...players[playerId],
         count: 0,
+        ready: false,
       }
       return result
     }, {} as MetropolysState["players"]),

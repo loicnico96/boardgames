@@ -18,12 +18,15 @@ export class GameContext<M extends GameModel> {
     return this.__state
   }
 
-  public async resolve<P extends any[]>(
-    handler: (context: this, ...args: P) => Promise<void>,
-    ...args: P
-  ): Promise<this> {
-    await handler(this, ...args)
-    return this
+  public allReady(): boolean {
+    const { playerOrder, players } = this.__state
+    return playerOrder.every(playerId => players[playerId].ready)
+  }
+
+  public nextPlayerId(playerId: string, shift: number = 1): string {
+    const { playerOrder } = this.__state
+    const playerIndex = playerOrder.indexOf(playerId)
+    return playerOrder[(playerIndex + shift) % playerOrder.length]
   }
 
   public update(spec: Spec<M["state"]>): this {
@@ -31,9 +34,19 @@ export class GameContext<M extends GameModel> {
     return this
   }
 
-  public async post(event: M["event"]): Promise<void> {
+  public async post<T extends M["event"]["code"]>(
+    ...[code, data]: { code: T } extends M["event"]
+      ? [
+          code: T,
+          data?: Omit<Extract<M["event"] & { code: T }, { code: T }>, "code">
+        ]
+      : [
+          code: T,
+          data: Omit<Extract<M["event"] & { code: T }, { code: T }>, "code">
+        ]
+  ): Promise<void> {
     if (this.__onStateChange) {
-      await this.__onStateChange(this.__state, event)
+      await this.__onStateChange(this.__state, { code, ...data })
     }
   }
 }

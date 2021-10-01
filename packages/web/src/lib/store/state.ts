@@ -20,6 +20,7 @@ export function getInitialState(): State {
     },
     games: {
       metropolys: {},
+      papayoo: {},
       roborally: {},
     },
     rooms: {},

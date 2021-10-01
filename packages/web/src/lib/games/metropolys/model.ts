@@ -4,10 +4,6 @@ export type MetropolysAction = {
   count: number
 }
 
-export type MetropolysEvent = {
-  code: string
-}
-
 export type MetropolysOptions = {
   // Empty
 }
@@ -20,7 +16,6 @@ export type MetropolysState = GameState & {
 
 export type MetropolysModel = GameModel & {
   action: MetropolysAction
-  event: MetropolysEvent
   options: MetropolysOptions
   state: MetropolysState
 }
