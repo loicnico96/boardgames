@@ -3,8 +3,8 @@ import { UserInfo } from "lib/model/UserInfo"
 import { RoborallyState } from "../model"
 
 export function getInitialGameState(
-  players: Record<string, UserInfo>,
-  playerOrder: string[]
+  playerOrder: string[],
+  players: Record<string, UserInfo>
 ): RoborallyState {
   return {
     count: 0,

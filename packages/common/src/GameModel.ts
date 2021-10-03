@@ -22,7 +22,3 @@ export type GameStateChangeListener<M extends GameModel> = (
   newState: M["state"],
   event: M["event"]
 ) => Promise<void>
-
-export type UserInfo = {
-  name: string
-}

@@ -4,6 +4,7 @@ import { getUserId } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
 import { getClientRef, getRoomRef, getServerRef } from "lib/db/collections"
 import { DocRef, firestore } from "lib/firebase/admin"
+import { getGameApi } from "lib/games/api"
 import { getGameSettings } from "lib/games/settings"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 import { Param } from "lib/utils/navigation"
@@ -37,7 +38,8 @@ export async function startGame(
       )
     }
 
-    const { getInitialGameState, minPlayers } = getGameSettings(roomData.game)
+    const { minPlayers } = getGameSettings(roomData.game)
+    const { getInitialGameState } = getGameApi(roomData.game)
 
     if (roomData.playerOrder.length < minPlayers) {
       throw new ApiError(
@@ -47,8 +49,8 @@ export async function startGame(
     }
 
     const initialGameState = getInitialGameState(
-      roomData.players,
       roomData.playerOrder,
+      roomData.players,
       roomData.options
     )
 

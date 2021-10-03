@@ -3,8 +3,8 @@ import { UserInfo } from "lib/model/UserInfo"
 import { MetropolysState } from "../model"
 
 export function getInitialGameState(
-  players: Record<string, UserInfo>,
-  playerOrder: string[]
+  playerOrder: string[],
+  players: Record<string, UserInfo>
 ): MetropolysState {
   return {
     count: 0,

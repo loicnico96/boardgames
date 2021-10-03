@@ -5,7 +5,7 @@ import { HttpMethod, HttpStatus } from "lib/api/types"
 import { getRoomRef } from "lib/db/collections"
 import { WithId } from "lib/db/types"
 import { DocRef, firestore } from "lib/firebase/admin"
-import { getGameSettings } from "lib/games/settings"
+import { getGameApi } from "lib/games/api"
 import { GameOptions, GameType } from "lib/games/types"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 import { toError } from "lib/utils/error"
@@ -45,7 +45,7 @@ export async function updateRoom<T extends GameType>(
       )
     }
 
-    const { validateOptions } = getGameSettings(roomData.game)
+    const { validateOptions } = getGameApi(roomData.game)
 
     let validatedOptions: GameOptions<T>
 

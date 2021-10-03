@@ -1,4 +1,4 @@
-import { GameSettings } from "@boardgames/common"
+import { GameApi } from "@boardgames/common"
 import { PageError, PageLoader } from "@boardgames/components"
 import { ReactNode, useCallback, useRef } from "react"
 
@@ -13,16 +13,16 @@ import { wait } from "lib/utils/performance"
 import { getLoadedResource } from "lib/utils/resource"
 
 export type GameProviderProps<T extends GameType> = {
+  api: GameApi<Games[T]>
   children: ReactNode
   game: T
-  resolveState: GameSettings<Games[T]>["resolveState"]
   roomId: string
 }
 
 export function GameProvider<T extends GameType>({
+  api,
   children,
   game,
-  resolveState,
   roomId,
 }: GameProviderProps<T>) {
   const resource = useGameResource(game, roomId)
@@ -55,7 +55,7 @@ export function GameProvider<T extends GameType>({
             while (stateQueue.current.length > 0) {
               const nextState = stateQueue.current.shift()
               if (nextState) {
-                setGameState(await resolveState(nextState, onStateChanged))
+                setGameState(await api.resolveState(nextState, onStateChanged))
               }
             }
           } finally {
@@ -72,7 +72,7 @@ export function GameProvider<T extends GameType>({
           setGameResource(game, roomId, result)
         }
       },
-      [game, resolveState, roomId, setGameResource]
+      [api, game, roomId, setGameResource]
     )
   )
 

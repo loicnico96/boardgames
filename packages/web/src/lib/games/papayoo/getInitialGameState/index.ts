@@ -6,8 +6,8 @@ import { dealCards } from "../cards"
 import { PapayooState } from "../model"
 
 export function getInitialGameState(
-  players: Record<string, UserInfo>,
-  playerOrder: string[]
+  playerOrder: string[],
+  players: Record<string, UserInfo>
 ): PapayooState {
   const playerCards = dealCards(playerOrder.length)
 

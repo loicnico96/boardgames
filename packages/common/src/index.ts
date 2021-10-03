@@ -1,3 +1,4 @@
+export * from "./GameApi"
 export * from "./GameContext"
 export * from "./GameSettings"
-export * from "./types"
+export * from "./GameModel"

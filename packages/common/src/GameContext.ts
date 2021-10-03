@@ -1,6 +1,6 @@
 import update, { Spec } from "immutability-helper"
 
-import { GameModel, GameStateChangeListener } from "./types"
+import { GameModel, GameStateChangeListener } from "./GameModel"
 
 export class GameContext<M extends GameModel> {
   private __onStateChange: GameStateChangeListener<M> | undefined

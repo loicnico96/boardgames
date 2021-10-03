@@ -4,7 +4,7 @@ import { getUserId } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
 import { getClientRef, getServerRef } from "lib/db/collections"
 import { firestore } from "lib/firebase/admin"
-import { getGameSettings } from "lib/games/settings"
+import { getGameApi } from "lib/games/api"
 import { GameAction, GameState, GameType, isGameType } from "lib/games/types"
 import { toError } from "lib/utils/error"
 import { Param } from "lib/utils/navigation"
@@ -35,7 +35,7 @@ export async function playerAction<T extends GameType>(
     }
 
     const { validatePlayerAction, resolveState, resolvePlayerAction } =
-      getGameSettings(game)
+      getGameApi(game)
 
     let validatedAction: GameAction<T>
 
