@@ -14,6 +14,7 @@ import {
   isCardPlayable,
 } from "lib/games/papayoo/cards"
 import { CardColor } from "lib/games/papayoo/model"
+import { GameType } from "lib/games/types"
 import { identity } from "lib/utils/types"
 
 export function getCardText(card: number): string {
@@ -22,7 +23,7 @@ export function getCardText(card: number): string {
 
 export function Game() {
   const { cards, currentPlayerId, playerOrder, players } = useGameState(
-    "papayoo",
+    GameType.PAPAYOO,
     identity
   )
 
@@ -36,7 +37,7 @@ export function Game() {
   const highestCardIndex = getHighestCard(cards)
 
   const playCard = useCallback(
-    async (card: number) => playerAction("papayoo", roomId, { card }),
+    async (card: number) => playerAction(GameType.PAPAYOO, roomId, { card }),
     [roomId]
   )
 

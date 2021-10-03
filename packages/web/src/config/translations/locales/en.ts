@@ -84,6 +84,7 @@ export default {
     },
   },
   roomList: {
+    allGames: "All games",
     createRoom: {
       label: "Create room",
       reason: {

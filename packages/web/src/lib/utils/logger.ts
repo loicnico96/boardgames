@@ -40,7 +40,7 @@ export class Logger {
     }
   }
 
-  public error(error: Error | string): void {
+  public error(error: unknown): void {
     if (this.level >= LogLevel.ERROR) {
       if (this.prefix) {
         console.error(`[${this.prefix}]`, error)

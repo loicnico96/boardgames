@@ -4,6 +4,7 @@ import { GameProvider } from "components/providers/GameProvider"
 import { useRoomId } from "hooks/useRoomId"
 import { useTranslations } from "hooks/useTranslations"
 import { MetropolysApi } from "lib/games/metropolys/api"
+import { GameType } from "lib/games/types"
 
 import { Counter } from "./Counter"
 
@@ -12,7 +13,11 @@ export default function Metropolys() {
   const t = useTranslations()
 
   return (
-    <GameProvider api={MetropolysApi} game="metropolys" roomId={roomId}>
+    <GameProvider
+      api={MetropolysApi}
+      game={GameType.METROPOLYS}
+      roomId={roomId}
+    >
       <Text>{t.games.metropolys.name}</Text>
       <Counter />
     </GameProvider>
