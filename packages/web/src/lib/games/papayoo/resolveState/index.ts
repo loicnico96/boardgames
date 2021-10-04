@@ -88,18 +88,20 @@ export async function resolveState(context: PapayooContext) {
   const { cards, currentPlayerId, playerOrder, startingPlayerId } =
     context.state
 
-  if (cards.length < playerOrder.length) {
-    const nextPlayerId = context.nextPlayerId(currentPlayerId)
+  if (context.allReady()) {
+    if (cards.length < playerOrder.length) {
+      const nextPlayerId = context.nextPlayerId(currentPlayerId)
 
-    await nextPlayer(context, nextPlayerId)
-  } else {
-    const highestCardPlayerId = context.nextPlayerId(
-      startingPlayerId,
-      getHighestCard(cards)
-    )
+      await nextPlayer(context, nextPlayerId)
+    } else {
+      const highestCardPlayerId = context.nextPlayerId(
+        startingPlayerId,
+        getHighestCard(cards)
+      )
 
-    const score = sum(cards.map(getCardScore))
+      const score = sum(cards.map(getCardScore))
 
-    await nextRound(context, highestCardPlayerId, score)
+      await nextRound(context, highestCardPlayerId, score)
+    }
   }
 }

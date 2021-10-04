@@ -1,6 +1,11 @@
 import { isNumber, isObject } from "lib/utils/types"
 
-import { getRequestedColor, isCardPlayable, isValidCard } from "../cards"
+import {
+  getRequestedColor,
+  isAbleToDiscard,
+  isAbleToPlay,
+  isValidCard,
+} from "../cards"
 import { PapayooAction, PapayooState } from "../model"
 
 export function validatePlayerAction(
@@ -10,6 +15,14 @@ export function validatePlayerAction(
 ): PapayooAction {
   if (!isObject(action)) {
     throw Error("Invalid action")
+  }
+
+  if (state.currentPlayerId !== playerId) {
+    throw Error("Not your turn")
+  }
+
+  if (state.players[playerId].ready) {
+    throw Error("Ready")
   }
 
   const { card } = action
@@ -24,8 +37,12 @@ export function validatePlayerAction(
     throw Error("Card is not in your hand")
   }
 
-  if (!isCardPlayable(card, player.cards, getRequestedColor(state.cards))) {
-    throw Error("Card is not playable")
+  const requestedColor = getRequestedColor(state.cards)
+
+  if (!isAbleToPlay(card, requestedColor)) {
+    if (!isAbleToDiscard(player, requestedColor)) {
+      throw Error("Card is not playable")
+    }
   }
 
   return { card }

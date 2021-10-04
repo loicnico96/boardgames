@@ -5,7 +5,7 @@ import { toast } from "react-toastify"
 
 import { useDocumentListener } from "hooks/db/useDocumentListener"
 import { useActions } from "hooks/store/useActions"
-import { useAuth } from "hooks/store/useAuth"
+import { useCurrentUserId } from "hooks/store/useCurrentUserId"
 import { withSearchParams } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
 import { getRoomRef } from "lib/db/collections"
@@ -29,7 +29,7 @@ export function RoomProvider({ children, game, roomId }: RoomProviderProps) {
   const t = useTranslations()
 
   const { setRoomResources } = useActions()
-  const { user } = useAuth()
+  const userId = useCurrentUserId()
 
   const previousRef = useRef(resource)
 
@@ -43,7 +43,7 @@ export function RoomProvider({ children, game, roomId }: RoomProviderProps) {
       previous?: Resource<WithId<RoomData>>
     ) => {
       if (current.error?.message.match(/not found/i)) {
-        if (previous?.data && previous.data.ownerId !== user?.userId) {
+        if (previous?.data && previous.data.ownerId !== userId) {
           toast.info(t.room.closedByOwner)
         }
 
@@ -60,7 +60,7 @@ export function RoomProvider({ children, game, roomId }: RoomProviderProps) {
         await router.replace(redirect)
       }
     },
-    [game, roomId, router, t, user]
+    [game, roomId, router, t, userId]
   )
 
   useDocumentListener<RoomData>(

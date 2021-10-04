@@ -2,10 +2,10 @@ import { GameModel, GameState } from "@boardgames/common"
 
 export enum CardColor {
   BLACK = 0,
-  BLUE = 1,
-  GREEN = 2,
-  ORANGE = 3,
-  PINK = 4,
+  SPADES = 1,
+  HEARTS = 2,
+  CLUBS = 3,
+  DIAMONDS = 4,
 }
 
 export type Card = {

@@ -7,7 +7,26 @@ export default {
       name: "Metropolys",
     },
     papayoo: {
+      action: {
+        discard: "Discard {{value}} of {{color}}",
+        play: "Play {{value}} of {{color}}",
+      },
+      card: {
+        label: "{{value}} of {{color}}",
+        tooltip: "{{value}} of {{color}} ({{score}} points)",
+      },
+      color: {
+        0: "Payoos",
+        1: "Spades",
+        2: "Hearts",
+        3: "Clubs",
+        4: "Diamonds",
+      },
       name: "Papayoo",
+      reason: {
+        notPlayable: "You must play a card of the requested color if able.",
+        notYourTurn: "It's not your turn to play.",
+      },
     },
     roborally: {
       name: "Roborally",

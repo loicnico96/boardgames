@@ -2,14 +2,14 @@ import { fill, sortBy } from "lib/utils/array"
 import { mutableShuffle, Random } from "lib/utils/random"
 import { assert } from "lib/utils/types"
 
-import { Card, CardColor } from "./model"
+import { Card, CardColor, PapayooPlayer } from "./model"
 
 const CARDS: Card[] = [
   ...fill(20, index => ({ color: CardColor.BLACK, value: index + 1 })),
-  ...fill(10, index => ({ color: CardColor.BLUE, value: index + 1 })),
-  ...fill(10, index => ({ color: CardColor.GREEN, value: index + 1 })),
-  ...fill(10, index => ({ color: CardColor.ORANGE, value: index + 1 })),
-  ...fill(10, index => ({ color: CardColor.PINK, value: index + 1 })),
+  ...fill(10, index => ({ color: CardColor.SPADES, value: index + 1 })),
+  ...fill(10, index => ({ color: CardColor.HEARTS, value: index + 1 })),
+  ...fill(10, index => ({ color: CardColor.CLUBS, value: index + 1 })),
+  ...fill(10, index => ({ color: CardColor.DIAMONDS, value: index + 1 })),
 ]
 
 export function isValidCard(card: number): boolean {
@@ -88,14 +88,19 @@ export function getHighestCard(cards: number[]): number {
   return highestCardIndex
 }
 
-export function isCardPlayable(
+export function isAbleToPlay(
   card: number,
-  hand: number[],
+  requestedColor: CardColor | null
+): boolean {
+  return requestedColor === null || getCardColor(card) === requestedColor
+}
+
+export function isAbleToDiscard(
+  player: PapayooPlayer,
   requestedColor: CardColor | null
 ): boolean {
   return (
-    requestedColor === null ||
-    getCardColor(card) === requestedColor ||
-    !hand.map(getCardColor).includes(requestedColor)
+    requestedColor !== null &&
+    !player.cards.map(getCardColor).includes(requestedColor)
   )
 }

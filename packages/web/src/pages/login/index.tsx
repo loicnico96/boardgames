@@ -5,7 +5,7 @@ import { useCallback, useEffect } from "react"
 import { AsyncButton } from "components/ui/AsyncButton"
 import { PageLayout } from "components/ui/PageLayout"
 import { useActions } from "hooks/store/useActions"
-import { useAuth } from "hooks/store/useAuth"
+import { useCurrentUserId } from "hooks/store/useCurrentUserId"
 import { useSearchParam } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
 import { promptUserName } from "lib/auth/promptUserName"
@@ -18,15 +18,15 @@ export default function LoginPage() {
 
   const router = useRouter()
   const { setUserName } = useActions()
-  const { user } = useAuth()
+  const userId = useCurrentUserId()
 
   const redirectTo = useSearchParam(Param.REDIRECT) ?? ROUTES.home()
 
   useEffect(() => {
-    if (user) {
+    if (userId) {
       router.replace(redirectTo).catch(Console.error)
     }
-  }, [redirectTo, router, user])
+  }, [redirectTo, router, userId])
 
   const parents = [
     {
@@ -51,15 +51,15 @@ export default function LoginPage() {
         <Text>Paragraph 2</Text>
         <Box gap={8}>
           <AsyncButton
-            disabled={user !== null}
+            disabled={userId !== null}
             onClick={signInAsGuest}
-            reason={user !== null ? "alreadyLoggedIn" : undefined}
+            reason={userId !== null ? "alreadyLoggedIn" : undefined}
             translations={t.login.signInAnonymously}
           />
           <AsyncButton
-            disabled={user !== null}
+            disabled={userId !== null}
             onClick={signInWithGoogle}
-            reason={user !== null ? "alreadyLoggedIn" : undefined}
+            reason={userId !== null ? "alreadyLoggedIn" : undefined}
             translations={t.login.signInWithGoogle}
           />
         </Box>

@@ -1,7 +1,7 @@
 import { PageContent, Text } from "@boardgames/components"
 
 import { AsyncButton } from "components/ui/AsyncButton"
-import { useAuth } from "hooks/store/useAuth"
+import { useCurrentUserId } from "hooks/store/useCurrentUserId"
 import { useRoomData } from "hooks/useRoomData"
 import { useRoomId } from "hooks/useRoomId"
 import { useTranslations } from "hooks/useTranslations"
@@ -19,10 +19,10 @@ export function RoomLobby() {
 
   const room = useRoomData(roomId, identity)
 
-  const { user } = useAuth()
+  const userId = useCurrentUserId()
 
-  const isPlayer = !!user && room.playerOrder.includes(user.userId)
-  const isOwner = !!user && room.ownerId === user.userId
+  const isPlayer = !!userId && room.playerOrder.includes(userId)
+  const isOwner = !!userId && room.ownerId === userId
 
   const [closeRoom, closeRoomDisabled, closeRoomReason] = useCloseRoom(roomId)
   const [enterRoom, enterRoomDisabled, enterRoomReason] = useEnterRoom(roomId)
