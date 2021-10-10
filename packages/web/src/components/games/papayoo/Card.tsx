@@ -68,6 +68,8 @@ import CardBlack17 from "assets/games/papayoo/cards/card517.png"
 import CardBlack18 from "assets/games/papayoo/cards/card518.png"
 import CardBlack19 from "assets/games/papayoo/cards/card519.png"
 import CardBlack20 from "assets/games/papayoo/cards/card520.png"
+// Empty
+import CardEmpty from "assets/games/papayoo/cards/empty.png"
 import { replace } from "config/translations/replace"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { useTranslations } from "hooks/useTranslations"
@@ -78,7 +80,7 @@ import {
 } from "lib/games/papayoo/cards"
 
 export type CardProps = {
-  card: number
+  card: number | null
   disabled?: boolean
   highlighted?: boolean
   onClick?: (card: number) => Promise<unknown>
@@ -159,6 +161,8 @@ export const CardImageSources = [
   CardDiamond8,
   CardDiamond9,
   CardDiamond10,
+  // Empty
+  CardEmpty,
 ]
 
 const StyledImageContainer = styled.div<ImageProps>`
@@ -201,7 +205,7 @@ export function Card({
 }: CardProps) {
   const [onClickAsync, loading] = useAsyncHandler(
     useCallback(async () => {
-      if (onClick && playable && !disabled) {
+      if (card !== null && onClick && playable && !disabled) {
         await onClick(card)
       }
     }, [card, disabled, onClick, playable])
@@ -209,17 +213,23 @@ export function Card({
 
   const t = useTranslations()
 
-  const color = getCardColor(card)
-  const score = getCardScore(card)
-  const value = getCardValue(card)
+  const cardLabel =
+    card === null
+      ? t.games.papayoo.card.empty
+      : replace(t.games.papayoo.card.label, {
+          color: t.games.papayoo.color[getCardColor(card)],
+          score: getCardScore(card),
+          value: getCardValue(card),
+        })
 
-  const cardLabel = replace(t.games.papayoo.card.label, { color, score, value })
-
-  const cardTooltip = replace(tooltip ?? t.games.papayoo.card.tooltip, {
-    color,
-    score,
-    value,
-  })
+  const cardTooltip =
+    card === null
+      ? tooltip
+      : replace(tooltip ?? t.games.papayoo.card.tooltip, {
+          color: t.games.papayoo.color[getCardColor(card)],
+          score: getCardScore(card),
+          value: getCardValue(card),
+        })
 
   return (
     <StyledImageContainer
@@ -234,7 +244,7 @@ export function Card({
       <Image
         aria-label={cardLabel}
         placeholder="blur"
-        src={CardImageSources[card]}
+        src={card === null ? CardEmpty : CardImageSources[card]}
       />
     </StyledImageContainer>
   )

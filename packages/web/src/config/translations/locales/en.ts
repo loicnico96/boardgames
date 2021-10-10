@@ -12,7 +12,11 @@ export default {
         discard: "Discard {{value}} of {{color}}",
         play: "Play {{value}} of {{color}}",
       },
+      banner: {
+        play: "Choose a card to play or discard",
+      },
       card: {
+        empty: "Empty",
         label: "{{value}} of {{color}}",
         tooltip: "{{value}} of {{color}} ({{score}} points)",
       },

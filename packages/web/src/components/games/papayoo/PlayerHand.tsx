@@ -1,4 +1,3 @@
-import { Box, Text } from "@boardgames/components"
 import { useCallback } from "react"
 
 import { useGameState } from "hooks/useGameState"
@@ -38,37 +37,32 @@ export function PlayerHand({ isCurrentUser, playerId }: PlayerHandProps) {
   const t = useTranslations()
 
   return (
-    <Box>
-      <Text>
-        {player.name} ({player.score})
-      </Text>
-      <CardList>
-        {player.cards.map(card => {
-          const isDiscardable = isAbleToDiscard(player, requestedColor)
-          const isPlayable = isAbleToPlay(card, requestedColor)
+    <CardList>
+      {player.cards.map(card => {
+        const isDiscardable = isAbleToDiscard(player, requestedColor)
+        const isPlayable = isAbleToPlay(card, requestedColor)
 
-          const tooltip = isCurrentUser
-            ? player.ready
-              ? t.games.papayoo.reason.notYourTurn
-              : isPlayable
-              ? t.games.papayoo.action.play
-              : isDiscardable
-              ? t.games.papayoo.action.discard
-              : t.games.papayoo.reason.notPlayable
-            : undefined
+        const tooltip = isCurrentUser
+          ? player.ready
+            ? t.games.papayoo.reason.notYourTurn
+            : isPlayable
+            ? t.games.papayoo.action.play
+            : isDiscardable
+            ? t.games.papayoo.action.discard
+            : t.games.papayoo.reason.notPlayable
+          : undefined
 
-          return (
-            <Card
-              card={card}
-              disabled={player.ready}
-              key={card}
-              onClick={isCurrentUser ? playCard : undefined}
-              playable={isPlayable || isDiscardable}
-              tooltip={tooltip}
-            />
-          )
-        })}
-      </CardList>
-    </Box>
+        return (
+          <Card
+            card={card}
+            disabled={player.ready}
+            key={card}
+            onClick={isCurrentUser ? playCard : undefined}
+            playable={isPlayable || isDiscardable}
+            tooltip={tooltip}
+          />
+        )
+      })}
+    </CardList>
   )
 }

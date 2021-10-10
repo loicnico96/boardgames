@@ -14,18 +14,20 @@ export function useAsyncHandler<P extends unknown[]>(
 
   const asyncHandler = useCallback(
     async (...args: P) => {
-      try {
-        setIsRunning(true)
-        await handler(...args)
-      } catch (error) {
-        onError(toError(error))
-      } finally {
-        if (mountedRef.current) {
-          setIsRunning(false)
+      if (!isRunning) {
+        try {
+          setIsRunning(true)
+          await handler(...args)
+        } catch (error) {
+          onError(toError(error))
+        } finally {
+          if (mountedRef.current) {
+            setIsRunning(false)
+          }
         }
       }
     },
-    [handler, mountedRef, onError]
+    [handler, isRunning, mountedRef, onError]
   )
 
   return [asyncHandler, isRunning]

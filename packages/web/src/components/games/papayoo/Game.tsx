@@ -9,10 +9,13 @@ import {
 } from "lib/games/papayoo/cards"
 import { CardColor } from "lib/games/papayoo/model"
 import { GameType } from "lib/games/types"
+import { fill } from "lib/utils/array"
 import { identity } from "lib/utils/types"
 
+import { Banner } from "./Banner"
 import { Card } from "./Card"
 import { CardList } from "./CardList"
+import { PlayerCard } from "./PlayerCard"
 import { PlayerHand } from "./PlayerHand"
 
 export function getCardText(card: number): string {
@@ -31,21 +34,31 @@ export function Game() {
 
   const isPlayer = userId !== null && playerOrder.includes(userId)
 
+  const field = fill(playerOrder.length, index => cards[index] ?? null)
+
   return (
-    <Box direction="column">
-      <CardList>
-        {cards.map((card, index) => (
-          <Card
-            card={card}
-            highlighted={index === highestCardIndex}
-            key={card}
-          />
+    <Box alignment="start">
+      <Box direction="column" flex={1}>
+        <Banner />
+        <CardList>
+          {field.map((card, index) => (
+            <Card
+              card={card}
+              highlighted={index === highestCardIndex}
+              key={index}
+            />
+          ))}
+        </CardList>
+        <PlayerHand
+          isCurrentUser={isPlayer}
+          playerId={isPlayer ? userId : currentPlayerId}
+        />
+      </Box>
+      <div>
+        {playerOrder.map(playerId => (
+          <PlayerCard key={playerId} playerId={playerId} />
         ))}
-      </CardList>
-      <PlayerHand
-        isCurrentUser={isPlayer}
-        playerId={isPlayer ? userId : currentPlayerId}
-      />
+      </div>
     </Box>
   )
 }
