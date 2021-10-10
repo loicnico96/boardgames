@@ -1,5 +1,6 @@
 export default {
   game: {
+    pageLoadingAssets: "Loading assets... ({{count}}/{{total}})",
     pageLoading: "Loading game...",
   },
   games: {

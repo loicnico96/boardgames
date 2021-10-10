@@ -1,6 +1,9 @@
 // Spades
 import css from "@emotion/css"
 import styled from "@emotion/styled"
+import Image from "next/image"
+import { useCallback } from "react"
+
 import CardSpade1 from "assets/games/papayoo/cards/card101.png"
 import CardSpade2 from "assets/games/papayoo/cards/card102.png"
 import CardSpade3 from "assets/games/papayoo/cards/card103.png"
@@ -65,9 +68,6 @@ import CardBlack17 from "assets/games/papayoo/cards/card517.png"
 import CardBlack18 from "assets/games/papayoo/cards/card518.png"
 import CardBlack19 from "assets/games/papayoo/cards/card519.png"
 import CardBlack20 from "assets/games/papayoo/cards/card520.png"
-import Image from "next/image"
-import { useCallback } from "react"
-
 import { replace } from "config/translations/replace"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { useTranslations } from "hooks/useTranslations"
@@ -93,7 +93,7 @@ export type ImageProps = {
   playable?: boolean
 }
 
-const CardImageSources = [
+export const CardImageSources = [
   // Payoos
   CardBlack1,
   CardBlack2,
