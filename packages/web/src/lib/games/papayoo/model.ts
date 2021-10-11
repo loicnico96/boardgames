@@ -1,4 +1,4 @@
-import { GameModel, GameState } from "@boardgames/common"
+import { GameModel, GamePlayer, GameState } from "@boardgames/common"
 
 export enum CardColor {
   BLACK = 0,
@@ -45,17 +45,14 @@ export type PapayooOptions = {
   // Empty
 }
 
-export type PapayooPlayer = {
+export type PapayooPlayer = GamePlayer & {
   cards: number[]
-  name: string
-  ready: boolean
   score: number
 }
 
-export type PapayooState = GameState & {
+export type PapayooState = GameState<PapayooPlayer> & {
   cards: number[]
   currentPlayerId: string
-  players: Record<string, PapayooPlayer>
   seed: number
   startingPlayerId: string
 }

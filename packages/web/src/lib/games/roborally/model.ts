@@ -1,4 +1,4 @@
-import { GameModel, GameState } from "@boardgames/common"
+import { GameModel, GamePlayer, GameState } from "@boardgames/common"
 
 export type RoborallyAction = {
   count: number
@@ -8,9 +8,12 @@ export type RoborallyOptions = {
   // Empty
 }
 
-export type RoborallyState = GameState & {
+export type RoborallyPlayer = GamePlayer & {
   count: number
-  players: Record<string, { count: number }>
+}
+
+export type RoborallyState = GameState<RoborallyPlayer> & {
+  count: number
   state: number
 }
 

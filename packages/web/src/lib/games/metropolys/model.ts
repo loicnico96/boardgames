@@ -1,4 +1,4 @@
-import { GameModel, GameState } from "@boardgames/common"
+import { GameModel, GamePlayer, GameState } from "@boardgames/common"
 
 export type MetropolysAction = {
   count: number
@@ -8,9 +8,12 @@ export type MetropolysOptions = {
   // Empty
 }
 
-export type MetropolysState = GameState & {
+export type MetropolysPlayer = GamePlayer & {
   count: number
-  players: Record<string, { count: number }>
+}
+
+export type MetropolysState = GameState<MetropolysPlayer> & {
+  count: number
   state: number
 }
 
