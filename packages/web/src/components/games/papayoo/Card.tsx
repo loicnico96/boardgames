@@ -70,6 +70,7 @@ import CardBlack19 from "assets/games/papayoo/cards/card519.png"
 import CardBlack20 from "assets/games/papayoo/cards/card520.png"
 // Empty
 import CardEmpty from "assets/games/papayoo/cards/empty.png"
+import { Tooltip } from "components/ui/Tooltip"
 import { replace } from "config/translations/replace"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { useTranslations } from "hooks/useTranslations"
@@ -232,20 +233,21 @@ export function Card({
         })
 
   return (
-    <StyledImageContainer
-      aria-disabled={disabled || loading}
-      disabled={disabled || loading}
-      highlighted={highlighted}
-      onClick={onClick ? onClickAsync : undefined}
-      playable={playable}
-      role="button"
-      title={cardTooltip}
-    >
-      <Image
-        aria-label={cardLabel}
-        placeholder="blur"
-        src={card === null ? CardEmpty : CardImageSources[card]}
-      />
-    </StyledImageContainer>
+    <Tooltip text={cardTooltip}>
+      <StyledImageContainer
+        aria-disabled={disabled || loading}
+        disabled={disabled || loading}
+        highlighted={highlighted}
+        onClick={onClick ? onClickAsync : undefined}
+        playable={playable}
+        role="button"
+      >
+        <Image
+          aria-label={cardLabel}
+          placeholder="blur"
+          src={card === null ? CardEmpty : CardImageSources[card]}
+        />
+      </StyledImageContainer>
+    </Tooltip>
   )
 }

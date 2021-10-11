@@ -2,6 +2,7 @@ import { Button, ButtonClickEvent, ButtonProps } from "@boardgames/components"
 import { useCallback } from "react"
 import { toast } from "react-toastify"
 
+import { Tooltip } from "components/ui/Tooltip"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { If, IsNever } from "lib/utils/types"
 
@@ -81,13 +82,10 @@ export function AsyncButton<Reason extends string = never>({
   const tooltip = getTooltip(translations, reason)
 
   return (
-    <Button
-      disabled={disabled || loading}
-      onClick={onClickAsync}
-      title={tooltip ?? label}
-      {...props}
-    >
-      {label}
-    </Button>
+    <Tooltip solid text={tooltip}>
+      <Button disabled={disabled || loading} onClick={onClickAsync} {...props}>
+        {label}
+      </Button>
+    </Tooltip>
   )
 }
