@@ -1,41 +1,54 @@
 import styled from "@emotion/styled"
 import { ComponentType } from "react"
 
-import { Box, BoxProps } from "Components/Primitives/Box"
 import { Link, LinkProps } from "Components/Primitives/Link"
+import { computeStyleProps, StyleProps } from "utils/style"
 
 export type BreadcrumbsParent = {
   title: string
   path: string
 }
 
-export type BreadcrumbsProps = Omit<BoxProps, "children"> & {
+export type BreadcrumbsProps = StyleProps & {
   linkComponent?: ComponentType<LinkProps>
   parents?: ReadonlyArray<BreadcrumbsParent>
   title: string
 }
 
-const Breadcrumb = styled.span`
-  :not(:last-of-type)::after {
-    content: ">";
-    margin: 0px 8px;
-  }
+const BreadcrumbList = styled.ol`
+  list-style: none;
+  padding: 0;
 `
 
-export function Breadcrumbs({
-  linkComponent: LinkComponent = Link,
-  parents = [],
-  title,
-  ...props
-}: BreadcrumbsProps) {
+const BreadcrumbListItem = styled.li`
+  display: inline;
+`
+
+const BreadcrumbSeparator = styled.span`
+  margin: 0px 8px;
+`
+
+export function Breadcrumbs(props: BreadcrumbsProps) {
+  const {
+    linkComponent: LinkComponent = Link,
+    parents = [],
+    title,
+    ...styleProps
+  } = computeStyleProps(props)
+
   return (
-    <Box {...props}>
-      {parents.map(parent => (
-        <Breadcrumb key={parent.path}>
-          <LinkComponent href={parent.path}>{parent.title}</LinkComponent>
-        </Breadcrumb>
-      ))}
-      <Breadcrumb>{title}</Breadcrumb>
-    </Box>
+    <nav aria-label="Breadcrumbs" {...styleProps}>
+      <BreadcrumbList>
+        {parents.map(parent => (
+          <BreadcrumbListItem key={parent.path}>
+            <LinkComponent href={parent.path}>{parent.title}</LinkComponent>
+            <BreadcrumbSeparator aria-hidden>{">"}</BreadcrumbSeparator>
+          </BreadcrumbListItem>
+        ))}
+        <BreadcrumbListItem>
+          <span aria-current="location">{title}</span>
+        </BreadcrumbListItem>
+      </BreadcrumbList>
+    </nav>
   )
 }

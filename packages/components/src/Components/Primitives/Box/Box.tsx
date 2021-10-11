@@ -1,4 +1,5 @@
 import styled from "@emotion/styled"
+import { ElementType } from "react"
 
 import { computeStyleProps, StyleProps } from "utils/style"
 
@@ -7,6 +8,7 @@ type BaseBoxProps = React.ButtonHTMLAttributes<HTMLDivElement>
 export type BoxProps = BaseBoxProps &
   StyleProps & {
     alignment?: "start" | "end" | "center"
+    as?: ElementType
     direction?: "row" | "column"
     gap?: number
   }

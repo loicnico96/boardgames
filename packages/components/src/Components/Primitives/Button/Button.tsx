@@ -50,5 +50,5 @@ const StyledButton = styled.button<StyledButtonProps>`
 
 export function Button(props: ButtonProps) {
   const styledProps = computeStyleProps(props)
-  return <StyledButton {...styledProps} />
+  return <StyledButton role="button" {...styledProps} />
 }
