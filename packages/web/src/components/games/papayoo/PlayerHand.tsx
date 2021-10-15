@@ -30,7 +30,8 @@ export function PlayerHand({ isCurrentUser, playerId }: PlayerHandProps) {
   const requestedColor = getRequestedColor(cards)
 
   const playCard = useCallback(
-    async (card: number) => playerAction(GameType.PAPAYOO, roomId, { card }),
+    async (card: number) =>
+      playerAction(GameType.PAPAYOO, roomId, "playCard", { card }),
     [roomId]
   )
 

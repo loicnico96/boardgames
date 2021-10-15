@@ -21,7 +21,7 @@ export async function nextGame(context: PapayooContext) {
     ]),
   })
 
-  await context.post("dealCards")
+  await context.post("dealCards", {})
 }
 
 export async function nextPlayer(context: PapayooContext, playerId: string) {

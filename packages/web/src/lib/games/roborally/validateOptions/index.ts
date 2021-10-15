@@ -1,5 +1,5 @@
 import { RoborallyOptions } from "../model"
 
-export function validateOptions(options: unknown): RoborallyOptions {
+export function validateOptions(): RoborallyOptions {
   return {}
 }

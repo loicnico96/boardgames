@@ -44,3 +44,16 @@ export function isObject(value: unknown): value is Record<string, unknown> {
 export function isString(value: unknown): value is string {
   return typeof value === "string"
 }
+
+export type ObjectRecord<T> = Record<string, T>
+export type Key<T extends ObjectRecord<unknown>> = keyof T
+export type Value<T extends ObjectRecord<unknown>> = T[keyof T]
+
+export type ObjectUnion<
+  U extends string,
+  T extends ObjectRecord<ObjectRecord<unknown>>
+> = {
+  [S in Key<T>]: {
+    [K in Key<T[S]> | U]: K extends U ? S : T[S][K]
+  }
+}[Key<T>]

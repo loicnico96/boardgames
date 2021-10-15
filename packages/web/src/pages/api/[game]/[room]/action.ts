@@ -1,3 +1,5 @@
+import { BaseAction } from "@boardgames/common"
+
 import { ApiError } from "lib/api/error"
 import { handle, readBody, readParam } from "lib/api/server"
 import { getUserId } from "lib/api/server/auth"
@@ -13,7 +15,7 @@ export async function playerAction<T extends GameType>(
   userId: string,
   game: T,
   roomId: string,
-  action: Record<string, unknown>
+  action: BaseAction
 ): Promise<GenericHttpResponse> {
   const success = await firestore.runTransaction(async transaction => {
     const clientRef = firestore.doc(getClientRef(game, roomId))
@@ -74,7 +76,7 @@ export default handle({
     }
 
     const roomId = readParam(request, Param.ROOM_ID)
-    const action = readBody<Record<string, unknown>>(request)
+    const action = readBody<BaseAction>(request)
     return playerAction(userId, game, roomId, action)
   },
 })

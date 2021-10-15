@@ -1,4 +1,11 @@
-import { GameModel, GamePlayer, GameState } from "@boardgames/common"
+import {
+  BaseModel,
+  BaseOptions,
+  BasePlayer,
+  BaseState,
+} from "@boardgames/common"
+
+import { ObjectUnion } from "lib/utils/types"
 
 export enum CardColor {
   BLACK = 0,
@@ -13,52 +20,52 @@ export type Card = {
   value: number
 }
 
-export type PapayooAction = {
-  card: number
-}
+export type PapayooAction = ObjectUnion<
+  "code",
+  {
+    playCard: {
+      card: number
+    }
+  }
+>
 
-export type PapayooEvent =
-  | {
-      code: "dealCards"
-    }
-  | {
-      code: "nextPlayer"
+export type PapayooEvent = ObjectUnion<
+  "code",
+  {
+    dealCards: {}
+    nextPlayer: {
       playerId: string
     }
-  | {
-      code: "nextRound"
+    nextRound: {
       playerId: string
     }
-  | {
-      code: "playCard"
+    playCard: {
       card: number
       playerId: string
     }
-  | {
-      code: "score"
+    score: {
       cards: number[]
       playerId: string
       score: number
     }
+  }
+>
 
-export type PapayooOptions = {
-  // Empty
-}
+export type PapayooOptions = BaseOptions
 
-export type PapayooPlayer = GamePlayer & {
+export type PapayooPlayer = BasePlayer<PapayooAction> & {
   cards: number[]
   score: number
 }
 
-export type PapayooState = GameState<PapayooPlayer> & {
+export type PapayooState = BaseState<PapayooPlayer> & {
   cards: number[]
   currentPlayerId: string
   seed: number
   startingPlayerId: string
 }
 
-export type PapayooModel = GameModel & {
-  action: PapayooAction
+export type PapayooModel = BaseModel & {
   event: PapayooEvent
   options: PapayooOptions
   state: PapayooState

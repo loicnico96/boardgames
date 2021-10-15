@@ -1,24 +1,31 @@
-import { GameModel, GamePlayer, GameState } from "@boardgames/common"
+import {
+  BaseAction,
+  BaseEvent,
+  BaseModel,
+  BaseOptions,
+  BasePlayer,
+  BaseState,
+} from "@boardgames/common"
 
-export type MetropolysAction = {
+export type MetropolysAction = BaseAction & {
   count: number
 }
 
-export type MetropolysOptions = {
-  // Empty
-}
+export type MetropolysEvent = BaseEvent
 
-export type MetropolysPlayer = GamePlayer & {
+export type MetropolysOptions = BaseOptions
+
+export type MetropolysPlayer = BasePlayer<MetropolysAction> & {
   count: number
 }
 
-export type MetropolysState = GameState<MetropolysPlayer> & {
+export type MetropolysState = BaseState<MetropolysPlayer> & {
   count: number
   state: number
 }
 
-export type MetropolysModel = GameModel & {
-  action: MetropolysAction
+export type MetropolysModel = BaseModel & {
+  event: MetropolysEvent
   options: MetropolysOptions
   state: MetropolysState
 }

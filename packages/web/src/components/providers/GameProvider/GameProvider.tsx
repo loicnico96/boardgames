@@ -7,13 +7,13 @@ import { useActions } from "hooks/store/useActions"
 import { useGameResource } from "hooks/useGameResource"
 import { useTranslations } from "hooks/useTranslations"
 import { getClientRef } from "lib/db/collections"
-import { GameEvent, Games, GameState, GameType } from "lib/games/types"
+import { Game, GameEvent, GameState, GameType } from "lib/games/types"
 import { Logger } from "lib/utils/logger"
 import { wait } from "lib/utils/performance"
 import { getLoadedResource } from "lib/utils/resource"
 
-export type GameProviderProps<T extends GameType> = {
-  api: GameApi<Games[T]>
+export interface GameProviderProps<T extends GameType> {
+  api: GameApi<Game<T>>
   children: ReactNode
   game: T
   roomId: string

@@ -1,24 +1,31 @@
-import { GameModel, GamePlayer, GameState } from "@boardgames/common"
+import {
+  BaseAction,
+  BaseEvent,
+  BaseModel,
+  BaseOptions,
+  BasePlayer,
+  BaseState,
+} from "@boardgames/common"
 
-export type RoborallyAction = {
+export type RoborallyAction = BaseAction & {
   count: number
 }
 
-export type RoborallyOptions = {
-  // Empty
-}
+export type RoborallyEvent = BaseEvent
 
-export type RoborallyPlayer = GamePlayer & {
+export type RoborallyOptions = BaseOptions
+
+export type RoborallyPlayer = BasePlayer<RoborallyAction> & {
   count: number
 }
 
-export type RoborallyState = GameState<RoborallyPlayer> & {
+export type RoborallyState = BaseState<RoborallyPlayer> & {
   count: number
   state: number
 }
 
-export type RoborallyModel = GameModel & {
-  action: RoborallyAction
+export type RoborallyModel = BaseModel & {
+  event: RoborallyEvent
   options: RoborallyOptions
   state: RoborallyState
 }

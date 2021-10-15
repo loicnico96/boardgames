@@ -1,4 +1,6 @@
-import { isNumber, isObject } from "lib/utils/types"
+import { BaseAction } from "@boardgames/common"
+
+import { isNumber } from "lib/utils/types"
 
 import {
   getRequestedColor,
@@ -11,20 +13,8 @@ import { PapayooAction, PapayooState } from "../model"
 export function validatePlayerAction(
   state: PapayooState,
   playerId: string,
-  action: unknown
+  action: BaseAction
 ): PapayooAction {
-  if (!isObject(action)) {
-    throw Error("Invalid action")
-  }
-
-  if (state.currentPlayerId !== playerId) {
-    throw Error("Not your turn")
-  }
-
-  if (state.players[playerId].ready) {
-    throw Error("Ready")
-  }
-
   const { card } = action
 
   if (!isNumber(card) || !isValidCard(card)) {
@@ -45,5 +35,5 @@ export function validatePlayerAction(
     }
   }
 
-  return { card }
+  return { code: "playCard", card }
 }

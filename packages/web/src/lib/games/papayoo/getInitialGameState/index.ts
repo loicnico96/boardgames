@@ -3,7 +3,21 @@ import { generate } from "lib/utils/array"
 import { randomValue } from "lib/utils/random"
 
 import { dealCards } from "../cards"
-import { PapayooState } from "../model"
+import { PapayooPlayer, PapayooState } from "../model"
+
+export function getInitialPlayerState(
+  userInfo: UserInfo,
+  isStartingPlayer: boolean,
+  cards: number[]
+): PapayooPlayer {
+  return {
+    ...userInfo,
+    action: null,
+    cards,
+    ready: !isStartingPlayer,
+    score: 0,
+  }
+}
 
 export function getInitialGameState(
   playerOrder: string[],
@@ -19,12 +33,11 @@ export function getInitialGameState(
     playerOrder,
     players: generate(playerOrder, (playerId, index) => [
       playerId,
-      {
-        ...players[playerId],
-        cards: playerCards[index],
-        ready: playerId !== startingPlayerId,
-        score: 0,
-      },
+      getInitialPlayerState(
+        players[playerId],
+        playerId === startingPlayerId,
+        playerCards[index]
+      ),
     ]),
     seed: Math.random(),
     startingPlayerId,

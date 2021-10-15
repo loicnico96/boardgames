@@ -1,6 +1,16 @@
 import { UserInfo } from "lib/model/UserInfo"
+import { generate } from "lib/utils/array"
 
-import { MetropolysState } from "../model"
+import { MetropolysPlayer, MetropolysState } from "../model"
+
+export function getInitialPlayerState(userInfo: UserInfo): MetropolysPlayer {
+  return {
+    ...userInfo,
+    action: null,
+    count: 0,
+    ready: false,
+  }
+}
 
 export function getInitialGameState(
   playerOrder: string[],
@@ -8,14 +18,10 @@ export function getInitialGameState(
 ): MetropolysState {
   return {
     count: 0,
-    players: Object.keys(playerOrder).reduce((result, playerId) => {
-      result[playerId] = {
-        ...players[playerId],
-        count: 0,
-        ready: false,
-      }
-      return result
-    }, {} as MetropolysState["players"]),
+    players: generate(playerOrder, playerId => [
+      playerId,
+      getInitialPlayerState(players[playerId]),
+    ]),
     playerOrder,
     state: 0,
   }

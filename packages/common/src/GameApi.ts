@@ -1,29 +1,37 @@
-import { GameModel, GameStateChangeListener } from "./GameModel"
+import {
+  BaseAction,
+  BaseOptions,
+  Action,
+  BaseModel,
+  Options,
+  State,
+  StateChangeListener,
+} from "./GameModel"
 import { UserInfo } from "./UserInfo"
 
-export type GameApi<M extends GameModel> = {
+export type GameApi<M extends BaseModel> = {
   getInitialGameState: (
     playerOrder: string[],
     players: Record<string, UserInfo>,
-    options: M["options"]
-  ) => M["state"]
+    options: Options<M>
+  ) => State<M>
 
   resolvePlayerAction: (
-    state: M["state"],
+    state: State<M>,
     playerId: string,
-    action: M["action"]
-  ) => Promise<M["state"]>
+    action: Action<M>
+  ) => Promise<State<M>>
 
   resolveState: (
-    state: M["state"],
-    onStateChange?: GameStateChangeListener<M>
-  ) => Promise<M["state"]>
+    state: State<M>,
+    onStateChange?: StateChangeListener<M>
+  ) => Promise<State<M>>
 
   validatePlayerAction: (
-    state: M["state"],
+    state: State<M>,
     playerId: string,
-    action: unknown
-  ) => M["action"]
+    action: BaseAction
+  ) => Action<M>
 
-  validateOptions: (options: unknown) => M["options"]
+  validateOptions: (options: BaseOptions) => Options<M>
 }

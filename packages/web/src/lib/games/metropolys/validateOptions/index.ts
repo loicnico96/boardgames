@@ -1,5 +1,5 @@
 import { MetropolysOptions } from "../model"
 
-export function validateOptions(options: unknown): MetropolysOptions {
+export function validateOptions(): MetropolysOptions {
   return {}
 }

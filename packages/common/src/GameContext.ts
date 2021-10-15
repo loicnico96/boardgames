@@ -1,20 +1,26 @@
 import update, { Spec } from "immutability-helper"
 
-import { GameModel, GameStateChangeListener } from "./GameModel"
+import {
+  BaseModel,
+  State,
+  StateChangeListener,
+  EventData,
+  EventCode,
+} from "./GameModel"
 
-export class GameContext<M extends GameModel> {
-  private __onStateChange: GameStateChangeListener<M> | undefined
-  private __state: M["state"]
+export class GameContext<M extends BaseModel> {
+  private __onStateChange: StateChangeListener<M> | undefined
+  private __state: State<M>
 
   public constructor(
-    initialState: M["state"],
-    onStateChange?: GameStateChangeListener<M>
+    initialState: State<M>,
+    onStateChange?: StateChangeListener<M>
   ) {
     this.__onStateChange = onStateChange
     this.__state = initialState
   }
 
-  public get state(): M["state"] {
+  public get state(): State<M> {
     return this.__state
   }
 
@@ -29,21 +35,14 @@ export class GameContext<M extends GameModel> {
     return playerOrder[(playerIndex + shift) % playerOrder.length]
   }
 
-  public update(spec: Spec<M["state"]>): this {
+  public update(spec: Spec<State<M>>): this {
     this.__state = update(this.__state, spec)
     return this
   }
 
-  public async post<T extends M["event"]["code"]>(
-    ...[code, data]: { code: T } extends M["event"]
-      ? [
-          code: T,
-          data?: Omit<Extract<M["event"] & { code: T }, { code: T }>, "code">
-        ]
-      : [
-          code: T,
-          data: Omit<Extract<M["event"] & { code: T }, { code: T }>, "code">
-        ]
+  public async post<C extends EventCode<M>>(
+    code: C,
+    data: EventData<M, C>
   ): Promise<void> {
     if (this.__onStateChange) {
       await this.__onStateChange(this.__state, { code, ...data })

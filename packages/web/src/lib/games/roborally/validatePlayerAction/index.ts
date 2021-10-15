@@ -1,9 +1,11 @@
+import { BaseAction } from "@boardgames/common"
+
 import { RoborallyAction, RoborallyState } from "../model"
 
 export function validatePlayerAction(
   state: RoborallyState,
   playerId: string,
-  action: unknown
+  action: BaseAction
 ): RoborallyAction {
-  return { count: 0 }
+  return { ...action, count: 0 }
 }

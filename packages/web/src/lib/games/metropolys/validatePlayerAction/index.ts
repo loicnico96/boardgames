@@ -1,9 +1,11 @@
+import { BaseAction } from "@boardgames/common"
+
 import { MetropolysAction, MetropolysState } from "../model"
 
 export function validatePlayerAction(
   state: MetropolysState,
   playerId: string,
-  action: unknown
+  action: BaseAction
 ): MetropolysAction {
-  return { count: 0 }
+  return { ...action, count: 0 }
 }
