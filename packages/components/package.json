@@ -2,10 +2,10 @@
   "name": "@boardgames/components",
   "version": "0.1.0",
   "author": "Loïc Nicolas <loicnico96@gmail.com>",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "private": true,
   "bugs": "https://github.com/loicnico96/boardgames",
-  "homepage": "https://github.com/loicnico96/boardgames/tree/main/package/components#readme",
+  "homepage": "https://github.com/loicnico96/boardgames/tree/main/packages/components#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/loicnico96/boardgames",
@@ -15,9 +15,7 @@
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "rollup -c",
     "build:storybook": "build-storybook -o build",
@@ -40,6 +38,7 @@
   "devDependencies": {
     "@babel/core": "7.15.5",
     "@babel/plugin-transform-runtime": "7.15.0",
+    "@boardgames/devtools": "workspace:*",
     "@emotion/react": "11.4.1",
     "@emotion/styled": "11.3.0",
     "@storybook/addon-a11y": "6.3.8",
@@ -73,9 +72,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "rollup": "2.56.3",
-    "rollup-plugin-typescript2": "0.30.0",
     "tsconfig-paths-webpack-plugin": "3.5.1",
-    "ttypescript": "1.5.12",
     "typescript": "4.4.3",
     "webpack": "5.52.1"
   },

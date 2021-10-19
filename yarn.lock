@@ -1593,6 +1593,7 @@ __metadata:
   resolution: "@boardgames/common@workspace:packages/common"
   dependencies:
     "@babel/core": 7.15.5
+    "@boardgames/devtools": "workspace:*"
     "@typescript-eslint/eslint-plugin": 4.31.1
     "@typescript-eslint/parser": 4.31.1
     eslint: 7.32.0
@@ -1603,7 +1604,6 @@ __metadata:
     lint-staged: 11.1.2
     prettier: 2.4.0
     rollup: 2.56.3
-    rollup-plugin-typescript2: 0.30.0
     typescript: 4.4.3
   languageName: unknown
   linkType: soft
@@ -1614,6 +1614,7 @@ __metadata:
   dependencies:
     "@babel/core": 7.15.5
     "@babel/plugin-transform-runtime": 7.15.0
+    "@boardgames/devtools": "workspace:*"
     "@emotion/react": 11.4.1
     "@emotion/styled": 11.3.0
     "@storybook/addon-a11y": 6.3.8
@@ -1647,9 +1648,7 @@ __metadata:
     react: 17.0.2
     react-dom: 17.0.2
     rollup: 2.56.3
-    rollup-plugin-typescript2: 0.30.0
     tsconfig-paths-webpack-plugin: 3.5.1
-    ttypescript: 1.5.12
     typescript: 4.4.3
     webpack: 5.52.1
   peerDependencies:
@@ -1657,6 +1656,28 @@ __metadata:
     "@emotion/styled": ">=11.0.0"
     react: ">=17.0.0"
     react-dom: ">=17.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@boardgames/devtools@workspace:*, @boardgames/devtools@workspace:packages/devtools":
+  version: 0.0.0-use.local
+  resolution: "@boardgames/devtools@workspace:packages/devtools"
+  dependencies:
+    "@babel/core": 7.15.5
+    "@typescript-eslint/eslint-plugin": 4.31.1
+    "@typescript-eslint/parser": 4.31.1
+    eslint: 7.32.0
+    eslint-config-prettier: 8.3.0
+    eslint-plugin-jest: 24.4.0
+    eslint-plugin-prettier: 4.0.0
+    lint-staged: 11.1.2
+    prettier: 2.4.0
+    rollup: 2.56.3
+    rollup-plugin-typescript2: 0.30.0
+    typescript: 4.4.3
+  peerDependencies:
+    rollup: 2.56.3
+    typescript: 4.4.3
   languageName: unknown
   linkType: soft
 
@@ -16023,7 +16044,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"resolve@1.20.0, resolve@>=1.9.0, resolve@^1.10.0, resolve@^1.12.0, resolve@^1.14.2, resolve@^1.19.0, resolve@^1.20.0, resolve@^1.3.2":
+"resolve@1.20.0, resolve@^1.10.0, resolve@^1.12.0, resolve@^1.14.2, resolve@^1.19.0, resolve@^1.20.0, resolve@^1.3.2":
   version: 1.20.0
   resolution: "resolve@npm:1.20.0"
   dependencies:
@@ -16043,7 +16064,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@1.20.0#~builtin<compat/resolve>, resolve@patch:resolve@>=1.9.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.10.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.12.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.19.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.3.2#~builtin<compat/resolve>":
+"resolve@patch:resolve@1.20.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.10.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.12.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.19.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.3.2#~builtin<compat/resolve>":
   version: 1.20.0
   resolution: "resolve@patch:resolve@npm%3A1.20.0#~builtin<compat/resolve>::version=1.20.0&hash=00b1ff"
   dependencies:
@@ -17890,21 +17911,6 @@ resolve@^2.0.0-next.3:
   version: 0.0.1
   resolution: "tty-browserify@npm:0.0.1"
   checksum: 93b745d43fa5a7d2b948fa23be8d313576d1d884b48acd957c07710bac1c0d8ac34c0556ad4c57c73d36e11741763ef66b3fb4fb97b06b7e4d525315a3cd45f5
-  languageName: node
-  linkType: hard
-
-"ttypescript@npm:1.5.12":
-  version: 1.5.12
-  resolution: "ttypescript@npm:1.5.12"
-  dependencies:
-    resolve: ">=1.9.0"
-  peerDependencies:
-    ts-node: ">=8.0.2"
-    typescript: ">=3.2.2"
-  bin:
-    ttsc: bin/tsc
-    ttsserver: bin/tsserver
-  checksum: 91b6d113d2ce4c7f93392b97a6df38ad6ce6ad4c80227e3d2e1d6948c53f8664018060a02020d8f28a3e461876232b78b4c38352c546a02f3b543a062147fafa
   languageName: node
   linkType: hard
 

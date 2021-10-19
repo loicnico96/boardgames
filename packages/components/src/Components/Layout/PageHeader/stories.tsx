@@ -1,4 +1,4 @@
-import { meta, story } from "utils/storybook"
+import { meta, story } from "storybook"
 
 import { Breadcrumbs } from "./Breadcrumbs/stories"
 import { PageHeader as Component } from "./PageHeader"

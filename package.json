@@ -18,6 +18,7 @@
     "deploy": "vercel",
     "deploy:indexes": "firebase deploy --only firestore:indexes",
     "deploy:rules": "firebase deploy --only firestore:rules",
+    "devtools": "yarn workspace @boardgames/devtools",
     "precommit": "yarn workspaces foreach -v --exclude @boardgames/root run precommit",
     "prepare": "husky install",
     "web": "yarn workspace @boardgames/web"

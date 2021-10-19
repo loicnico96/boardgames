@@ -1,7 +1,7 @@
 import { Box } from "Components/Primitives/Box"
 import { Button } from "Components/Primitives/Button/stories"
 import { Headline } from "Components/Typography/Headline/stories"
-import { meta, story } from "utils/storybook"
+import { meta, story } from "storybook"
 
 import { PageContent as Component } from "./PageContent"
 

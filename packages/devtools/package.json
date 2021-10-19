@@ -1,15 +1,15 @@
 {
-  "name": "@boardgames/common",
+  "name": "@boardgames/devtools",
   "version": "0.1.0",
   "author": "Loïc Nicolas <loicnico96@gmail.com>",
   "license": "MIT",
   "private": true,
   "bugs": "https://github.com/loicnico96/boardgames",
-  "homepage": "https://github.com/loicnico96/boardgames/tree/main/packages/common#readme",
+  "homepage": "https://github.com/loicnico96/boardgames/tree/main/packages/devtools#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/loicnico96/boardgames",
-    "directory": "packages/common"
+    "directory": "packages/devtools"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",
@@ -26,11 +26,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "immutability-helper": "3.1.1"
+    "rollup-plugin-typescript2": "0.30.0"
+  },
+  "peerDependencies": {
+    "rollup": "2.56.3",
+    "typescript": "4.4.3"
   },
   "devDependencies": {
     "@babel/core": "7.15.5",
-    "@boardgames/devtools": "workspace:*",
     "@typescript-eslint/eslint-plugin": "4.31.1",
     "@typescript-eslint/parser": "4.31.1",
     "eslint": "7.32.0",

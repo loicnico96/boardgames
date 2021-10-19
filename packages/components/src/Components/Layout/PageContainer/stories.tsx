@@ -2,7 +2,7 @@ import { PageContent } from "Components/Layout/PageContent/stories"
 import { PageError } from "Components/Layout/PageError/stories"
 import { PageHeader } from "Components/Layout/PageHeader/stories"
 import { PageLoader } from "Components/Layout/PageLoader/stories"
-import { meta, story } from "utils/storybook"
+import { meta, story } from "storybook"
 
 import { PageContainer as Component } from "./PageContainer"
 

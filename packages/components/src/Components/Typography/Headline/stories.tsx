@@ -1,5 +1,5 @@
 import { Text } from "Components/Typography/Text/stories"
-import { meta, story } from "utils/storybook"
+import { meta, story } from "storybook"
 
 import { Headline as Component } from "./Headline"
 

@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "private": true,
   "bugs": "https://github.com/loicnico96/boardgames",
-  "homepage": "https://github.com/loicnico96/boardgames/tree/main/package/web#readme",
+  "homepage": "https://github.com/loicnico96/boardgames/tree/main/packages/web#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/loicnico96/boardgames",

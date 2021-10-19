@@ -1,4 +1,4 @@
-import { meta, story } from "utils/storybook"
+import { meta, story } from "storybook"
 
 import { PageError as Component } from "./PageError"
 
