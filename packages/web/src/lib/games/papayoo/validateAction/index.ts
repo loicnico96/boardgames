@@ -8,10 +8,11 @@ import {
   isAbleToPlay,
   isValidCard,
 } from "../cards"
-import { PapayooAction, PapayooState } from "../model"
+import { PapayooContext } from "../context"
+import { PapayooAction } from "../model"
 
-export function validatePlayerAction(
-  state: PapayooState,
+export function validateAction(
+  context: PapayooContext,
   playerId: string,
   action: BaseAction
 ): PapayooAction {
@@ -21,13 +22,13 @@ export function validatePlayerAction(
     throw Error("Invalid action")
   }
 
-  const player = state.players[playerId]
+  const player = context.state.players[playerId]
 
   if (!player.cards.includes(card)) {
     throw Error("Card is not in your hand")
   }
 
-  const requestedColor = getRequestedColor(state.cards)
+  const requestedColor = getRequestedColor(context.state.cards)
 
   if (!isAbleToPlay(card, requestedColor)) {
     if (!isAbleToDiscard(player, requestedColor)) {

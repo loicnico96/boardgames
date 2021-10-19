@@ -1,7 +1,7 @@
 import { GameProvider } from "components/providers/GameProvider"
 import { ImageLoader } from "components/ui/ImageLoader"
 import { useRoomId } from "hooks/useRoomId"
-import { PapayooApi } from "lib/games/papayoo/api"
+import { PapayooContext } from "lib/games/papayoo/context"
 import { GameType } from "lib/games/types"
 
 import { CardImageSources } from "./Card"
@@ -12,7 +12,11 @@ export default function Papayoo() {
 
   return (
     <ImageLoader images={CardImageSources}>
-      <GameProvider api={PapayooApi} game={GameType.PAPAYOO} roomId={roomId}>
+      <GameProvider
+        context={PapayooContext}
+        game={GameType.PAPAYOO}
+        roomId={roomId}
+      >
         <Game />
       </GameProvider>
     </ImageLoader>

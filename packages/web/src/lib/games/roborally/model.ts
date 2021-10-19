@@ -1,10 +1,10 @@
 import {
   BaseAction,
   BaseEvent,
-  BaseModel,
   BaseOptions,
   BasePlayer,
   BaseState,
+  GameModel,
 } from "@boardgames/common"
 
 export type RoborallyAction = BaseAction & {
@@ -24,8 +24,10 @@ export type RoborallyState = BaseState<RoborallyPlayer> & {
   state: number
 }
 
-export type RoborallyModel = BaseModel & {
-  event: RoborallyEvent
-  options: RoborallyOptions
-  state: RoborallyState
-}
+export type RoborallyModel = GameModel<
+  RoborallyAction,
+  RoborallyEvent,
+  RoborallyOptions,
+  RoborallyPlayer,
+  RoborallyState
+>

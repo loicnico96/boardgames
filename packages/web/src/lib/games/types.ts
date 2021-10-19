@@ -1,5 +1,3 @@
-import { Action, Event, Options, State } from "@boardgames/common"
-
 import { MetropolysModel } from "./metropolys/model"
 import { PapayooModel } from "./papayoo/model"
 import { RoborallyModel } from "./roborally/model"
@@ -10,18 +8,17 @@ export enum GameType {
   ROBORALLY = "roborally",
 }
 
-export type Games = {
+export type GameModels = {
   metropolys: MetropolysModel
   papayoo: PapayooModel
   roborally: RoborallyModel
 }
 
-export type Game<T extends GameType> = Games[T]
-
-export type GameAction<T extends GameType> = Action<Game<T>>
-export type GameEvent<T extends GameType> = Event<Game<T>>
-export type GameOptions<T extends GameType> = Options<Game<T>>
-export type GameState<T extends GameType> = State<Game<T>>
+export type GameAction<T extends GameType> = GameModels[T]["action"]
+export type GameEvent<T extends GameType> = GameModels[T]["event"]
+export type GameOptions<T extends GameType> = GameModels[T]["options"]
+export type GamePlayer<T extends GameType> = GameModels[T]["player"]
+export type GameState<T extends GameType> = GameModels[T]["state"]
 
 export function isGameType(value: unknown): value is GameType {
   return Object.values(GameType).includes(value as GameType)

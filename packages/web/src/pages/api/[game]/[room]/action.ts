@@ -6,8 +6,8 @@ import { getUserId } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
 import { getClientRef, getServerRef } from "lib/db/collections"
 import { firestore } from "lib/firebase/admin"
-import { getGameApi } from "lib/games/api"
-import { GameAction, GameState, GameType, isGameType } from "lib/games/types"
+import { getGameContext } from "lib/games/context"
+import { GameState, GameType, isGameType } from "lib/games/types"
 import { toError } from "lib/utils/error"
 import { Param } from "lib/utils/navigation"
 
@@ -36,26 +36,30 @@ export async function playerAction<T extends GameType>(
       )
     }
 
-    const { validatePlayerAction, resolveState, resolvePlayerAction } =
-      getGameApi(game)
+    const context = getGameContext(game, gameState)
 
-    let validatedAction: GameAction<T>
+    const player = context.player(userId)
+
+    if (player.ready) {
+      throw new ApiError(
+        HttpStatus.FAILED_PRECONDITION,
+        "You cannot perform this action now"
+      )
+    }
 
     try {
-      validatedAction = validatePlayerAction(gameState, userId, action)
+      context.setAction(userId, context.validateAction(userId, action))
     } catch (error) {
       throw new ApiError(HttpStatus.BAD_REQUEST, toError(error).message)
     }
 
-    let nextState = gameState
+    transaction.update(clientRef, context.state)
 
-    nextState = await resolvePlayerAction(nextState, userId, validatedAction)
+    if (!context.isWaitingForAction()) {
+      await context.resolve()
+    }
 
-    transaction.update(clientRef, nextState)
-
-    nextState = await resolveState(nextState)
-
-    transaction.update(serverRef, nextState)
+    transaction.update(serverRef, context.state)
 
     return true
   })

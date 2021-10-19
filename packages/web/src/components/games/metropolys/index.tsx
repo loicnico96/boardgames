@@ -3,7 +3,7 @@ import { Text } from "@boardgames/components"
 import { GameProvider } from "components/providers/GameProvider"
 import { useRoomId } from "hooks/useRoomId"
 import { useTranslations } from "hooks/useTranslations"
-import { MetropolysApi } from "lib/games/metropolys/api"
+import { MetropolysContext } from "lib/games/metropolys/context"
 import { GameType } from "lib/games/types"
 
 import { Counter } from "./Counter"
@@ -14,7 +14,7 @@ export default function Metropolys() {
 
   return (
     <GameProvider
-      api={MetropolysApi}
+      context={MetropolysContext}
       game={GameType.METROPOLYS}
       roomId={roomId}
     >

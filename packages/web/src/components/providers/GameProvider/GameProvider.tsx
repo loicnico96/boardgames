@@ -1,4 +1,3 @@
-import { GameApi } from "@boardgames/common"
 import { PageError, PageLoader } from "@boardgames/components"
 import { ReactNode, useCallback, useRef } from "react"
 
@@ -7,21 +6,22 @@ import { useActions } from "hooks/store/useActions"
 import { useGameResource } from "hooks/useGameResource"
 import { useTranslations } from "hooks/useTranslations"
 import { getClientRef } from "lib/db/collections"
-import { Game, GameEvent, GameState, GameType } from "lib/games/types"
+import { Constructor, GameContext } from "lib/games/context"
+import { GameEvent, GameState, GameType } from "lib/games/types"
 import { Logger } from "lib/utils/logger"
 import { wait } from "lib/utils/performance"
 import { getLoadedResource } from "lib/utils/resource"
 
 export interface GameProviderProps<T extends GameType> {
-  api: GameApi<Game<T>>
   children: ReactNode
+  context: Constructor<GameContext<T>, [state: GameState<T>]>
   game: T
   roomId: string
 }
 
 export function GameProvider<T extends GameType>({
-  api,
   children,
+  context,
   game,
   roomId,
 }: GameProviderProps<T>) {
@@ -43,7 +43,7 @@ export function GameProvider<T extends GameType>({
           setGameResource(game, roomId, getLoadedResource(state))
         }
 
-        function onStateChanged(state: GameState<T>, event: GameEvent<T>) {
+        function onStateChange(state: GameState<T>, event: GameEvent<T>) {
           logger.log("Event:", event)
           setGameState(state)
           return wait(500)
@@ -55,7 +55,10 @@ export function GameProvider<T extends GameType>({
             while (stateQueue.current.length > 0) {
               const nextState = stateQueue.current.shift()
               if (nextState) {
-                setGameState(await api.resolveState(nextState, onStateChanged))
+                const ctx = new context(nextState)
+                ctx.onStateChange(onStateChange)
+                await ctx.resolve()
+                setGameState(ctx.state)
               }
             }
           } finally {
@@ -72,7 +75,7 @@ export function GameProvider<T extends GameType>({
           setGameResource(game, roomId, result)
         }
       },
-      [api, game, roomId, setGameResource]
+      [context, game, roomId, setGameResource]
     )
   )
 

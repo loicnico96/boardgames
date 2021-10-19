@@ -1,18 +1,16 @@
-import { ActionCode, ActionData } from "@boardgames/common"
-
 import { GenericHttpResponse, HttpMethod } from "lib/api/types"
-import { Game, GameType } from "lib/games/types"
+import { GameAction, GameType } from "lib/games/types"
 
 import { apiCall, apiPath } from "./utils"
 
 export async function playerAction<
   T extends GameType,
-  C extends ActionCode<Game<T>>
+  C extends GameAction<T>["code"]
 >(
   game: T,
   roomId: string,
   code: C,
-  data: ActionData<Game<T>, C>
+  data: Omit<Extract<GameAction<T>, { code: C }>, "code">
 ): Promise<GenericHttpResponse> {
   return apiCall<GenericHttpResponse>(
     HttpMethod.POST,

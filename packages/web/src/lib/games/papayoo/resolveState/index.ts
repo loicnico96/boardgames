@@ -4,6 +4,35 @@ import { createGenerator } from "lib/utils/random"
 
 import { dealCards, getCardScore, getHighestCard } from "../cards"
 import { PapayooContext } from "../context"
+import { PapayooAction } from "../model"
+
+export async function resolvePlayerAction(
+  context: PapayooContext,
+  playerId: string,
+  action: PapayooAction
+) {
+  context.update({
+    cards: {
+      $push: [action.card],
+    },
+    players: {
+      [playerId]: {
+        cards: cards => cards.filter(card => card !== action.card),
+        ready: {
+          $set: true,
+        },
+      },
+    },
+    seed: {
+      $set: Math.random(),
+    },
+  })
+
+  await context.post("playCard", {
+    card: action.card,
+    playerId,
+  })
+}
 
 export async function nextGame(context: PapayooContext) {
   const { playerOrder, seed } = context.state
@@ -88,20 +117,18 @@ export async function resolveState(context: PapayooContext) {
   const { cards, currentPlayerId, playerOrder, startingPlayerId } =
     context.state
 
-  if (context.allReady()) {
-    if (cards.length < playerOrder.length) {
-      const nextPlayerId = context.nextPlayerId(currentPlayerId)
+  if (cards.length < playerOrder.length) {
+    const nextPlayerId = context.nextPlayerId(currentPlayerId)
 
-      await nextPlayer(context, nextPlayerId)
-    } else {
-      const highestCardPlayerId = context.nextPlayerId(
-        startingPlayerId,
-        getHighestCard(cards)
-      )
+    await nextPlayer(context, nextPlayerId)
+  } else {
+    const highestCardPlayerId = context.nextPlayerId(
+      startingPlayerId,
+      getHighestCard(cards)
+    )
 
-      const score = sum(cards.map(getCardScore))
+    const score = sum(cards.map(getCardScore))
 
-      await nextRound(context, highestCardPlayerId, score)
-    }
+    await nextRound(context, highestCardPlayerId, score)
   }
 }

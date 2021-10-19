@@ -1,8 +1,8 @@
 import {
-  BaseModel,
   BaseOptions,
   BasePlayer,
   BaseState,
+  GameModel,
 } from "@boardgames/common"
 
 import { ObjectUnion } from "lib/utils/types"
@@ -65,8 +65,10 @@ export type PapayooState = BaseState<PapayooPlayer> & {
   startingPlayerId: string
 }
 
-export type PapayooModel = BaseModel & {
-  event: PapayooEvent
-  options: PapayooOptions
-  state: PapayooState
-}
+export type PapayooModel = GameModel<
+  PapayooAction,
+  PapayooEvent,
+  PapayooOptions,
+  PapayooPlayer,
+  PapayooState
+>

@@ -1,7 +1,7 @@
 import {
   BaseAction,
   BaseEvent,
-  BaseModel,
+  GameModel,
   BaseOptions,
   BasePlayer,
   BaseState,
@@ -24,8 +24,10 @@ export type MetropolysState = BaseState<MetropolysPlayer> & {
   state: number
 }
 
-export type MetropolysModel = BaseModel & {
-  event: MetropolysEvent
-  options: MetropolysOptions
-  state: MetropolysState
-}
+export type MetropolysModel = GameModel<
+  MetropolysAction,
+  MetropolysEvent,
+  MetropolysOptions,
+  MetropolysPlayer,
+  MetropolysState
+>

@@ -4,7 +4,7 @@ import { getUserId } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
 import { getClientRef, getRoomRef, getServerRef } from "lib/db/collections"
 import { DocRef, firestore } from "lib/firebase/admin"
-import { getGameApi } from "lib/games/api"
+import { createGameContext } from "lib/games/context"
 import { getGameSettings } from "lib/games/settings"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 import { Param } from "lib/utils/navigation"
@@ -39,7 +39,6 @@ export async function startGame(
     }
 
     const { minPlayers } = getGameSettings(roomData.game)
-    const { getInitialGameState } = getGameApi(roomData.game)
 
     if (roomData.playerOrder.length < minPlayers) {
       throw new ApiError(
@@ -48,17 +47,18 @@ export async function startGame(
       )
     }
 
-    const initialGameState = getInitialGameState(
-      roomData.playerOrder,
-      roomData.players,
-      roomData.options
-    )
+    const context = createGameContext(roomData)
 
     const clientRef = firestore.doc(getClientRef(roomData.game, roomId))
-    const serverRef = firestore.doc(getServerRef(roomData.game, roomId))
+    transaction.create(clientRef, context.state)
 
-    transaction.create(clientRef, initialGameState)
-    transaction.create(serverRef, initialGameState)
+    if (!context.isWaitingForAction()) {
+      await context.resolve()
+    }
+
+    const serverRef = firestore.doc(getServerRef(roomData.game, roomId))
+    transaction.create(serverRef, context.state)
+
     transaction.update(roomRef, { status: RoomStatus.ONGOING })
 
     return true
