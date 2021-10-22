@@ -4,14 +4,14 @@ import { useCallback } from "react"
 import { getAuth } from "hooks/store/useAuth"
 import { createRoom } from "lib/api/client/createRoom"
 import { GameType } from "lib/games/types"
-import { useStore } from "lib/store/context"
+import { useGlobalStore } from "lib/store/global"
 import { Console } from "lib/utils/logger"
 import { ROUTES } from "lib/utils/navigation"
 
 export function useCreateRoom(game: GameType | null) {
   const router = useRouter()
 
-  const reason = useStore(
+  const reason = useGlobalStore(
     useCallback(
       store => {
         const { user } = getAuth(store)

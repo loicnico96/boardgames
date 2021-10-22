@@ -1,134 +1,174 @@
-import { generate } from "lib/utils/array"
 import { sum } from "lib/utils/math"
 import { createGenerator } from "lib/utils/random"
+import { assert } from "lib/utils/types"
 
-import { dealCards, getCardScore, getHighestCard } from "../cards"
+import { dealCards, getCardScore, getHighestCard, sortCards } from "../cards"
 import { PapayooContext } from "../context"
-import { PapayooAction } from "../model"
-
-export async function resolvePlayerAction(
-  context: PapayooContext,
-  playerId: string,
-  action: PapayooAction
-) {
-  context.update({
-    cards: {
-      $push: [action.card],
-    },
-    players: {
-      [playerId]: {
-        cards: cards => cards.filter(card => card !== action.card),
-        ready: {
-          $set: true,
-        },
-      },
-    },
-    seed: {
-      $set: Math.random(),
-    },
-  })
-
-  await context.post("playCard", {
-    card: action.card,
-    playerId,
-  })
-}
 
 export async function nextGame(context: PapayooContext) {
   const { playerOrder, seed } = context.state
 
-  const playerCards = dealCards(playerOrder.length, createGenerator(seed))
+  const playerCards = dealCards(playerOrder, createGenerator(seed))
 
   context.update({
-    players: generate(playerOrder, (playerId, playerIndex) => [
-      playerId,
-      {
-        cards: {
-          $set: playerCards[playerIndex],
-        },
-      },
-    ]),
+    $merge: {
+      cards: [],
+      phase: "swapCard",
+    },
   })
 
-  await context.post("dealCards", {})
+  for (const playerId of playerOrder) {
+    context.updatePlayer(playerId, {
+      $merge: {
+        cards: playerCards[playerId],
+      },
+    })
+
+    context.requireAction(playerId)
+  }
+
+  await context.post("nextGame", {})
 }
 
 export async function nextPlayer(context: PapayooContext, playerId: string) {
   context.update({
-    currentPlayerId: {
-      $set: playerId,
-    },
-    players: {
-      [playerId]: {
-        ready: {
-          $set: false,
-        },
-      },
+    $merge: {
+      currentPlayerId: playerId,
     },
   })
+
+  context.requireAction(playerId)
 
   await context.post("nextPlayer", {
     playerId,
   })
 }
 
-export async function nextRound(
-  context: PapayooContext,
-  playerId: string,
-  score: number
-) {
-  const { cards, players } = context.state
+export async function nextRound(context: PapayooContext) {
+  const { startingPlayerId } = context.state
 
   context.update({
-    players: {
-      [playerId]: {
-        score: total => total + score,
-      },
-    },
-  })
-
-  await context.post("score", {
-    cards,
-    playerId,
-    score,
-  })
-
-  context.update({
-    cards: {
-      $set: [],
-    },
-    startingPlayerId: {
-      $set: playerId,
+    $merge: {
+      cards: [],
     },
   })
 
   await context.post("nextRound", {
-    playerId,
+    playerId: startingPlayerId,
   })
 
-  if (players[playerId].cards.length === 0) {
+  await nextPlayer(context, startingPlayerId)
+}
+
+export async function endRound(context: PapayooContext) {
+  const { cards, startingPlayerId } = context.state
+
+  const highestCardPlayerId = context.nextPlayerId(
+    startingPlayerId,
+    getHighestCard(cards)
+  )
+
+  const score = sum(cards.map(getCardScore))
+
+  context.updatePlayer(highestCardPlayerId, {
+    score: total => total + score,
+  })
+
+  await context.post("score", {
+    playerId: highestCardPlayerId,
+    cards,
+    score,
+  })
+
+  context.update({
+    $merge: {
+      startingPlayerId: highestCardPlayerId,
+    },
+  })
+
+  if (context.player(highestCardPlayerId).cards.length > 0) {
+    await nextRound(context)
+  } else {
     await nextGame(context)
   }
+}
 
-  await nextPlayer(context, playerId)
+export async function playCard(
+  context: PapayooContext,
+  playerId: string,
+  card: number
+) {
+  context.updatePlayer(playerId, {
+    cards: cards => cards.filter(item => item !== card),
+  })
+
+  context.update({
+    cards: {
+      $push: [card],
+    },
+  })
+
+  await context.post("playCard", {
+    playerId,
+    card,
+  })
+}
+
+export async function swapCards(context: PapayooContext) {
+  const { playerOrder } = context.state
+
+  for (const playerId of playerOrder) {
+    const { action } = context.player(playerId)
+    assert(action?.code === "swapCard", "Invalid state")
+
+    const nextPlayerId = context.nextPlayerId(playerId)
+
+    context.updatePlayer(playerId, {
+      cards: cards => cards.filter(card => !action.cards.includes(card)),
+    })
+
+    context.updatePlayer(nextPlayerId, {
+      cards: cards => sortCards([...cards, ...action.cards]),
+    })
+  }
+
+  await context.post("swapCard", {})
+
+  context.update({
+    $merge: {
+      phase: "playCard",
+    },
+  })
+
+  await nextRound(context)
 }
 
 export async function resolveState(context: PapayooContext) {
-  const { cards, currentPlayerId, playerOrder, startingPlayerId } =
-    context.state
+  const { phase } = context.state
 
-  if (cards.length < playerOrder.length) {
-    const nextPlayerId = context.nextPlayerId(currentPlayerId)
+  switch (phase) {
+    case "nextGame": {
+      return nextGame(context)
+    }
 
-    await nextPlayer(context, nextPlayerId)
-  } else {
-    const highestCardPlayerId = context.nextPlayerId(
-      startingPlayerId,
-      getHighestCard(cards)
-    )
+    case "playCard": {
+      const { currentPlayerId } = context.state
+      const { action } = context.player(currentPlayerId)
+      assert(action?.code === "playCard", "Invalid state")
+      await playCard(context, currentPlayerId, action.card)
 
-    const score = sum(cards.map(getCardScore))
+      if (context.state.cards.length < context.state.playerOrder.length) {
+        return nextPlayer(context, context.nextPlayerId(currentPlayerId))
+      } else {
+        return endRound(context)
+      }
+    }
 
-    await nextRound(context, highestCardPlayerId, score)
+    case "swapCard": {
+      return swapCards(context)
+    }
+
+    default:
+      throw Error("Invalid state")
   }
 }

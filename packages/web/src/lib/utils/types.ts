@@ -25,8 +25,8 @@ export function isArray(value: unknown): value is unknown[] {
   return Array.isArray(value)
 }
 
-export function isBoolean(value: unknown): value is string {
-  return typeof value === "string"
+export function isBoolean(value: unknown): value is boolean {
+  return value === true || value === false
 }
 
 export function isNumber(value: unknown): value is number {

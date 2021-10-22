@@ -26,13 +26,16 @@ export type PapayooAction = ObjectUnion<
     playCard: {
       card: number
     }
+    swapCard: {
+      cards: number[]
+    }
   }
 >
 
 export type PapayooEvent = ObjectUnion<
   "code",
   {
-    dealCards: {}
+    nextGame: {}
     nextPlayer: {
       playerId: string
     }
@@ -48,6 +51,7 @@ export type PapayooEvent = ObjectUnion<
       playerId: string
       score: number
     }
+    swapCard: {}
   }
 >
 
@@ -61,6 +65,7 @@ export type PapayooPlayer = BasePlayer<PapayooAction> & {
 export type PapayooState = BaseState<PapayooPlayer> & {
   cards: number[]
   currentPlayerId: string
+  phase: PapayooAction["code"] | "nextGame"
   seed: number
   startingPlayerId: string
 }

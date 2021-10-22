@@ -6,6 +6,7 @@ import { GameType } from "lib/games/types"
 
 import { CardImageSources } from "./Card"
 import { Game } from "./Game"
+import { usePapayooStore } from "./store"
 
 export default function Papayoo() {
   const roomId = useRoomId()
@@ -16,6 +17,7 @@ export default function Papayoo() {
         context={PapayooContext}
         game={GameType.PAPAYOO}
         roomId={roomId}
+        store={usePapayooStore}
       >
         <Game />
       </GameProvider>

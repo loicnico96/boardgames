@@ -3,17 +3,17 @@ import { AppProps } from "next/app"
 
 import { AuthProvider } from "components/providers/AuthProvider"
 import { ToastProvider } from "components/providers/ToastProvider"
-import { createStore, StoreProvider } from "lib/store/context"
+import { GlobalStoreProvider } from "lib/store/global"
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={defaultTheme}>
       <ToastProvider>
-        <StoreProvider createStore={createStore}>
+        <GlobalStoreProvider>
           <AuthProvider>
             <Component {...pageProps} />
           </AuthProvider>
-        </StoreProvider>
+        </GlobalStoreProvider>
       </ToastProvider>
     </ThemeProvider>
   )

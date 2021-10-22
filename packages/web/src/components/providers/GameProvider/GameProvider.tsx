@@ -2,90 +2,87 @@ import { PageError, PageLoader } from "@boardgames/components"
 import { ReactNode, useCallback, useRef } from "react"
 
 import { useDocumentListener } from "hooks/db/useDocumentListener"
-import { useActions } from "hooks/store/useActions"
-import { useGameResource } from "hooks/useGameResource"
 import { useTranslations } from "hooks/useTranslations"
 import { getClientRef } from "lib/db/collections"
+import { WithId } from "lib/db/types"
 import { Constructor, GameContext } from "lib/games/context"
 import { GameEvent, GameState, GameType } from "lib/games/types"
-import { Logger } from "lib/utils/logger"
-import { wait } from "lib/utils/performance"
-import { getLoadedResource } from "lib/utils/resource"
+import { UseGameStore } from "lib/store/utils/createGameStore"
+import { Resource } from "lib/utils/resource"
 
 export interface GameProviderProps<T extends GameType> {
   children: ReactNode
   context: Constructor<GameContext<T>, [state: GameState<T>]>
   game: T
   roomId: string
+  store: UseGameStore<T>
 }
 
-export function GameProvider<T extends GameType>({
+function GameProviderInternal<T extends GameType>({
   children,
   context,
   game,
   roomId,
+  store: useGameStore,
 }: GameProviderProps<T>) {
-  const resource = useGameResource(game, roomId)
   const t = useTranslations()
 
-  const { setGameResource } = useActions()
+  const { actions, error, loading } = useGameStore()
 
   const isResolving = useRef(false)
-  const stateQueue = useRef<GameState<T>[]>([])
+  const resourceQueue = useRef<Resource<WithId<GameState<T>>>[]>([])
 
   useDocumentListener<GameState<T>>(
     getClientRef(game, roomId),
     useCallback(
       result => {
-        const logger = new Logger(game)
-
-        function setGameState(state: GameState<T>) {
-          setGameResource(game, roomId, getLoadedResource(state))
+        async function onStateChange(state: GameState<T>, event: GameEvent<T>) {
+          actions.setState(state)
+          await actions.onEvent(event)
         }
 
-        function onStateChange(state: GameState<T>, event: GameEvent<T>) {
-          logger.log("Event:", event)
-          setGameState(state)
-          return wait(500)
-        }
-
-        async function resolveStateQueue() {
-          try {
-            isResolving.current = true
-            while (stateQueue.current.length > 0) {
-              const nextState = stateQueue.current.shift()
-              if (nextState) {
-                const ctx = new context(nextState)
-                ctx.onStateChange(onStateChange)
-                await ctx.resolve()
-                setGameState(ctx.state)
-              }
-            }
-          } finally {
-            isResolving.current = false
-          }
-        }
-
-        if (result.data) {
-          stateQueue.current.push(result.data)
+        async function resolveQueue() {
           if (!isResolving.current) {
-            resolveStateQueue().catch(error => logger.error(error))
+            try {
+              isResolving.current = true
+              while (resourceQueue.current.length > 0) {
+                const resource = resourceQueue.current.shift()
+                if (resource?.data) {
+                  const ctx = new context(resource.data)
+                  await ctx.resolve(onStateChange)
+                  actions.setState(ctx.state)
+                } else if (resource?.error) {
+                  actions.setError(resource.error)
+                }
+              }
+            } finally {
+              isResolving.current = false
+            }
           }
-        } else {
-          setGameResource(game, roomId, result)
         }
+
+        resourceQueue.current.push(result)
+        resolveQueue().catch(console.error)
       },
-      [context, game, roomId, setGameResource]
+      [actions, context]
     )
   )
 
-  if (!resource || resource.loading) {
+  if (loading) {
     return <PageLoader message={t.game.pageLoading} />
   }
 
-  if (resource.error) {
-    return <PageError error={resource.error} />
+  if (error) {
+    return <PageError error={error} />
   }
 
   return <>{children}</>
+}
+
+export function GameProvider<T extends GameType>(props: GameProviderProps<T>) {
+  return (
+    <props.store.Provider>
+      <GameProviderInternal {...props} />
+    </props.store.Provider>
+  )
 }

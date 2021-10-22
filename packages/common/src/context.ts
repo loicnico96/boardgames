@@ -9,7 +9,7 @@ export type StateChangeHandler<M extends GameModel> = (
 ) => Promise<void>
 
 export abstract class BaseContext<M extends GameModel> {
-  private __onStateChange: StateChangeHandler<M> | null = null
+  private __onStateChange: StateChangeHandler<M> | undefined
   private __state: M["state"]
 
   public constructor(state: M["state"])
@@ -124,14 +124,11 @@ export abstract class BaseContext<M extends GameModel> {
     } as Spec<M["player"]>)
   }
 
-  public async resolve(): Promise<void> {
+  public async resolve(onStateChange?: StateChangeHandler<M>): Promise<void> {
+    this.__onStateChange = onStateChange
     while (!this.isOver() && !this.isWaitingForAction()) {
       await this.resolveState()
     }
-  }
-
-  public onStateChange(onStateChange: StateChangeHandler<M> | null): void {
-    this.__onStateChange = onStateChange
   }
 
   public async post<C extends M["event"]["code"]>(

@@ -1,4 +1,4 @@
-import { fill, sortBy } from "lib/utils/array"
+import { fill, generate, sortBy } from "lib/utils/array"
 import { mutableShuffle, Random } from "lib/utils/random"
 import { assert } from "lib/utils/types"
 
@@ -39,25 +39,46 @@ export function getDeck(playerCount: number, generator?: Random): number[] {
 
   if (playerCount >= 7) {
     return deck.filter(
-      card => getCardColor(card) !== CardColor.BLACK && getCardValue(card) === 1
+      card => getCardColor(card) === CardColor.BLACK || getCardValue(card) !== 1
     )
   }
 
   return deck
 }
 
-export function dealCards(playerCount: number, generator?: Random): number[][] {
+export function sortCards(cards: number[]): number[] {
+  return sortBy(cards, card => card)
+}
+
+export function dealCards(
+  playerOrder: string[],
+  generator?: Random
+): Record<string, number[]> {
+  const playerCount = playerOrder.length
   const deck = getDeck(playerCount, generator)
 
   assert(deck.length % playerCount === 0, "Cannot be divided by player count")
 
   const handSize = deck.length / playerCount
 
-  return fill(playerCount, playerIndex =>
-    sortBy(
-      deck.slice(playerIndex * handSize, playerIndex * handSize + handSize),
-      card => card
-    )
+  return generate(playerOrder, (playerId, playerIndex) => [
+    playerId,
+    sortCards(
+      deck.slice(playerIndex * handSize, playerIndex * handSize + handSize)
+    ),
+  ])
+}
+
+export function getSwapCardCount(playerCount: number): number {
+  return (
+    {
+      3: 6,
+      4: 5,
+      5: 4,
+      6: 3,
+      7: 3,
+      8: 3,
+    }[playerCount] ?? 3
   )
 }
 

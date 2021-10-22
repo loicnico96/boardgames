@@ -11,9 +11,12 @@ export default {
       action: {
         discard: "Discard {{value}} of {{color}}",
         play: "Play {{value}} of {{color}}",
+        swap: "Swap {{value}} of {{color}}",
+        unswap: "Return to hand",
       },
       banner: {
         play: "Choose a card to play or discard",
+        swap: "Choose {{count}} cards to pass to the next player",
       },
       card: {
         empty: "Empty",

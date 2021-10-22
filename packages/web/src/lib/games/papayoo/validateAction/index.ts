@@ -1,9 +1,10 @@
 import { BaseAction } from "@boardgames/common"
 
-import { isNumber } from "lib/utils/types"
+import { array, integer, objectUnion } from "lib/utils/validation"
 
 import {
   getRequestedColor,
+  getSwapCardCount,
   isAbleToDiscard,
   isAbleToPlay,
   isValidCard,
@@ -16,25 +17,60 @@ export function validateAction(
   playerId: string,
   action: BaseAction
 ): PapayooAction {
-  const { card } = action
+  const { phase, playerOrder } = context.state
 
-  if (!isNumber(card) || !isValidCard(card)) {
-    throw Error("Invalid action")
-  }
+  const player = context.player(playerId)
 
-  const player = context.state.players[playerId]
+  return objectUnion(
+    "code",
+    {
+      playCard: {
+        card: integer({
+          custom: card => {
+            if (!isValidCard(card)) {
+              throw Error("Invalid card")
+            }
 
-  if (!player.cards.includes(card)) {
-    throw Error("Card is not in your hand")
-  }
+            if (!player.cards.includes(card)) {
+              throw Error("This card is not in your hand")
+            }
 
-  const requestedColor = getRequestedColor(context.state.cards)
+            const requestedColor = getRequestedColor(context.state.cards)
 
-  if (!isAbleToPlay(card, requestedColor)) {
-    if (!isAbleToDiscard(player, requestedColor)) {
-      throw Error("Card is not playable")
+            if (!isAbleToPlay(card, requestedColor)) {
+              if (!isAbleToDiscard(player, requestedColor)) {
+                throw Error("Card is not playable")
+              }
+            }
+          },
+        }),
+      },
+      swapCard: {
+        cards: array(
+          integer({
+            custom: card => {
+              if (!isValidCard(card)) {
+                throw Error("Invalid card")
+              }
+
+              if (!player.cards.includes(card)) {
+                throw Error("This card is not in your hand")
+              }
+            },
+          }),
+          {
+            length: getSwapCardCount(playerOrder.length),
+            unique: true,
+          }
+        ),
+      },
+    },
+    {
+      custom: ({ code }) => {
+        if (code !== phase) {
+          throw Error("You cannot perform this action now")
+        }
+      },
     }
-  }
-
-  return { code: "playCard", card }
+  )(action)
 }

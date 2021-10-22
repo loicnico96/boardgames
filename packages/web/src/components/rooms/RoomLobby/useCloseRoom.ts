@@ -4,10 +4,10 @@ import { getAuth } from "hooks/store/useAuth"
 import { getRoomData } from "hooks/useRoomData"
 import { closeRoom } from "lib/api/client/closeRoom"
 import { RoomStatus } from "lib/model/RoomData"
-import { useStore } from "lib/store/context"
+import { useGlobalStore } from "lib/store/global"
 
 export function useCloseRoom(roomId: string) {
-  const reason = useStore(
+  const reason = useGlobalStore(
     useCallback(
       store => {
         const { user } = getAuth(store)

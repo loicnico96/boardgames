@@ -1,19 +1,19 @@
 import { useCallback } from "react"
 
-import { useGameState } from "hooks/useGameState"
 import { useRoomId } from "hooks/useRoomId"
 import { useTranslations } from "hooks/useTranslations"
 import { playerAction } from "lib/api/client/playerAction"
 import {
   getRequestedColor,
+  getSwapCardCount,
   isAbleToDiscard,
   isAbleToPlay,
 } from "lib/games/papayoo/cards"
 import { GameType } from "lib/games/types"
-import { identity } from "lib/utils/types"
 
 import { Card } from "./Card"
 import { CardList } from "./CardList"
+import { usePapayooStore } from "./store"
 
 export type PlayerHandProps = {
   isCurrentUser?: boolean
@@ -21,7 +21,11 @@ export type PlayerHandProps = {
 }
 
 export function PlayerHand({ isCurrentUser, playerId }: PlayerHandProps) {
-  const { cards, players } = useGameState(GameType.PAPAYOO, identity)
+  const { cards, phase, playerOrder, players } = usePapayooStore(
+    store => store.state!
+  )
+  const { swapCard } = usePapayooStore(store => store.actions)
+  const { swap } = usePapayooStore(store => store.ui)
 
   const roomId = useRoomId()
 
@@ -35,35 +39,59 @@ export function PlayerHand({ isCurrentUser, playerId }: PlayerHandProps) {
     [roomId]
   )
 
+  const swapCount = getSwapCardCount(playerOrder.length)
+
   const t = useTranslations()
 
   return (
     <CardList>
-      {player.cards.map(card => {
-        const isDiscardable = isAbleToDiscard(player, requestedColor)
-        const isPlayable = isAbleToPlay(card, requestedColor)
+      {player.cards
+        .filter(card => !swap.includes(card))
+        .map(card => {
+          const isDiscardable = isAbleToDiscard(player, requestedColor)
+          const isPlayable = isAbleToPlay(card, requestedColor)
 
-        const tooltip = isCurrentUser
-          ? player.ready
-            ? t.games.papayoo.reason.notYourTurn
-            : isPlayable
-            ? t.games.papayoo.action.play
-            : isDiscardable
-            ? t.games.papayoo.action.discard
-            : t.games.papayoo.reason.notPlayable
-          : undefined
+          const tooltip = {
+            playCard: isCurrentUser
+              ? player.ready
+                ? t.games.papayoo.reason.notYourTurn
+                : isPlayable
+                ? t.games.papayoo.action.play
+                : isDiscardable
+                ? t.games.papayoo.action.discard
+                : t.games.papayoo.reason.notPlayable
+              : undefined,
+            nextGame: undefined,
+            swapCard: isCurrentUser
+              ? player.ready
+                ? t.games.papayoo.reason.notYourTurn
+                : t.games.papayoo.action.swap
+              : undefined,
+          }[phase]
 
-        return (
-          <Card
-            card={card}
-            disabled={player.ready}
-            key={card}
-            onClick={isCurrentUser ? playCard : undefined}
-            playable={isPlayable || isDiscardable}
-            tooltip={tooltip}
-          />
-        )
-      })}
+          const onClick = {
+            playCard: isCurrentUser ? playCard : undefined,
+            nextGame: undefined,
+            swapCard: isCurrentUser ? swapCard : undefined,
+          }[phase]
+
+          const playable = {
+            playCard: isPlayable || isDiscardable,
+            nextGame: true,
+            swapCard: swap.length < swapCount,
+          }[phase]
+
+          return (
+            <Card
+              card={card}
+              disabled={player.ready}
+              key={card}
+              onClick={onClick}
+              playable={playable}
+              tooltip={tooltip}
+            />
+          )
+        })}
     </CardList>
   )
 }

@@ -5,10 +5,10 @@ import { getRoomData } from "hooks/useRoomData"
 import { enterRoom } from "lib/api/client/enterRoom"
 import { getGameSettings } from "lib/games/settings"
 import { RoomStatus } from "lib/model/RoomData"
-import { useStore } from "lib/store/context"
+import { useGlobalStore } from "lib/store/global"
 
 export function useEnterRoom(roomId: string) {
-  const reason = useStore(
+  const reason = useGlobalStore(
     useCallback(
       store => {
         const { user } = getAuth(store)

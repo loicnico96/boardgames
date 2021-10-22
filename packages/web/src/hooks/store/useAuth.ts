@@ -1,10 +1,10 @@
 import { AuthState } from "lib/auth/types"
-import { Store, useStore } from "lib/store/context"
+import { GlobalStore, useGlobalStore } from "lib/store/global"
 
-export function getAuth(store: Store): AuthState {
+export function getAuth(store: GlobalStore): AuthState {
   return store.auth
 }
 
 export function useAuth(): AuthState {
-  return useStore(getAuth)
+  return useGlobalStore(getAuth)
 }

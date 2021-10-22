@@ -12,7 +12,7 @@ import { getRoomRef } from "lib/db/collections"
 import { WithId } from "lib/db/types"
 import { GameType } from "lib/games/types"
 import { RoomData } from "lib/model/RoomData"
-import { useStore } from "lib/store/context"
+import { useGlobalStore } from "lib/store/global"
 import { Console } from "lib/utils/logger"
 import { Param, ROUTES } from "lib/utils/navigation"
 import { Resource } from "lib/utils/resource"
@@ -24,7 +24,7 @@ export type RoomProviderProps = {
 }
 
 export function RoomProvider({ children, game, roomId }: RoomProviderProps) {
-  const resource = useStore(store => store.rooms[roomId])
+  const resource = useGlobalStore(store => store.rooms[roomId])
   const router = useRouter()
   const t = useTranslations()
 

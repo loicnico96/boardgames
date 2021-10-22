@@ -30,6 +30,10 @@ export function mutableSortByAlpha<T>(
   array.sort((value, other) => mapFn(value).localeCompare(mapFn(other)))
 }
 
+export function remove<T>(array: ReadonlyArray<T>, value: T): Array<T> {
+  return array.filter(item => item !== value)
+}
+
 export function sortByAlpha<T>(
   array: ReadonlyArray<T>,
   mapFn: (value: T) => string

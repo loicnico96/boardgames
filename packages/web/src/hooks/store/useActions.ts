@@ -1,10 +1,9 @@
-import { Actions } from "lib/store/actions"
-import { Store, useStore } from "lib/store/context"
+import { GlobalActions, GlobalStore, useGlobalStore } from "lib/store/global"
 
-export function getActions(store: Store): Actions {
+export function getActions(store: GlobalStore): GlobalActions {
   return store.actions
 }
 
-export function useActions(): Actions {
-  return useStore(getActions)
+export function useActions(): GlobalActions {
+  return useGlobalStore(getActions)
 }

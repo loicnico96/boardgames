@@ -84,7 +84,7 @@ export type CardProps = {
   card: number | null
   disabled?: boolean
   highlighted?: boolean
-  onClick?: (card: number) => Promise<unknown>
+  onClick?: (card: number) => unknown
   playable?: boolean
   tooltip?: string
 }
@@ -238,7 +238,7 @@ export function Card({
         aria-disabled={disabled || loading}
         disabled={disabled || loading}
         highlighted={highlighted}
-        onClick={onClick ? onClickAsync : undefined}
+        onClick={onClick && card !== null ? onClickAsync : undefined}
         playable={playable}
         role="button"
       >

@@ -2,16 +2,15 @@ import {
   PlayerCardContainer,
   PlayerCardRow,
 } from "components/games/common/PlayerCard"
-import { useGameState } from "hooks/useGameState"
-import { GameType } from "lib/games/types"
-import { identity } from "lib/utils/types"
+
+import { usePapayooStore } from "./store"
 
 export type PlayerCardProps = {
   playerId: string
 }
 
 export function PlayerCard({ playerId }: PlayerCardProps) {
-  const { players } = useGameState(GameType.PAPAYOO, identity)
+  const { players } = usePapayooStore(store => store.state!)
 
   const player = players[playerId]
 

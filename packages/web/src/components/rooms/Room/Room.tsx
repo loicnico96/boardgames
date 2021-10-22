@@ -18,7 +18,7 @@ const GAME_COMPONENTS: Record<GameType, ComponentType> = {
     () =>
       import(
         /* webpackChunkName: "metropolys" */
-        "components/games/metropolys"
+        "components/games/papayoo" // TODO Implement Metropolys
       ),
     DYNAMIC_OPTIONS
   ),
@@ -34,7 +34,7 @@ const GAME_COMPONENTS: Record<GameType, ComponentType> = {
     () =>
       import(
         /* webpackChunkName: "roborally" */
-        "components/games/roborally"
+        "components/games/papayoo" // TODO Implement Roborally
       ),
     DYNAMIC_OPTIONS
   ),
