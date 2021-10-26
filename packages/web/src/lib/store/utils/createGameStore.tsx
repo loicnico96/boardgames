@@ -12,7 +12,7 @@ import {
 export type GameStoreState<T extends GameType, S> = {
   error: Error | null
   loading: boolean
-  state: GameState<T> | null
+  state: GameState<T>
   ui: S
 }
 
@@ -40,11 +40,20 @@ export function createGameStore<T extends GameType, S = {}, A = {}>(
   ) => Promise<void>,
   createActions: (set: SetState<S>, get: GetState<S>) => A
 ): UseGameStore<T, S, A> {
+  const initialGameState = new Proxy({} as GameState<T>, {
+    get: () => {
+      throw Error("Invalid context")
+    },
+    set: () => {
+      throw Error("Invalid context")
+    },
+  })
+
   return createStore<GameStoreState<T, S>, GameStoreActions<T, A>>(
     {
       error: null,
       loading: true,
-      state: null,
+      state: initialGameState,
       ui: initialUiState,
     },
     (set, get) => {

@@ -10,7 +10,7 @@ export type PlayerCardProps = {
 }
 
 export function PlayerCard({ playerId }: PlayerCardProps) {
-  const { players } = usePapayooStore(store => store.state!)
+  const { players } = usePapayooStore(store => store.state)
 
   const player = players[playerId]
 

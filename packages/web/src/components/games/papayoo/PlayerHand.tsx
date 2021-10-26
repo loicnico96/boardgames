@@ -1,8 +1,7 @@
 import { useCallback } from "react"
 
-import { useRoomId } from "hooks/useRoomId"
+import { usePlayerAction } from "hooks/usePlayerAction"
 import { useTranslations } from "hooks/useTranslations"
-import { playerAction } from "lib/api/client/playerAction"
 import {
   getRequestedColor,
   getSwapCardCount,
@@ -22,21 +21,20 @@ export type PlayerHandProps = {
 
 export function PlayerHand({ isCurrentUser, playerId }: PlayerHandProps) {
   const { cards, phase, playerOrder, players } = usePapayooStore(
-    store => store.state!
+    store => store.state
   )
   const { swapCard } = usePapayooStore(store => store.actions)
   const { swap } = usePapayooStore(store => store.ui)
-
-  const roomId = useRoomId()
 
   const player = players[playerId]
 
   const requestedColor = getRequestedColor(cards)
 
+  const playerAction = usePlayerAction(GameType.PAPAYOO)
+
   const playCard = useCallback(
-    async (card: number) =>
-      playerAction(GameType.PAPAYOO, roomId, "playCard", { card }),
-    [roomId]
+    (card: number) => playerAction({ code: "playCard", card }),
+    [playerAction]
   )
 
   const swapCount = getSwapCardCount(playerOrder.length)
