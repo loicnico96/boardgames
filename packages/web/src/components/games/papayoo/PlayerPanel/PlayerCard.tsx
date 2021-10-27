@@ -3,14 +3,14 @@ import {
   PlayerCardRow,
 } from "components/games/common/PlayerCard"
 
-import { usePapayooStore } from "./store"
+import { usePapayooState } from "../store"
 
 export type PlayerCardProps = {
   playerId: string
 }
 
 export function PlayerCard({ playerId }: PlayerCardProps) {
-  const { players } = usePapayooStore(store => store.state)
+  const { players } = usePapayooState(state => state)
 
   const player = players[playerId]
 

@@ -80,20 +80,20 @@ import {
   getCardValue,
 } from "lib/games/papayoo/cards"
 
+export type CardVariant = "default" | "highlight" | "invalid" | "valid"
+
 export type CardProps = {
   card: number | null
   disabled?: boolean
-  highlighted?: boolean
   onClick?: (card: number) => unknown
-  playable?: boolean
   tooltip?: string
+  variant?: CardVariant
 }
 
-export type ImageProps = {
+type CardImageProps = {
   disabled?: boolean
-  highlighted?: boolean
   onClick?: () => unknown
-  playable?: boolean
+  variant: CardVariant
 }
 
 export const CardImageSources = [
@@ -166,16 +166,15 @@ export const CardImageSources = [
   CardEmpty,
 ]
 
-const StyledImageContainer = styled.div<ImageProps>`
-  box-shadow: 0px 0px 4px 2px
-    ${props =>
-      props.highlighted
-        ? "yellow"
-        : props.onClick && !props.disabled
-        ? props.playable
-          ? "green"
-          : "red"
-        : "gray"};
+const VARIANTS: Record<CardVariant, string> = {
+  default: "gray",
+  highlight: "yellow",
+  invalid: "red",
+  valid: "green",
+}
+
+const StyledImageContainer = styled.div<CardImageProps>`
+  box-shadow: 0px 0px 4px 2px ${props => VARIANTS[props.variant]};
   border-radius: 8px;
   height: 120px;
   margin: 8px;
@@ -185,12 +184,10 @@ const StyledImageContainer = styled.div<ImageProps>`
   ${props =>
     props.onClick
       ? css`
-          cursor: ${props.playable && !props.disabled
-            ? "pointer"
-            : "not-allowed"};
+          cursor: ${props.disabled ? "not-allowed" : "pointer"};
           &:hover {
-            margin-bottom: ${props.playable && !props.disabled ? 16 : 12}px;
-            margin-top: ${props.playable && !props.disabled ? 0 : 4}px;
+            margin-bottom: ${props.disabled ? 12 : 16}px;
+            margin-top: ${props.disabled ? 4 : 0}px;
           }
         `
       : ""}
@@ -198,18 +195,17 @@ const StyledImageContainer = styled.div<ImageProps>`
 
 export function Card({
   card,
-  disabled = false,
-  highlighted = false,
+  disabled,
   onClick,
-  playable = false,
   tooltip,
+  variant = "default",
 }: CardProps) {
   const [onClickAsync, loading] = useAsyncHandler(
     useCallback(async () => {
-      if (card !== null && onClick && playable && !disabled) {
+      if (card !== null && onClick && !disabled) {
         await onClick(card)
       }
-    }, [card, disabled, onClick, playable])
+    }, [card, disabled, onClick])
   )
 
   const t = useTranslations()
@@ -235,12 +231,11 @@ export function Card({
   return (
     <Tooltip text={cardTooltip}>
       <StyledImageContainer
-        aria-disabled={disabled || loading}
-        disabled={disabled || loading}
-        highlighted={highlighted}
-        onClick={onClick && card !== null ? onClickAsync : undefined}
-        playable={playable}
+        aria-disabled={disabled ?? loading}
+        disabled={disabled ?? loading}
+        onClick={onClick ? onClickAsync : undefined}
         role="button"
+        variant={variant}
       >
         <Image
           aria-label={cardLabel}

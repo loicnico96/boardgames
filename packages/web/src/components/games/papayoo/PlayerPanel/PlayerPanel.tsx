@@ -1,8 +1,9 @@
+import { usePapayooState } from "../store"
+
 import { PlayerCard } from "./PlayerCard"
-import { usePapayooStore } from "./store"
 
 export function PlayerPanel() {
-  const playerIds = usePapayooStore(store => store.state.playerOrder)
+  const playerIds = usePapayooState(state => state.playerOrder)
 
   return (
     <div>

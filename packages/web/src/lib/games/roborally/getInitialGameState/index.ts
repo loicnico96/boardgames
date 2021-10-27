@@ -25,6 +25,7 @@ export function getInitialGameState(
       getInitialPlayerState(players[playerId]),
     ]),
     playerOrder,
+    seed: Date.now(),
     state: 0,
   }
 }

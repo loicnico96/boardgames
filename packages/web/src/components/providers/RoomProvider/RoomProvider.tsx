@@ -4,7 +4,6 @@ import { ReactNode, useCallback, useEffect, useRef } from "react"
 import { toast } from "react-toastify"
 
 import { useDocumentListener } from "hooks/db/useDocumentListener"
-import { useActions } from "hooks/store/useActions"
 import { useCurrentUserId } from "hooks/store/useCurrentUserId"
 import { withSearchParams } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
@@ -12,7 +11,7 @@ import { getRoomRef } from "lib/db/collections"
 import { WithId } from "lib/db/types"
 import { GameType } from "lib/games/types"
 import { RoomData } from "lib/model/RoomData"
-import { useGlobalStore } from "lib/store/global"
+import { useGlobalActions, useGlobalStore } from "lib/store/global"
 import { Console } from "lib/utils/logger"
 import { Param, ROUTES } from "lib/utils/navigation"
 import { Resource } from "lib/utils/resource"
@@ -28,7 +27,7 @@ export function RoomProvider({ children, game, roomId }: RoomProviderProps) {
   const router = useRouter()
   const t = useTranslations()
 
-  const { setRoomResources } = useActions()
+  const { setRoomResources } = useGlobalActions()
   const userId = useCurrentUserId()
 
   const previousRef = useRef(resource)

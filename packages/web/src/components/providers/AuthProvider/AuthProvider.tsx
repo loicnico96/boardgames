@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from "react"
 
-import { useActions } from "hooks/store/useActions"
 import { onAuthStateChange } from "lib/firebase/auth"
+import { useGlobalActions } from "lib/store/global"
 import { Console } from "lib/utils/logger"
 
 export type AuthProviderProps = {
@@ -9,7 +9,7 @@ export type AuthProviderProps = {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { setUser } = useActions()
+  const { setUser } = useGlobalActions()
 
   useEffect(() => onAuthStateChange(setUser, Console.error), [setUser])
 

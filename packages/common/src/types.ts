@@ -25,6 +25,7 @@ export type BaseState<P extends BasePlayer<BaseAction>> = {
   over: boolean
   playerOrder: string[]
   players: Record<string, P>
+  seed: number
 }
 
 export type GameModel<

@@ -31,7 +31,7 @@ export function getInitialGameState(
       playerId,
       getInitialPlayerState(players[playerId]),
     ]),
-    seed: Math.random(),
+    seed: Date.now(),
     startingPlayerId,
   }
 }

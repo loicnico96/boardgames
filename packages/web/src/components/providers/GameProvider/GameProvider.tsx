@@ -2,32 +2,40 @@ import { PageError, PageLoader } from "@boardgames/components"
 import { ReactNode, useCallback, useRef } from "react"
 
 import { useDocumentListener } from "hooks/db/useDocumentListener"
+import { useRoomId } from "hooks/useRoomId"
 import { useTranslations } from "hooks/useTranslations"
 import { getClientRef } from "lib/db/collections"
 import { WithId } from "lib/db/types"
 import { Constructor, GameContext } from "lib/games/context"
 import { GameEvent, GameState, GameType } from "lib/games/types"
-import { UseGameStore } from "lib/store/utils/createGameStore"
-import { Resource } from "lib/utils/resource"
+import { useGlobalActions, useGlobalStore } from "lib/store/global"
+import { Logger } from "lib/utils/logger"
+import { wait } from "lib/utils/performance"
+import { getLoadedResource, Resource } from "lib/utils/resource"
 
-export interface GameProviderProps<T extends GameType> {
+export type GameProviderProps<T extends GameType> = {
   children: ReactNode
   context: Constructor<GameContext<T>, [state: GameState<T>]>
   game: T
-  roomId: string
-  store: UseGameStore<T>
 }
 
-function GameProviderInternal<T extends GameType>({
+export function GameProvider<T extends GameType>({
   children,
   context,
   game,
-  roomId,
-  store: useGameStore,
 }: GameProviderProps<T>) {
+  const roomId = useRoomId()
   const t = useTranslations()
 
-  const { actions, error, loading } = useGameStore()
+  const { setGameResource } = useGlobalActions()
+
+  const error = useGlobalStore(
+    store => store.games[game][roomId]?.error ?? null
+  )
+
+  const loading = useGlobalStore(
+    store => store.games[game][roomId]?.loading !== false
+  )
 
   const isResolving = useRef(false)
   const resourceQueue = useRef<Resource<WithId<GameState<T>>>[]>([])
@@ -36,9 +44,12 @@ function GameProviderInternal<T extends GameType>({
     getClientRef(game, roomId),
     useCallback(
       result => {
+        const logger = new Logger(game)
+
         async function onStateChange(state: GameState<T>, event: GameEvent<T>) {
-          actions.setState(state)
-          await actions.onEvent(event)
+          setGameResource(game, roomId, getLoadedResource(state))
+          logger.log("Event", event)
+          await wait(500)
         }
 
         async function resolveQueue() {
@@ -48,11 +59,13 @@ function GameProviderInternal<T extends GameType>({
               while (resourceQueue.current.length > 0) {
                 const resource = resourceQueue.current.shift()
                 if (resource?.data) {
+                  logger.log("State", resource.data)
                   const ctx = new context(resource.data)
                   await ctx.resolve(onStateChange)
-                  actions.setState(ctx.state)
+                  setGameResource(game, roomId, getLoadedResource(ctx.state))
                 } else if (resource?.error) {
-                  actions.setError(resource.error)
+                  logger.error(resource.error)
+                  setGameResource(game, roomId, resource)
                 }
               }
             } finally {
@@ -64,7 +77,7 @@ function GameProviderInternal<T extends GameType>({
         resourceQueue.current.push(result)
         resolveQueue().catch(console.error)
       },
-      [actions, context]
+      [context, game, roomId, setGameResource]
     )
   )
 
@@ -77,12 +90,4 @@ function GameProviderInternal<T extends GameType>({
   }
 
   return <>{children}</>
-}
-
-export function GameProvider<T extends GameType>(props: GameProviderProps<T>) {
-  return (
-    <props.store.Provider>
-      <GameProviderInternal {...props} />
-    </props.store.Provider>
-  )
 }

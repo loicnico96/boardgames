@@ -4,12 +4,12 @@ import { useCallback, useEffect } from "react"
 
 import { AsyncButton } from "components/ui/AsyncButton"
 import { PageLayout } from "components/ui/PageLayout"
-import { useActions } from "hooks/store/useActions"
 import { useCurrentUserId } from "hooks/store/useCurrentUserId"
 import { useSearchParam } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
 import { promptUserName } from "lib/auth/promptUserName"
 import { signInAnonymously, signInWithGoogle } from "lib/firebase/auth"
+import { useGlobalActions } from "lib/store/global"
 import { Console } from "lib/utils/logger"
 import { Param, ROUTES } from "lib/utils/navigation"
 
@@ -17,7 +17,7 @@ export default function LoginPage() {
   const t = useTranslations()
 
   const router = useRouter()
-  const { setUserName } = useActions()
+  const { setUserName } = useGlobalActions()
   const userId = useCurrentUserId()
 
   const redirectTo = useSearchParam(Param.REDIRECT) ?? ROUTES.home()

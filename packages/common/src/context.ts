@@ -98,6 +98,14 @@ export abstract class BaseContext<M extends GameModel> {
     } as Spec<M["state"]>)
   }
 
+  public setSeed(seed: number): void {
+    this.update({
+      $merge: {
+        seed,
+      },
+    } as Spec<M["state"]>)
+  }
+
   public endGame(): void {
     this.update({
       $merge: {

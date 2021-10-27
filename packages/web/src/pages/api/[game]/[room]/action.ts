@@ -53,6 +53,8 @@ export async function playerAction<T extends GameType>(
       throw new ApiError(HttpStatus.BAD_REQUEST, toError(error).message)
     }
 
+    context.setSeed(Date.now())
+
     transaction.update(clientRef, context.state)
 
     if (!context.isWaitingForAction()) {

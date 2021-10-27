@@ -8,15 +8,25 @@ export default {
       name: "Metropolys",
     },
     papayoo: {
-      action: {
+      actions: {
         discard: "Discard {{value}} of {{color}}",
         play: "Play {{value}} of {{color}}",
         swap: "Swap {{value}} of {{color}}",
         unswap: "Return to hand",
       },
       banner: {
-        play: "Choose a card to play or discard",
-        swap: "Choose {{count}} cards to pass to the next player",
+        play: {
+          message: "Choose a card to play or discard",
+        },
+        swap: {
+          actions: {
+            confirm: {
+              label: "Confirm",
+            },
+          },
+          message: "Choose {{count}} cards to pass to the next player",
+          ready: "Waiting for other players...",
+        },
       },
       card: {
         empty: "Empty",
