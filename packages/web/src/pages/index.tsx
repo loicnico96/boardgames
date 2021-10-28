@@ -1,30 +1,23 @@
-import { Text, PageContent } from "@boardgames/components"
-
+import { PageContent } from "@boardgames/components"
+import { GameTile } from "components/home/GameTile"
+import styled from "@emotion/styled"
 import { PageLayout } from "components/ui/PageLayout"
-import { RouterLink } from "components/ui/RouterLink"
-import { withSearchParams } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
 import { GameType } from "lib/games/types"
-import { Param, ROUTES } from "lib/utils/navigation"
+
+const StyledPageContent = styled(PageContent)`
+  display: flex;
+  gap: 0px 48px;
+`
 
 export default function HomePage() {
   const t = useTranslations()
 
   return (
     <PageLayout title={t.home.pageTitle}>
-      <PageContent>
-        {Object.values(GameType).map(game => {
-          const url = withSearchParams(ROUTES.roomList(), {
-            [Param.GAME_TYPE]: game,
-          })
-
-          return (
-            <Text key={game}>
-              <RouterLink href={url}>{t.games[game].name}</RouterLink>
-            </Text>
-          )
-        })}
-      </PageContent>
+      <StyledPageContent>
+        {Object.values(GameType).map(game => <GameTile game={game} key={game} />)}
+      </StyledPageContent>
     </PageLayout>
   )
 }

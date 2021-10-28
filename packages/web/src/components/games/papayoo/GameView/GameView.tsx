@@ -25,20 +25,15 @@ export function GameView() {
     useCallback(state => state.currentPlayerId, [])
   )
 
-  if (playerId) {
-    return (
-      <>
-        {phase === "playCard" && <PlayCardField />}
-        {phase === "swapCard" && <SwapCardField playerId={playerId} />}
-        <PlayerHand isCurrentUser playerId={playerId} />
-      </>
-    )
-  } else {
-    return (
-      <>
-        {phase === "playCard" && <PlayCardField />}
-        <PlayerHand playerId={currentPlayerId} />
-      </>
-    )
-  }
+  return (
+    <>
+      {phase === "playCard" && (
+        <PlayCardField />
+      )}
+      {phase === "swapCard" && playerId !== null && (
+        <SwapCardField playerId={playerId} />
+      )}
+      <PlayerHand playerId={playerId ?? currentPlayerId} />
+    </>
+  )
 }

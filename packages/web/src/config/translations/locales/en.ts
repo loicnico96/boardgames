@@ -51,6 +51,9 @@ export default {
     },
   },
   home: {
+    gameTile: {
+      tooltip: "Show {{game}} rooms",
+    },
     pageTitle: "Home",
   },
   login: {
