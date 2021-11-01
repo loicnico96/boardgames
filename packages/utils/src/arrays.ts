@@ -1,4 +1,4 @@
-import { isFunction } from "./types"
+import { Function, isFunction } from "./types"
 
 export function fill<T>(length: number, value: (index: number) => T): T[]
 export function fill<T>(length: number, value: Exclude<T, Function>): T[]
@@ -25,9 +25,12 @@ export function generate<T, K extends string, R>(
 
 export function mutableSortByAlpha<T>(
   array: Array<T>,
-  mapFn: (value: T) => string
+  sortFn: (value: T) => string,
+  sortDir: number = 1
 ): void {
-  array.sort((value, other) => mapFn(value).localeCompare(mapFn(other)))
+  array.sort(
+    (value, other) => sortFn(value).localeCompare(sortFn(other)) * sortDir
+  )
 }
 
 export function remove<T>(array: ReadonlyArray<T>, value: T): Array<T> {
@@ -36,25 +39,35 @@ export function remove<T>(array: ReadonlyArray<T>, value: T): Array<T> {
 
 export function sortByAlpha<T>(
   array: ReadonlyArray<T>,
-  mapFn: (value: T) => string
+  mapFn: (value: T) => string,
+  sortDir: number = 1
 ): Array<T> {
   const clone = array.slice()
-  mutableSortByAlpha(clone, mapFn)
+  mutableSortByAlpha(clone, mapFn, sortDir)
   return clone
 }
 
 export function mutableSortBy<T>(
   array: Array<T>,
-  mapFn: (value: T) => number
+  ...sortFns: ((value: T) => number)[]
 ): void {
-  array.sort((value, other) => mapFn(value) - mapFn(other))
+  array.sort((value, other) => {
+    for (const fn of sortFns) {
+      const diff = fn(value) - fn(other)
+      if (diff) {
+        return diff
+      }
+    }
+
+    return 0
+  })
 }
 
 export function sortBy<T>(
   array: ReadonlyArray<T>,
-  mapFn: (value: T) => number
+  ...sortFns: ((value: T) => number)[]
 ): Array<T> {
   const clone = array.slice()
-  mutableSortBy(clone, mapFn)
+  mutableSortBy(clone, ...sortFns)
   return clone
 }

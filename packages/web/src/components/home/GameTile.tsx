@@ -1,22 +1,24 @@
 import { Text } from "@boardgames/components"
+import styled from "@emotion/styled"
+import Image from "next/image"
+
+import CacaoHome from "assets/games/cacao/home.jpg"
 import MetropolysHome from "assets/games/metropolys/home.jpg"
 import PapayooHome from "assets/games/papayoo/home.jpg"
 import RoborallyHome from "assets/games/roborally/home.jpg"
-import Image from "next/image"
-import styled from "@emotion/styled"
-
 import { RouterLink } from "components/ui/RouterLink"
+import { replace } from "config/translations/replace"
 import { withSearchParams } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
 import { GameType } from "lib/games/types"
 import { Param, ROUTES } from "lib/utils/navigation"
-import { replace } from "config/translations/replace"
 
 export type GameTileProps = {
   game: GameType
 }
 
-export const GameImageSources = {
+export const GameImageSources: Record<GameType, StaticImageData> = {
+  cacao: CacaoHome,
   metropolys: MetropolysHome,
   papayoo: PapayooHome,
   roborally: RoborallyHome,

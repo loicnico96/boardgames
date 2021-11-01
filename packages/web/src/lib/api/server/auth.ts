@@ -1,8 +1,9 @@
+import { toError } from "@boardgames/utils"
+
 import { ApiError } from "lib/api/error"
 import { HttpStatus } from "lib/api/types"
 import { AuthUserInfo } from "lib/auth/types"
 import { auth } from "lib/firebase/admin"
-import { toError } from "lib/utils/error"
 
 import { ApiRequest } from "./types"
 

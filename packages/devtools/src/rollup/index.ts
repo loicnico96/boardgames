@@ -1,5 +1,6 @@
 import { posix } from "path"
 import { RollupOptions } from "rollup"
+import cleanOutDir from "rollup-plugin-delete"
 import typescript from "rollup-plugin-typescript2"
 
 export enum BuildFormat {
@@ -41,6 +42,9 @@ export function rollup({
       format,
     })),
     plugins: [
+      cleanOutDir({
+        targets: outputDir,
+      }),
       typescript({
         tsconfigOverride: {
           compilerOptions: {

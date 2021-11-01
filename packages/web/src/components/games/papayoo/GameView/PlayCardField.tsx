@@ -1,5 +1,6 @@
+import { fill } from "@boardgames/utils"
+
 import { getHighestCard } from "lib/games/papayoo/cards"
-import { fill } from "lib/utils/array"
 
 import { usePapayooState } from "../store"
 

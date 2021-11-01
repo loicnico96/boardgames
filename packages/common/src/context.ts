@@ -1,7 +1,7 @@
+import { mod, Random } from "@boardgames/utils"
 import update, { Spec } from "immutability-helper"
 
 import { BaseAction, BaseOptions, GameModel, UserInfo } from "./types"
-import { mod } from "./utils"
 
 export type StateChangeHandler<M extends GameModel> = (
   state: M["state"],
@@ -9,73 +9,82 @@ export type StateChangeHandler<M extends GameModel> = (
 ) => Promise<void>
 
 export abstract class BaseContext<M extends GameModel> {
+  private __generator: Random | undefined
   private __onStateChange: StateChangeHandler<M> | undefined
-  private __state: M["state"]
+  private __state: M["state"] | undefined
 
-  public constructor(state: M["state"])
-  public constructor(
+  public initState(
     playerOrder: string[],
     players: Record<string, UserInfo>,
-    options: M["options"]
-  )
-  public constructor(
-    ...args:
-      | [state: M["state"]]
-      | [
-          playerOrder: string[],
-          players: Record<string, UserInfo>,
-          options: M["options"]
-        ]
+    options: M["options"],
+    seed: number = Date.now()
   ) {
-    if (args.length === 1) {
-      this.__state = args[0]
-    } else {
-      this.__state = this.getInitialState(...args)
-    }
+    this.__generator = new Random(seed)
+    this.__state = this.getInitialGameState(playerOrder, players, options, seed)
   }
 
-  protected abstract getInitialState(
+  public abstract getDefaultOptions(): M["options"]
+
+  protected abstract getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,
-    options: M["options"]
+    options: M["options"],
+    seed: number
   ): M["state"]
 
   protected abstract resolveState(): Promise<void>
+
+  public abstract validateOptions(options: BaseOptions): M["options"]
 
   public abstract validateAction(
     playerId: string,
     action: BaseAction
   ): M["action"]
 
-  public abstract validateOptions(options: BaseOptions): M["options"]
+  public get generator(): Random {
+    if (!this.__generator) {
+      throw Error("Context was not initialized")
+    }
+
+    return this.__generator
+  }
 
   public get state(): M["state"] {
+    if (!this.__state) {
+      throw Error("Context was not initialized")
+    }
+
     return this.__state
   }
 
+  public setState(state: M["state"]) {
+    this.__generator = new Random(state.seed)
+    this.__state = state
+  }
+
   public isOver(): boolean {
-    return this.__state.over
+    return this.state.over
   }
 
   public isWaitingForAction(): boolean {
-    const { playerOrder, players } = this.__state
+    const { playerOrder, players } = this.state
     return playerOrder.some(playerId => !players[playerId].ready)
   }
 
   public player(playerId: string): M["player"] {
-    const { players } = this.__state
+    const { players } = this.state
     return players[playerId]
   }
 
   public nextPlayerId(playerId: string, shift: number = 1): string {
-    const { playerOrder } = this.__state
+    const { playerOrder } = this.state
     const playerIndex = playerOrder.indexOf(playerId)
     const nextPlayerIndex = mod(playerIndex + shift, playerOrder.length)
     return playerOrder[nextPlayerIndex]
   }
 
   public update(spec: Spec<M["state"]>): void {
-    this.__state = update(this.__state, spec)
+    this.__state = update(this.state, spec)
   }
 
   public updatePlayer(playerId: string, spec: Spec<M["player"]>): void {
@@ -144,7 +153,7 @@ export abstract class BaseContext<M extends GameModel> {
     data: Omit<Extract<M["event"], { code: C }>, "code">
   ): Promise<void> {
     if (this.__onStateChange) {
-      await this.__onStateChange(this.__state, { code, ...data })
+      await this.__onStateChange(this.state, { code, ...data })
     }
   }
 }

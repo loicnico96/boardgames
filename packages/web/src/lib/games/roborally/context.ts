@@ -4,36 +4,50 @@ import {
   BaseOptions,
   UserInfo,
 } from "@boardgames/common"
+import { generate, object } from "@boardgames/utils"
 
-import { getInitialGameState } from "./getInitialGameState"
 import {
   RoborallyAction,
   RoborallyModel,
   RoborallyOptions,
   RoborallyState,
 } from "./model"
-import { resolveState } from "./resolveState"
-import { validateAction } from "./validateAction"
-import { validateOptions } from "./validateOptions"
 
 export class RoborallyContext extends BaseContext<RoborallyModel> {
-  getInitialState(
+  getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,
-    options: BaseOptions
+    options: RoborallyOptions,
+    seed: number
   ): RoborallyState {
-    return getInitialGameState(playerOrder, players, options)
+    return {
+      over: false,
+      playerOrder,
+      players: generate(playerOrder, playerId => [
+        playerId,
+        {
+          ...players[playerId],
+          action: null,
+          ready: true,
+        },
+      ]),
+      seed,
+    }
   }
 
-  resolveState(): Promise<void> {
-    return resolveState(this)
+  async resolveState() {
+    // Todo
   }
 
-  validateAction(playerId: string, action: BaseAction): RoborallyAction {
-    return validateAction(this, playerId, action)
+  getDefaultOptions(): RoborallyOptions {
+    return {}
   }
 
   validateOptions(options: BaseOptions): RoborallyOptions {
-    return validateOptions(options)
+    return object({})(options)
+  }
+
+  validateAction(playerId: string, action: BaseAction): RoborallyAction {
+    return action
   }
 }

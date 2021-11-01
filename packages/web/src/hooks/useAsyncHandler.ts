@@ -1,6 +1,7 @@
+import { toError } from "@boardgames/utils"
 import { useCallback, useState } from "react"
 
-import { handleGenericError, toError } from "lib/utils/error"
+import { handleGenericError } from "lib/utils/error"
 
 import { useMountedRef } from "./useMountedRef"
 

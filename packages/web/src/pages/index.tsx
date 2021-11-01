@@ -1,6 +1,7 @@
 import { PageContent } from "@boardgames/components"
-import { GameTile } from "components/home/GameTile"
 import styled from "@emotion/styled"
+
+import { GameTile } from "components/home/GameTile"
 import { PageLayout } from "components/ui/PageLayout"
 import { useTranslations } from "hooks/useTranslations"
 import { GameType } from "lib/games/types"
@@ -16,7 +17,9 @@ export default function HomePage() {
   return (
     <PageLayout title={t.home.pageTitle}>
       <StyledPageContent>
-        {Object.values(GameType).map(game => <GameTile game={game} key={game} />)}
+        {Object.values(GameType).map(game => (
+          <GameTile game={game} key={game} />
+        ))}
       </StyledPageContent>
     </PageLayout>
   )

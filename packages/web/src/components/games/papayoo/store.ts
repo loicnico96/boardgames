@@ -1,8 +1,9 @@
+import { remove } from "@boardgames/utils"
+
 import { makeUseGamePlayer } from "hooks/store/useGamePlayer"
 import { makeUseGameState } from "hooks/store/useGameState"
 import { GameType } from "lib/games/types"
 import { createStore } from "lib/store/utils/createStore"
-import { remove } from "lib/utils/array"
 
 export const usePapayooState = makeUseGameState(GameType.PAPAYOO)
 

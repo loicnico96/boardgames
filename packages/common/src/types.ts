@@ -42,8 +42,7 @@ export type GameModel<
   state: S
 }
 
-export type GameSettings<M extends GameModel> = {
-  defaultOptions: M["options"]
+export type GameSettings = {
   minPlayers: number
   maxPlayers: number
 }

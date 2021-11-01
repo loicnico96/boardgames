@@ -1,9 +1,9 @@
+import { toError } from "@boardgames/utils"
 import { useCallback } from "react"
 import useSWR from "swr"
 
 import { query } from "lib/db/query"
 import { DocumentData, QueryOptions, WithId } from "lib/db/types"
-import { toError } from "lib/utils/error"
 import { Logger } from "lib/utils/logger"
 import {
   getErrorResource,

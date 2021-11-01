@@ -44,9 +44,7 @@ export function PlayerHandCard({ card, playerId }: PlayerHandCardProps) {
 
   const swapCardsLocal = usePapayooStore(store => store.swap.cards)
   const swapCards = usePapayooPlayer(playerId, p =>
-    p.ready && p.action?.code === "swapCard"
-      ? p.action.cards
-      : swapCardsLocal
+    p.ready && p.action?.code === "swapCard" ? p.action.cards : swapCardsLocal
   )
 
   const t = useTranslations()
@@ -90,7 +88,6 @@ export function PlayerHandCard({ card, playerId }: PlayerHandCardProps) {
       />
     )
   }
-
 
   if (phase === "swapCard") {
     if (swapCards.includes(card)) {

@@ -4,36 +4,50 @@ import {
   BaseOptions,
   UserInfo,
 } from "@boardgames/common"
+import { generate, object } from "@boardgames/utils"
 
-import { getInitialGameState } from "./getInitialGameState"
 import {
   MetropolysAction,
   MetropolysModel,
   MetropolysOptions,
   MetropolysState,
 } from "./model"
-import { resolveState } from "./resolveState"
-import { validateAction } from "./validateAction"
-import { validateOptions } from "./validateOptions"
 
 export class MetropolysContext extends BaseContext<MetropolysModel> {
-  getInitialState(
+  getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,
-    options: BaseOptions
+    options: MetropolysOptions,
+    seed: number
   ): MetropolysState {
-    return getInitialGameState(playerOrder, players, options)
+    return {
+      over: false,
+      playerOrder,
+      players: generate(playerOrder, playerId => [
+        playerId,
+        {
+          ...players[playerId],
+          action: null,
+          ready: true,
+        },
+      ]),
+      seed,
+    }
   }
 
-  resolveState(): Promise<void> {
-    return resolveState(this)
+  async resolveState() {
+    // Todo
   }
 
-  validateAction(playerId: string, action: BaseAction): MetropolysAction {
-    return validateAction(this, playerId, action)
+  getDefaultOptions(): MetropolysOptions {
+    return {}
   }
 
   validateOptions(options: BaseOptions): MetropolysOptions {
-    return validateOptions(options)
+    return object({})(options)
+  }
+
+  validateAction(playerId: string, action: BaseAction): MetropolysAction {
+    return action
   }
 }

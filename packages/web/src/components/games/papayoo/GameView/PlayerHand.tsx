@@ -13,11 +13,7 @@ export function PlayerHand({ playerId }: PlayerHandProps) {
   return (
     <CardList>
       {cards.map(card => (
-        <PlayerHandCard
-          card={card}
-          key={card}
-          playerId={playerId}
-        />
+        <PlayerHandCard card={card} key={card} playerId={playerId} />
       ))}
     </CardList>
   )

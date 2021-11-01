@@ -1,3 +1,5 @@
+import { toError } from "@boardgames/utils"
+
 import { ApiError } from "lib/api/error"
 import { handle, readBody, readParam } from "lib/api/server"
 import { getUserId } from "lib/api/server/auth"
@@ -5,10 +7,9 @@ import { HttpMethod, HttpStatus } from "lib/api/types"
 import { getRoomRef } from "lib/db/collections"
 import { WithId } from "lib/db/types"
 import { DocRef, firestore } from "lib/firebase/admin"
-import { createGameContext } from "lib/games/context"
+import { getGameContext } from "lib/games/context"
 import { GameOptions, GameType } from "lib/games/types"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
-import { toError } from "lib/utils/error"
 import { Param } from "lib/utils/navigation"
 
 export type RoomUpdate<T extends GameType = GameType> = {
@@ -45,7 +46,7 @@ export async function updateRoom<T extends GameType>(
       )
     }
 
-    const context = createGameContext(roomData)
+    const context = getGameContext(roomData.game)
 
     let validatedOptions: GameOptions<T>
 

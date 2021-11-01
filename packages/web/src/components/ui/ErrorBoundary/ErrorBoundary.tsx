@@ -1,6 +1,5 @@
+import { toError } from "@boardgames/utils"
 import { Component, ReactNode } from "react"
-
-import { toError } from "lib/utils/error"
 
 export type ErrorBoundaryProps = {
   children: ReactNode

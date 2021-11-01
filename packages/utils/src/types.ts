@@ -6,16 +6,7 @@ export type Is<A, B> = And<Extends<A, B>, Extends<B, A>>
 export type IsEmpty<A extends Record<any, any>> = Extends<A, Record<any, never>>
 export type IsNever<A> = Extends<A, never>
 
-export type Fn<P extends any[] = any[], R = any> = (...args: P) => R
-
-export function assert(
-  condition: boolean,
-  message: string = "Assertion failed"
-): asserts condition {
-  if (!condition) {
-    throw Error(message)
-  }
-}
+export type Function<P extends any[] = any[], R = any> = (...args: P) => R
 
 export function identity<T>(value: T): T {
   return value
@@ -29,8 +20,19 @@ export function isBoolean(value: unknown): value is boolean {
   return value === true || value === false
 }
 
+export function isError(value: unknown): value is Error {
+  return value instanceof Error
+}
+
 export function isNumber(value: unknown): value is number {
   return Number.isFinite(value)
+}
+
+export function isEnum<T extends string>(
+  value: unknown,
+  enumObject: Record<string, T>
+): value is T {
+  return Object.values(enumObject).includes(value as T)
 }
 
 export function isFunction(value: unknown): value is Function {
@@ -44,16 +46,3 @@ export function isObject(value: unknown): value is Record<string, unknown> {
 export function isString(value: unknown): value is string {
   return typeof value === "string"
 }
-
-export type ObjectRecord<T> = Record<string, T>
-export type Key<T extends ObjectRecord<unknown>> = keyof T
-export type Value<T extends ObjectRecord<unknown>> = T[keyof T]
-
-export type ObjectUnion<
-  U extends string,
-  T extends ObjectRecord<ObjectRecord<unknown>>
-> = {
-  [S in Key<T>]: {
-    [K in Key<T[S]> | U]: K extends U ? S : T[S][K]
-  }
-}[Key<T>]

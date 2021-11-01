@@ -1,4 +1,5 @@
 import { PageError, PageLoader } from "@boardgames/components"
+import { wait } from "@boardgames/utils"
 import { ReactNode, useCallback, useRef } from "react"
 
 import { useDocumentListener } from "hooks/db/useDocumentListener"
@@ -10,7 +11,6 @@ import { Constructor, GameContext } from "lib/games/context"
 import { GameEvent, GameState, GameType } from "lib/games/types"
 import { useGlobalActions, useGlobalStore } from "lib/store/global"
 import { Logger } from "lib/utils/logger"
-import { wait } from "lib/utils/performance"
 import { getLoadedResource, Resource } from "lib/utils/resource"
 
 export type GameProviderProps<T extends GameType> = {

@@ -1,8 +1,9 @@
+import { generate } from "@boardgames/utils"
+
 import { AuthState, AuthUser } from "lib/auth/types"
 import { WithId } from "lib/db/types"
 import { GameState, GameType } from "lib/games/types"
 import { RoomData } from "lib/model/RoomData"
-import { generate } from "lib/utils/array"
 import { Resource } from "lib/utils/resource"
 
 import { createStore, Store } from "./utils/createStore"

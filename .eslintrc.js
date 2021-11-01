@@ -129,7 +129,6 @@ module.exports = {
     // Style
     "no-array-constructor": ["error"],
     "no-bitwise": ["error"],
-    "no-continue": ["error"],
     "no-lonely-if": ["error"],
     "no-multi-assign": ["error"],
     "no-new-object": ["error"],

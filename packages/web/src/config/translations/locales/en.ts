@@ -4,6 +4,9 @@ export default {
     pageLoading: "Loading game...",
   },
   games: {
+    cacao: {
+      name: "Cacao",
+    },
     metropolys: {
       name: "Metropolys",
     },

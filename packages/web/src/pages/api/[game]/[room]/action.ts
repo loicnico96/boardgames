@@ -1,4 +1,5 @@
 import { BaseAction } from "@boardgames/common"
+import { toError } from "@boardgames/utils"
 
 import { ApiError } from "lib/api/error"
 import { handle, readBody, readParam } from "lib/api/server"
@@ -8,7 +9,6 @@ import { getClientRef, getServerRef } from "lib/db/collections"
 import { firestore } from "lib/firebase/admin"
 import { getGameContext } from "lib/games/context"
 import { GameState, GameType, isGameType } from "lib/games/types"
-import { toError } from "lib/utils/error"
 import { Param } from "lib/utils/navigation"
 
 export async function playerAction<T extends GameType>(
@@ -36,7 +36,9 @@ export async function playerAction<T extends GameType>(
       )
     }
 
-    const context = getGameContext(game, gameState)
+    const context = getGameContext(game)
+
+    context.setState(gameState)
 
     const player = context.player(userId)
 

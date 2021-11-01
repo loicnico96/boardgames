@@ -1,11 +1,12 @@
-import { toError } from "./error"
+import { toError } from "./errors"
+import { ObjectUnion } from "./objects"
 import {
   isArray,
   isBoolean,
+  isEnum,
   isNumber,
   isObject,
   isString,
-  ObjectUnion,
 } from "./types"
 
 export type Validator<T> = (value: unknown) => T
@@ -33,7 +34,7 @@ export function array<T>(
       throw Error(`Array must contain exactly ${options.length} elements`)
     }
 
-    if (options.maxLength !== undefined && options.maxLength > value.length) {
+    if (options.maxLength !== undefined && options.maxLength < value.length) {
       throw Error(`Array contains more than ${options.maxLength} elements`)
     }
 
@@ -79,6 +80,25 @@ export function boolean(
   }
 }
 
+export function enumValue<T extends string>(
+  enumObject: Record<string, T>,
+  options: {
+    custom?: (value: T) => void
+  } = {}
+): Validator<T> {
+  return value => {
+    if (!isEnum(value, enumObject)) {
+      throw Error("Not an enum")
+    }
+
+    if (options.custom) {
+      options.custom(value as T)
+    }
+
+    return value as T
+  }
+}
+
 export function float(
   options: {
     custom?: (value: number) => void
@@ -91,7 +111,7 @@ export function float(
       throw Error("Not a number")
     }
 
-    if (options.max !== undefined && options.max > value) {
+    if (options.max !== undefined && options.max < value) {
       throw Error(`Value is greater than ${options.max}`)
     }
 
@@ -119,7 +139,7 @@ export function integer(
       throw Error("Not an integer")
     }
 
-    if (options.max !== undefined && options.max > value) {
+    if (options.max !== undefined && options.max < value) {
       throw Error(`Value is greater than ${options.max}`)
     }
 
@@ -320,7 +340,7 @@ export function string(
       throw Error(`String must contain exactly ${options.length} characters`)
     }
 
-    if (options.maxLength !== undefined && options.maxLength > value.length) {
+    if (options.maxLength !== undefined && options.maxLength < value.length) {
       throw Error(`String contains more than ${options.maxLength} characters`)
     }
 

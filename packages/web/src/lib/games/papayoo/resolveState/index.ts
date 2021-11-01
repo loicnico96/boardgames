@@ -1,14 +1,12 @@
-import { sum } from "lib/utils/math"
-import { createGenerator } from "lib/utils/random"
-import { assert } from "lib/utils/types"
+import { sum, assert } from "@boardgames/utils"
 
 import { dealCards, getCardScore, getHighestCard, sortCards } from "../cards"
 import { PapayooContext } from "../context"
 
 export async function nextGame(context: PapayooContext) {
-  const { playerOrder, seed } = context.state
+  const { playerOrder } = context.state
 
-  const playerCards = dealCards(playerOrder, createGenerator(seed))
+  const playerCards = dealCards(context.generator, playerOrder)
 
   context.update({
     $merge: {

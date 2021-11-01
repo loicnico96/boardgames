@@ -4,8 +4,8 @@ import {
   BaseOptions,
   UserInfo,
 } from "@boardgames/common"
+import { generate, object } from "@boardgames/utils"
 
-import { getInitialGameState } from "./getInitialGameState"
 import {
   PapayooAction,
   PapayooModel,
@@ -14,26 +14,50 @@ import {
 } from "./model"
 import { resolveState } from "./resolveState"
 import { validateAction } from "./validateAction"
-import { validateOptions } from "./validateOptions"
 
 export class PapayooContext extends BaseContext<PapayooModel> {
-  getInitialState(
+  getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,
-    options: BaseOptions
+    options: PapayooOptions,
+    seed: number
   ): PapayooState {
-    return getInitialGameState(playerOrder, players, options)
+    const startingPlayerId = this.generator.pick(playerOrder)
+
+    return {
+      cards: [],
+      currentPlayerId: startingPlayerId,
+      phase: "nextGame",
+      over: false,
+      playerOrder,
+      players: generate(playerOrder, playerId => [
+        playerId,
+        {
+          ...players[playerId],
+          action: null,
+          cards: [],
+          ready: true,
+          score: 0,
+        },
+      ]),
+      seed,
+      startingPlayerId,
+    }
   }
 
-  resolveState(): Promise<void> {
+  async resolveState() {
     return resolveState(this)
+  }
+
+  getDefaultOptions(): PapayooOptions {
+    return {}
+  }
+
+  validateOptions(options: BaseOptions): PapayooOptions {
+    return object({})(options)
   }
 
   validateAction(playerId: string, action: BaseAction): PapayooAction {
     return validateAction(this, playerId, action)
-  }
-
-  validateOptions(options: BaseOptions): PapayooOptions {
-    return validateOptions(options)
   }
 }

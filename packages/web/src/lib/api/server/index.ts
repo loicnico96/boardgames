@@ -1,12 +1,11 @@
+import { getTime, getTimeDiff, toError } from "@boardgames/utils"
 import { NextApiRequest, NextApiResponse } from "next"
 
 import { getParam } from "hooks/useParam"
 import { ApiError } from "lib/api/error"
 import { ApiLogger } from "lib/api/logger"
 import { HttpHeader, HttpMethod, HttpStatus } from "lib/api/types"
-import { toError } from "lib/utils/error"
 import { Param } from "lib/utils/navigation"
-import { getTime, getTimeDiff } from "lib/utils/performance"
 
 import { ApiHandler } from "./types"
 

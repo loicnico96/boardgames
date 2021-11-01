@@ -1,9 +1,6 @@
 import { GameSettings } from "@boardgames/common"
 
-import { MetropolysModel } from "./model"
-
-export const MetropolysSettings: GameSettings<MetropolysModel> = {
-  defaultOptions: { code: "metropolys/default" },
+export const MetropolysSettings: GameSettings = {
   minPlayers: 2,
   maxPlayers: 4,
 }

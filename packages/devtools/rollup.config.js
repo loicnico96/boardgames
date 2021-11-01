@@ -1,9 +1,11 @@
+import cleanOutDir from "rollup-plugin-delete"
 import typescript from "rollup-plugin-typescript2"
 
 export default {
   external: [
-    "rollup-plugin-typescript2",
-    "path"
+    "path",
+    "rollup-plugin-delete",
+    "rollup-plugin-typescript2"
   ],
   input: "src/index.ts",
   output: [
@@ -17,6 +19,9 @@ export default {
     }
   ],
   plugins: [
+    cleanOutDir({
+      targets: "dist",
+    }),
     typescript({
       tsconfigOverride: {
         compilerOptions: {

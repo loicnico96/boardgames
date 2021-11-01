@@ -4,8 +4,7 @@ import {
   BaseState,
   GameModel,
 } from "@boardgames/common"
-
-import { ObjectUnion } from "lib/utils/types"
+import { ObjectUnion } from "@boardgames/utils"
 
 export enum CardColor {
   BLACK = 0,

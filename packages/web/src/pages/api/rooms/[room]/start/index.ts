@@ -4,7 +4,7 @@ import { getUserId } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
 import { getClientRef, getRoomRef, getServerRef } from "lib/db/collections"
 import { DocRef, firestore } from "lib/firebase/admin"
-import { createGameContext } from "lib/games/context"
+import { getGameContext } from "lib/games/context"
 import { getGameSettings } from "lib/games/settings"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 import { Param } from "lib/utils/navigation"
@@ -47,7 +47,9 @@ export async function startGame(
       )
     }
 
-    const context = createGameContext(roomData)
+    const context = getGameContext(roomData.game)
+
+    context.initState(roomData.playerOrder, roomData.players, roomData.options)
 
     const clientRef = firestore.doc(getClientRef(roomData.game, roomId))
     transaction.create(clientRef, context.state)

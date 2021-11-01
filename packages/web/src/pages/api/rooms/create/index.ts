@@ -5,7 +5,7 @@ import { HttpMethod, HttpStatus } from "lib/api/types"
 import { Collection } from "lib/db/collections"
 import { WithId } from "lib/db/types"
 import { firestore } from "lib/firebase/admin"
-import { getGameSettings } from "lib/games/settings"
+import { getGameContext } from "lib/games/context"
 import { GameType } from "lib/games/types"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 
@@ -22,12 +22,14 @@ export async function createRoom<T extends GameType>(
     )
   }
 
-  const { defaultOptions } = getGameSettings(game)
+  const context = getGameContext(game)
+
+  const options = context.getDefaultOptions()
 
   const roomData: RoomData<T> = {
     createdAt: Date.now(),
     game,
-    options: defaultOptions,
+    options,
     ownerId: userId,
     playerOrder: [userId],
     players: { [userId]: { name: userName } },

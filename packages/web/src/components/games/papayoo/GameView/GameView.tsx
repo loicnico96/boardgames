@@ -27,9 +27,7 @@ export function GameView() {
 
   return (
     <>
-      {phase === "playCard" && (
-        <PlayCardField />
-      )}
+      {phase === "playCard" && <PlayCardField />}
       {phase === "swapCard" && playerId !== null && (
         <SwapCardField playerId={playerId} />
       )}

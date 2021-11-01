@@ -1,10 +1,10 @@
 import { Button, ButtonClickEvent, ButtonProps } from "@boardgames/components"
+import { If, IsNever } from "@boardgames/utils"
 import { useCallback } from "react"
 import { toast } from "react-toastify"
 
 import { Tooltip } from "components/ui/Tooltip"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
-import { If, IsNever } from "lib/utils/types"
 
 export type BaseButtonTranslations = {
   label: string

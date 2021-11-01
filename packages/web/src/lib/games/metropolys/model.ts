@@ -7,22 +7,15 @@ import {
   BaseState,
 } from "@boardgames/common"
 
-export type MetropolysAction = BaseAction & {
-  count: number
-}
+export type MetropolysAction = BaseAction
 
 export type MetropolysEvent = BaseEvent
 
 export type MetropolysOptions = BaseOptions
 
-export type MetropolysPlayer = BasePlayer<MetropolysAction> & {
-  count: number
-}
+export type MetropolysPlayer = BasePlayer<MetropolysAction>
 
-export type MetropolysState = BaseState<MetropolysPlayer> & {
-  count: number
-  state: number
-}
+export type MetropolysState = BaseState<MetropolysPlayer>
 
 export type MetropolysModel = GameModel<
   MetropolysAction,

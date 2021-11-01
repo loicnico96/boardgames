@@ -1,6 +1,5 @@
 import { BaseAction } from "@boardgames/common"
-
-import { array, integer, objectUnion } from "lib/utils/validation"
+import { array, integer, objectUnion } from "@boardgames/utils"
 
 import {
   getRequestedColor,

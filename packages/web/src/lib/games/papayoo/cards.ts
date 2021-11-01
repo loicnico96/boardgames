@@ -1,6 +1,4 @@
-import { fill, generate, sortBy } from "lib/utils/array"
-import { mutableShuffle, Random } from "lib/utils/random"
-import { assert } from "lib/utils/types"
+import { fill, generate, sortBy, Random, assert } from "@boardgames/utils"
 
 import { Card, CardColor, PapayooPlayer } from "./model"
 
@@ -32,10 +30,8 @@ export function getCardScore(card: number): number {
     : 0
 }
 
-export function getDeck(playerCount: number, generator?: Random): number[] {
+export function getDeck(playerCount: number): number[] {
   const deck = fill(CARDS.length, card => card)
-
-  mutableShuffle(deck, generator)
 
   if (playerCount >= 7) {
     return deck.filter(
@@ -51,11 +47,13 @@ export function sortCards(cards: number[]): number[] {
 }
 
 export function dealCards(
-  playerOrder: string[],
-  generator?: Random
+  generator: Random,
+  playerOrder: string[]
 ): Record<string, number[]> {
   const playerCount = playerOrder.length
-  const deck = getDeck(playerCount, generator)
+  const deck = getDeck(playerCount)
+
+  generator.shuffle(deck)
 
   assert(deck.length % playerCount === 0, "Cannot be divided by player count")
 
