@@ -1,4 +1,4 @@
-import { Banner } from "components/games/common/Banner"
+import { Banner } from "components/ui/GameView/Banner"
 import { useTranslations } from "hooks/useTranslations"
 
 import { usePapayooPlayer } from "../store"

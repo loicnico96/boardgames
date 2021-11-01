@@ -1,5 +1,5 @@
-import { Banner } from "components/games/common/Banner"
 import { AsyncButton } from "components/ui/AsyncButton"
+import { Banner } from "components/ui/GameView/Banner"
 import { replace } from "config/translations/replace"
 import { useTranslations } from "hooks/useTranslations"
 import { getSwapCardCount } from "lib/games/papayoo/cards"
