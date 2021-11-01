@@ -15,7 +15,7 @@ import { getLoadedResource, Resource } from "lib/utils/resource"
 
 export type GameProviderProps<T extends GameType> = {
   children: ReactNode
-  context: Constructor<GameContext<T>, [state: GameState<T>]>
+  context: Constructor<GameContext<T>>
   game: T
 }
 
@@ -47,9 +47,9 @@ export function GameProvider<T extends GameType>({
         const logger = new Logger(game)
 
         async function onStateChange(state: GameState<T>, event: GameEvent<T>) {
-          setGameResource(game, roomId, getLoadedResource(state))
           logger.log("Event", event)
-          await wait(500)
+          setGameResource(game, roomId, getLoadedResource(state))
+          return wait(500)
         }
 
         async function resolveQueue() {
@@ -60,8 +60,10 @@ export function GameProvider<T extends GameType>({
                 const resource = resourceQueue.current.shift()
                 if (resource?.data) {
                   logger.log("State", resource.data)
-                  const ctx = new context(resource.data)
+                  const ctx = new context()
+                  ctx.setState(resource.data)
                   await ctx.resolve(onStateChange)
+                  logger.log("State", ctx.state)
                   setGameResource(game, roomId, getLoadedResource(ctx.state))
                 } else if (resource?.error) {
                   logger.error(resource.error)

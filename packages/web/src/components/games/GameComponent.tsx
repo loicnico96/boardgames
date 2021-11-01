@@ -12,11 +12,7 @@ const DYNAMIC_OPTIONS: DynamicOptions = {
 
 export const GAME_COMPONENTS: Record<GameType, ComponentType> = {
   cacao: dynamic(
-    () =>
-      import(
-        /* webpackChunkName: "cacao" */
-        "./GameComponentLoader" // TODO Implement Cacao
-      ).then(file => file.GameComponentLoader),
+    () => import(/* webpackChunkName: "cacao" */ "./cacao"),
     DYNAMIC_OPTIONS
   ),
   metropolys: dynamic(
@@ -28,11 +24,7 @@ export const GAME_COMPONENTS: Record<GameType, ComponentType> = {
     DYNAMIC_OPTIONS
   ),
   papayoo: dynamic(
-    () =>
-      import(
-        /* webpackChunkName: "papayoo" */
-        "./papayoo"
-      ),
+    () => import(/* webpackChunkName: "papayoo" */ "./papayoo"),
     DYNAMIC_OPTIONS
   ),
   roborally: dynamic(
