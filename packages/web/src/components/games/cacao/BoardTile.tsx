@@ -2,13 +2,18 @@ import styled from "@emotion/styled"
 
 export type BoardTileProps = {
   background?: string
+  disabled?: boolean
+  onClick?: () => void
   rot?: number
+  selected?: boolean
 }
 
 export const BoardTile = styled.div<BoardTileProps>`
   align-items: center;
   background-color: ${props => props.background ?? "lightgray"};
-  border: 1px black solid;
+  border: ${props => (props.selected ? 3 : 1)}px black solid;
+  cursor: ${props =>
+    props.onClick ? (props.disabled ? "not-allowed" : "pointer") : "default"};
   display: flex;
   height: 60px;
   justify-content: center;

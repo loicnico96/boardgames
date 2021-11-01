@@ -4,12 +4,15 @@ import { BoardTile } from "./BoardTile"
 import { useCacaoState } from "./store"
 
 export type VillageTileProps = {
+  disabled?: boolean
   rot?: number
+  onClick?: () => void
   playerId: string
+  selected?: boolean
   type: VillageType
 }
 
-export function VillageTile({ playerId, rot = 0, type }: VillageTileProps) {
+export function VillageTile({ playerId, ...props }: VillageTileProps) {
   const playerIndex = useCacaoState(state =>
     state.playerOrder.indexOf(playerId)
   )
@@ -17,8 +20,8 @@ export function VillageTile({ playerId, rot = 0, type }: VillageTileProps) {
   const playerColor = ["yellow", "red", "purple", "white"][playerIndex]
 
   return (
-    <BoardTile background={playerColor} rot={rot} title={type}>
-      {type}
+    <BoardTile background={playerColor} title={props.type} {...props}>
+      {props.type}
     </BoardTile>
   )
 }

@@ -1,11 +1,8 @@
 import styled from "@emotion/styled"
 
-import { useCurrentUserId } from "hooks/store/useCurrentUserId"
-
 import { ForestDisplay } from "./ForestDisplay"
 import { GameBoard } from "./GameBoard"
 import { PlayerHand } from "./PlayerHand"
-import { useCacaoState } from "./store"
 
 const GameViewContainer = styled.div`
   align-items: center;
@@ -15,16 +12,14 @@ const GameViewContainer = styled.div`
   padding: 20px;
 `
 
-export function GameView() {
-  const userId = useCurrentUserId()
+export type GameViewProps = {
+  playerId: string | null
+}
 
-  const player = useCacaoState(state =>
-    userId ? state.players[userId] ?? null : null
-  )
-
+export function GameView({ playerId }: GameViewProps) {
   return (
     <GameViewContainer>
-      {userId !== null && player !== null && <PlayerHand playerId={userId} />}
+      {playerId !== null && <PlayerHand playerId={playerId} />}
       <ForestDisplay />
       <GameBoard />
     </GameViewContainer>

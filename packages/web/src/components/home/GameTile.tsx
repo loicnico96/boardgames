@@ -1,11 +1,11 @@
 import { Text } from "@boardgames/components"
 import styled from "@emotion/styled"
-import Image from "next/image"
-
 import CacaoHome from "assets/games/cacao/home.jpg"
 import MetropolysHome from "assets/games/metropolys/home.jpg"
 import PapayooHome from "assets/games/papayoo/home.jpg"
 import RoborallyHome from "assets/games/roborally/home.jpg"
+import Image from "next/image"
+
 import { RouterLink } from "components/ui/RouterLink"
 import { replace } from "config/translations/replace"
 import { withSearchParams } from "hooks/useSearchParams"

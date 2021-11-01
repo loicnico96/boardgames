@@ -53,7 +53,7 @@ export async function gainCoins(
   amount: number
 ): Promise<void> {
   context.updatePlayer(playerId, { coins: coins => coins + amount })
-  await context.post("gainBeans", { playerId, amount })
+  await context.post("gainCoins", { playerId, amount })
 }
 
 export async function gainSun(
@@ -325,7 +325,7 @@ export async function resolveWorkers(
 
     for (const direction of Directions) {
       const adjacentVillagePos = movePos(forestPos, direction, 1)
-      if (!samePos(villagePos, adjacentVillagePos)) {
+      if (samePos(villagePos, adjacentVillagePos)) {
         continue
       }
 
