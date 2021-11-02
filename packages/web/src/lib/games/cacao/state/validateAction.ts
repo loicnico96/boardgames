@@ -2,9 +2,19 @@ import { BaseAction } from "@boardgames/common"
 import { Pos, array, integer, object, objectUnion } from "@boardgames/utils"
 
 import { CacaoContext } from "../context"
-import { BoardTile, CacaoAction, isForestTile, isVillageTile } from "../model"
+import {
+  BoardTile,
+  CacaoAction,
+  CacaoState,
+  isForestTile,
+  isVillageTile,
+} from "../model"
 
 import { PLAYER_HAND_SIZE } from "./getInitialGameState"
+
+export function getTile(state: CacaoState, pos: Pos): BoardTile {
+  return state.board[pos.x]?.[pos.y] ?? { type: null }
+}
 
 export function getAdjacentPositions(pos: Pos): Pos[] {
   return [
@@ -15,29 +25,32 @@ export function getAdjacentPositions(pos: Pos): Pos[] {
   ]
 }
 
-export function getAdjacentTiles(context: CacaoContext, pos: Pos): BoardTile[] {
-  return getAdjacentPositions(pos).map(adjacentPos => context.tile(adjacentPos))
+export function getAdjacentTiles(state: CacaoState, pos: Pos): BoardTile[] {
+  return getAdjacentPositions(pos).map(adjacentPos =>
+    getTile(state, adjacentPos)
+  )
 }
 
 export function isFillable(
-  context: CacaoContext,
+  state: CacaoState,
   pos: Pos,
   fillThreshold: number
 ): boolean {
   return (
-    context.isEmpty(pos) &&
-    getAdjacentPositions(pos).filter(villagePos => !context.isEmpty(villagePos))
-      .length >= fillThreshold
+    getTile(state, pos).type === null &&
+    getAdjacentPositions(pos).filter(
+      adjacentPos => getTile(state, adjacentPos).type !== null
+    ).length >= fillThreshold
   )
 }
 
 export function getForestFillPositions(
-  context: CacaoContext,
+  state: CacaoState,
   pos: Pos,
   fillThreshold: number
 ): Pos[] {
-  return getAdjacentPositions(pos).filter(forestPos =>
-    isFillable(context, forestPos, fillThreshold)
+  return getAdjacentPositions(pos).filter(adjacentPos =>
+    isFillable(state, adjacentPos, fillThreshold)
   )
 }
 
@@ -141,16 +154,16 @@ export function validateAction(
         }
 
         // Check that there exists at least one adjacent Forest tile
-        const adjacentTiles = getAdjacentTiles(context, pos)
+        const adjacentTiles = getAdjacentTiles(context.state, pos)
         if (!adjacentTiles.some(isForestTile)) {
           throw Error("You cannot place this tile here.")
         }
 
         // Check that the correct number of extra Forest tiles are provided
-        const fillPositions = getForestFillPositions(context, pos, 1)
+        const fillPositions = getForestFillPositions(context.state, pos, 1)
         const fillCount = Math.min(
           fillPositions.length,
-          context.state.tiles.length
+          context.state.tiles.filter(t => t !== null).length
         )
         if (forests.length !== fillCount) {
           throw Error(`You must choose ${fillCount} Forest tiles to place.`)

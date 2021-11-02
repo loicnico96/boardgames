@@ -1,71 +1,131 @@
-import { mod } from "@boardgames/utils"
+import { identity, mod } from "@boardgames/utils"
 import { useCallback } from "react"
 
 import { AsyncButton } from "components/ui/AsyncButton"
 import { Banner } from "components/ui/GameView/Banner"
 import { usePlayerAction } from "hooks/usePlayerAction"
 import { VillageType } from "lib/games/cacao/model"
+import { getForestFillPositions } from "lib/games/cacao/state/validateAction"
 import { GameType } from "lib/games/types"
 
-import { useCacaoActions, useCacaoPlayer, useCacaoStore } from "./store"
+import {
+  useCacaoActions,
+  useCacaoPlayer,
+  useCacaoState,
+  useCacaoStore,
+} from "./store"
 
 export type GameBannerProps = {
   playerId: string
 }
 
 export function GameBanner({ playerId }: GameBannerProps) {
-  const selectedIndex = useCacaoStore(store => store.village.index)
-  const selectedPos = useCacaoStore(store => store.village.pos)
-  const selectedRot = useCacaoStore(store => store.village.rot)
-  const confirmed = useCacaoStore(store => store.village.confirmed)
+  const forest = useCacaoStore(store => store.forest)
   const forests = useCacaoStore(store => store.forests)
+  const village = useCacaoStore(store => store.village)
 
-  const { resetSelection, rotateVillageTile } = useCacaoActions()
+  const {
+    confirmForestTile,
+    confirmVillageTile,
+    resetSelection,
+    rotateVillageTile,
+  } = useCacaoActions()
 
   const isReady = useCacaoPlayer(playerId, player => player.ready)
 
   const selectedTile = useCacaoPlayer(playerId, player =>
-    selectedIndex !== null ? player.hand[selectedIndex] : null
+    village.index !== null ? player.hand[village.index] : null
   )
+
+  const selectedForestTile = useCacaoState(state =>
+    forest.index !== null ? state.tiles[forest.index] : null
+  )
+
+  const state = useCacaoState(identity)
 
   const playerAction = usePlayerAction(GameType.CACAO)
 
   const confirmTile = useCallback(async () => {
-    if (selectedIndex !== null && selectedPos !== null) {
-      await playerAction({
-        code: "playTile",
-        forests,
-        village: {
-          index: selectedIndex,
-          rot: mod(selectedRot, 4),
-          pos: selectedPos,
-        },
-      })
-      resetSelection()
+    if (village.index !== null && village.pos !== null) {
+      if (village.confirmed) {
+        if (forest.index !== null && forest.pos !== null) {
+          const fillPositions = getForestFillPositions(state, village.pos, 1)
+          const fillCount = Math.min(
+            fillPositions.length,
+            state.tiles.filter(t => t !== null).length
+          )
+
+          if (fillCount === forests.length + 1) {
+            await playerAction({
+              code: "playTile",
+              forests: [
+                ...forests,
+                {
+                  index: forest.index,
+                  pos: forest.pos,
+                },
+              ],
+              village: {
+                index: village.index,
+                rot: mod(village.rot, 4),
+                pos: village.pos,
+              },
+            })
+
+            resetSelection()
+          } else {
+            confirmForestTile()
+          }
+        }
+      } else {
+        const fillPositions = getForestFillPositions(state, village.pos, 1)
+        const fillCount = Math.min(
+          fillPositions.length,
+          state.tiles.filter(t => t !== null).length
+        )
+
+        if (fillCount === 0) {
+          await playerAction({
+            code: "playTile",
+            forests: [],
+            village: {
+              index: village.index,
+              rot: mod(village.rot, 4),
+              pos: village.pos,
+            },
+          })
+
+          resetSelection()
+        } else {
+          confirmVillageTile()
+        }
+      }
     }
   }, [
+    confirmForestTile,
+    confirmVillageTile,
+    forest,
     forests,
     playerAction,
     resetSelection,
-    selectedPos,
-    selectedIndex,
-    selectedRot,
+    state,
+    village,
   ])
 
   if (isReady) {
     return null
   }
 
-  if (confirmed) {
+  if (village.confirmed) {
     return (
       <Banner>
         Choose a Forest tile to place
         <AsyncButton
-          onClick={async () => resetSelection}
+          onClick={async () => resetSelection()}
           translations={{ label: "Reset" }}
         />
         <AsyncButton
-          disabled={selectedTile === null || selectedPos === null}
+          disabled={selectedForestTile === null || forest.pos === null}
           onClick={confirmTile}
           translations={{ label: "Confirm" }}
         />
@@ -91,7 +151,7 @@ export function GameBanner({ playerId }: GameBannerProps) {
         translations={{ label: "Rotate right" }}
       />
       <AsyncButton
-        disabled={selectedTile === null || selectedPos === null}
+        disabled={selectedTile === null || village.pos === null}
         onClick={confirmTile}
         translations={{ label: "Confirm" }}
       />

@@ -4,7 +4,7 @@ import {
   BaseState,
   GameModel,
 } from "@boardgames/common"
-import { Direction, Pos, isEnum, ObjectUnion } from "@boardgames/utils"
+import { Direction, Pos, ObjectUnion, isEnum } from "@boardgames/utils"
 
 export enum ForestType {
   CACAO_1 = "beans1", // x6
@@ -26,6 +26,10 @@ export enum VillageType {
   VILLAGE_3100 = "3-1-0-0", // x1
 }
 
+export type EmptyTile = {
+  type: null
+}
+
 export type VillageTile = {
   playerId: string
   rot: number
@@ -36,7 +40,7 @@ export type ForestTile = {
   type: ForestType
 }
 
-export type BoardTile = { type: null } | ForestTile | VillageTile
+export type BoardTile = EmptyTile | ForestTile | VillageTile
 
 export function isForestTile(tile: BoardTile): tile is ForestTile {
   return isEnum(tile.type, ForestType)

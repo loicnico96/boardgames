@@ -6,9 +6,11 @@ import {
   PlayerCardRow,
 } from "components/ui/GameView/PlayerCard"
 
-import { useCacaoPlayer } from "./store"
+import { useCacaoPlayer, useCacaoState } from "./store"
 
 export function PlayerCard({ playerId }: PlayerCardProps) {
+  const over = useCacaoState(state => state.over)
+
   const { beans, coins, name, ready, sun, water } = useCacaoPlayer(
     playerId,
     identity
@@ -26,7 +28,13 @@ export function PlayerCard({ playerId }: PlayerCardProps) {
         Water: {water} / 8 ({waterScore}pts)
       </PlayerCardRow>
       <PlayerCardRow>Sun disks: {sun} / 3</PlayerCardRow>
-      <PlayerCardRow>{ready ? "Ready" : "Waiting..."}</PlayerCardRow>
+      <PlayerCardRow>
+        {over
+          ? `Final Score: ${coins + waterScore}pts`
+          : ready
+          ? "Ready"
+          : "Waiting..."}
+      </PlayerCardRow>
     </PlayerCardContainer>
   )
 }

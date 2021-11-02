@@ -57,10 +57,8 @@ export const {
   },
   (set, get) => ({
     confirmForestTile() {
-      const {
-        forest: { index, pos },
-      } = get()
-      if (index !== null && pos !== null) {
+      const { forest } = get()
+      if (forest.index !== null && forest.pos !== null) {
         set({
           $merge: {
             forest: {
@@ -69,17 +67,15 @@ export const {
             },
           },
           forests: {
-            $push: [{ index, pos }],
+            $push: [{ index: forest.index, pos: forest.pos }],
           },
         })
       }
     },
 
     confirmVillageTile() {
-      const {
-        village: { index, pos },
-      } = get()
-      if (index !== null && pos !== null) {
+      const { village } = get()
+      if (village.index !== null && village.pos !== null) {
         set({
           village: {
             $merge: {
@@ -109,10 +105,8 @@ export const {
     },
 
     rotateVillageTile(rot) {
-      const {
-        village: { confirmed },
-      } = get()
-      if (!confirmed) {
+      const { village } = get()
+      if (!village.confirmed) {
         set({
           village: {
             rot: r => r + rot,
@@ -142,10 +136,8 @@ export const {
     },
 
     selectVillagePosition(x, y) {
-      const {
-        village: { confirmed },
-      } = get()
-      if (!confirmed) {
+      const { village } = get()
+      if (!village.confirmed) {
         set({
           $merge: {
             forest: {
@@ -164,10 +156,8 @@ export const {
     },
 
     selectVillageTile(index) {
-      const {
-        village: { confirmed },
-      } = get()
-      if (!confirmed) {
+      const { village } = get()
+      if (!village.confirmed) {
         set({
           village: {
             $merge: {

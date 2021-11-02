@@ -1,6 +1,9 @@
 // Spades
 import css from "@emotion/css"
 import styled from "@emotion/styled"
+import Image from "next/image"
+import { useCallback } from "react"
+
 import CardSpade1 from "assets/games/papayoo/cards/card101.png"
 import CardSpade2 from "assets/games/papayoo/cards/card102.png"
 import CardSpade3 from "assets/games/papayoo/cards/card103.png"
@@ -67,9 +70,6 @@ import CardBlack19 from "assets/games/papayoo/cards/card519.png"
 import CardBlack20 from "assets/games/papayoo/cards/card520.png"
 // Empty
 import CardEmpty from "assets/games/papayoo/cards/empty.png"
-import Image from "next/image"
-import { useCallback } from "react"
-
 import { Tooltip } from "components/ui/Tooltip"
 import { replace } from "config/translations/replace"
 import { useAsyncHandler } from "hooks/useAsyncHandler"

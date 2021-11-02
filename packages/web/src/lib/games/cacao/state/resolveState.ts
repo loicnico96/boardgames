@@ -8,7 +8,6 @@ import {
   Pos,
   samePos,
   assert,
-  isString,
 } from "@boardgames/utils"
 
 import { CacaoContext } from "../context"
@@ -102,6 +101,12 @@ export async function nextPlayer(
   context: CacaoContext,
   playerId: string
 ): Promise<void> {
+  if (context.player(playerId).hand.length === 0) {
+    context.update({ $merge: { currentPlayerId: null } })
+    context.endGame()
+    return
+  }
+
   context.update({ $merge: { currentPlayerId: playerId } })
 
   context.requireAction(playerId)
@@ -363,10 +368,13 @@ export async function fillForest(
   forestPos: Pos,
   tileIndex: number
 ): Promise<void> {
-  assert(isFillable(context, forestPos, 2), "This location cannot be filled.")
+  assert(
+    isFillable(context.state, forestPos, 2),
+    "This location cannot be filled."
+  )
 
   const type = context.state.tiles[tileIndex]
-  assert(isString(type), "This tile is not available.")
+  assert(type !== null, "This tile is not available.")
 
   context.update({
     tiles: {
@@ -385,10 +393,13 @@ export async function fillForestFromDeck(
   context: CacaoContext,
   forestPos: Pos
 ): Promise<void> {
-  assert(isFillable(context, forestPos, 2), "This location cannot be filled.")
+  assert(
+    isFillable(context.state, forestPos, 2),
+    "This location cannot be filled."
+  )
+  assert(context.state.deck.length > 0, "The Forest deck is empty.")
 
   const type = context.state.deck[0]
-  assert(isString(type), "The Forest deck is empty.")
 
   context.update({
     deck: {
@@ -410,8 +421,9 @@ export async function placeVillageTile(
 ): Promise<void> {
   const player = context.player(playerId)
 
+  assert(tileIndex < player.hand.length, "This tile is not available.")
+
   const type = player.hand[tileIndex]
-  assert(isString(type), "This tile is not available.")
 
   const overbuilt = !context.isEmpty(villagePos)
 
@@ -461,7 +473,11 @@ export async function resolvePlayerAction(
     filledPositions.push(forest.pos)
   }
 
-  const fillPositions = getForestFillPositions(context, action.village.pos, 2)
+  const fillPositions = getForestFillPositions(
+    context.state,
+    action.village.pos,
+    2
+  )
 
   if (fillPositions.length > 0) {
     assert(

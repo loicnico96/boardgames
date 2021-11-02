@@ -21,7 +21,7 @@ export function GameView({ playerId }: GameViewProps) {
     <GameViewContainer>
       {playerId !== null && <PlayerHand playerId={playerId} />}
       <ForestDisplay />
-      <GameBoard />
+      <GameBoard playerId={playerId} />
     </GameViewContainer>
   )
 }

@@ -1,8 +1,8 @@
 import styled from "@emotion/styled"
 
-import { BoardTile } from "./BoardTile"
-import { ForestTile } from "./ForestTile"
-import { useCacaoState } from "./store"
+import { useCacaoActions, useCacaoState, useCacaoStore } from "./store"
+import { BasicTile } from "./Tile/BasicTile"
+import { ForestTile } from "./Tile/ForestTile"
 
 const ForestDisplayContainer = styled.div`
   display: flex;
@@ -13,14 +13,23 @@ export function ForestDisplay() {
   const deckSize = useCacaoState(state => state.deck.length)
   const forestTiles = useCacaoState(state => state.tiles)
 
+  const village = useCacaoStore(store => store.village)
+
+  const { selectForestTile } = useCacaoActions()
+
   return (
     <ForestDisplayContainer>
-      <BoardTile>{deckSize}</BoardTile>
+      <BasicTile>{deckSize}</BasicTile>
       {forestTiles.map((type, index) =>
         type ? (
-          <ForestTile key={index} type={type} />
+          <ForestTile
+            disabled={!village.confirmed}
+            key={index}
+            onClick={() => selectForestTile(index)}
+            type={type}
+          />
         ) : (
-          <BoardTile key={index} />
+          <BasicTile key={index} />
         )
       )}
     </ForestDisplayContainer>
