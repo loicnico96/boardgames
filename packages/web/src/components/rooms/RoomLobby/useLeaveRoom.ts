@@ -1,31 +1,38 @@
 import { useCallback } from "react"
 
-import { getAuth } from "hooks/store/useAuth"
 import { getRoomData } from "hooks/useRoomData"
 import { leaveRoom } from "lib/api/client/leaveRoom"
+import { useAuthContext } from "lib/auth/context"
 import { RoomStatus } from "lib/model/RoomData"
 import { useGlobalStore } from "lib/store/global"
 
 export function useLeaveRoom(roomId: string) {
+  const { user } = useAuthContext()
+
   const reason = useGlobalStore(
     useCallback(
       store => {
-        const { user } = getAuth(store)
         const room = getRoomData(store, roomId)
 
         if (room.status !== RoomStatus.OPENED) {
           return "alreadyStarted"
-        } else if (!user) {
+        }
+
+        if (!user) {
           return "notAuthenticated"
-        } else if (room.ownerId === user.userId) {
+        }
+
+        if (room.ownerId === user.userId) {
           return "isOwner"
-        } else if (!room.playerOrder.includes(user.userId)) {
+        }
+
+        if (!room.playerOrder.includes(user.userId)) {
           return "notInRoom"
         }
 
         return undefined
       },
-      [roomId]
+      [roomId, user]
     )
   )
 

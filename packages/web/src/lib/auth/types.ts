@@ -11,6 +11,7 @@ export type AuthUser = {
 }
 
 export type AuthState = {
-  loading: boolean
+  isAuthenticated: boolean
+  isLoading: boolean
   user: AuthUser | null
 }

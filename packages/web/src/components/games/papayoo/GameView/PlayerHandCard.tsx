@@ -1,4 +1,4 @@
-import { useCurrentUserId } from "hooks/store/useCurrentUserId"
+import { useCurrentUserId } from "hooks/useCurrentUserId"
 import { usePlayerAction } from "hooks/usePlayerAction"
 import { useTranslations } from "hooks/useTranslations"
 import {

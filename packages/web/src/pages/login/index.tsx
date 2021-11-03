@@ -4,12 +4,11 @@ import { useCallback, useEffect } from "react"
 
 import { AsyncButton } from "components/ui/AsyncButton"
 import { PageLayout } from "components/ui/PageLayout"
-import { useCurrentUserId } from "hooks/store/useCurrentUserId"
 import { useSearchParam } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
+import { useAuthContext } from "lib/auth/context"
 import { promptUserName } from "lib/auth/promptUserName"
 import { signInAnonymously, signInWithGoogle } from "lib/firebase/auth"
-import { useGlobalActions } from "lib/store/global"
 import { Console } from "lib/utils/logger"
 import { Param, ROUTES } from "lib/utils/navigation"
 
@@ -17,16 +16,16 @@ export default function LoginPage() {
   const t = useTranslations()
 
   const router = useRouter()
-  const { setUserName } = useGlobalActions()
-  const userId = useCurrentUserId()
+
+  const { isAuthenticated, setUserName } = useAuthContext()
 
   const redirectTo = useSearchParam(Param.REDIRECT) ?? ROUTES.home()
 
   useEffect(() => {
-    if (userId) {
+    if (isAuthenticated) {
       router.replace(redirectTo).catch(Console.error)
     }
-  }, [redirectTo, router, userId])
+  }, [isAuthenticated, redirectTo, router])
 
   const parents = [
     {
@@ -51,15 +50,15 @@ export default function LoginPage() {
         <Text>Paragraph 2</Text>
         <Box gap={8}>
           <AsyncButton
-            disabled={userId !== null}
+            disabled={isAuthenticated}
             onClick={signInAsGuest}
-            reason={userId !== null ? "alreadyLoggedIn" : undefined}
+            reason={isAuthenticated ? "alreadyLoggedIn" : undefined}
             translations={t.login.signInAnonymously}
           />
           <AsyncButton
-            disabled={userId !== null}
+            disabled={isAuthenticated}
             onClick={signInWithGoogle}
-            reason={userId !== null ? "alreadyLoggedIn" : undefined}
+            reason={isAuthenticated ? "alreadyLoggedIn" : undefined}
             translations={t.login.signInWithGoogle}
           />
         </Box>

@@ -1,34 +1,24 @@
 import { useRouter } from "next/router"
 import { useCallback } from "react"
 
-import { getAuth } from "hooks/store/useAuth"
 import { createRoom } from "lib/api/client/createRoom"
+import { useAuthContext } from "lib/auth/context"
 import { GameType } from "lib/games/types"
-import { useGlobalStore } from "lib/store/global"
 import { Console } from "lib/utils/logger"
 import { ROUTES } from "lib/utils/navigation"
 
 export function useCreateRoom(game: GameType | null) {
+  const { user } = useAuthContext()
+
   const router = useRouter()
 
-  const reason = useGlobalStore(
-    useCallback(
-      store => {
-        const { user } = getAuth(store)
-
-        if (!user) {
-          return "notAuthenticated"
-        } else if (!user.userInfo.userName) {
-          return "noUserName"
-        } else if (!game) {
-          return "noGameSelected"
-        }
-
-        return undefined
-      },
-      [game]
-    )
-  )
+  const reason = user
+    ? user.userInfo.userName
+      ? game
+        ? undefined
+        : "noGameSelected"
+      : "noUserName"
+    : "notAuthenticated"
 
   const trigger = useCallback(async () => {
     if (game) {

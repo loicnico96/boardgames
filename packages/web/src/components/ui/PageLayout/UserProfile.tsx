@@ -2,18 +2,16 @@ import { Box, Spinner, UserInfo } from "@boardgames/components"
 import { useCallback } from "react"
 
 import { AsyncButton } from "components/ui/AsyncButton"
-import { useAuth } from "hooks/store/useAuth"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { useTranslations } from "hooks/useTranslations"
+import { useAuthContext } from "lib/auth/context"
 import { promptUserName } from "lib/auth/promptUserName"
 import { changeUserName, signOut } from "lib/firebase/auth"
-import { useGlobalActions } from "lib/store/global"
 
 import { LoginLink } from "./LoginLink"
 
 export function UserProfile() {
-  const { loading, user } = useAuth()
-  const { setUserName } = useGlobalActions()
+  const { isLoading, setUserName, user } = useAuthContext()
   const t = useTranslations()
 
   const [onClick] = useAsyncHandler(
@@ -29,11 +27,11 @@ export function UserProfile() {
     }, [setUserName, t, user])
   )
 
-  if (loading) {
+  if (isLoading) {
     return <Spinner size={28} />
   }
 
-  if (!user) {
+  if (user === null) {
     return <LoginLink />
   }
 

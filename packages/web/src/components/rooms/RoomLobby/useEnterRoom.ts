@@ -1,36 +1,45 @@
 import { useCallback } from "react"
 
-import { getAuth } from "hooks/store/useAuth"
 import { getRoomData } from "hooks/useRoomData"
 import { enterRoom } from "lib/api/client/enterRoom"
+import { useAuthContext } from "lib/auth/context"
 import { getGameSettings } from "lib/games/settings"
 import { RoomStatus } from "lib/model/RoomData"
 import { useGlobalStore } from "lib/store/global"
 
 export function useEnterRoom(roomId: string) {
+  const { user } = useAuthContext()
+
   const reason = useGlobalStore(
     useCallback(
       store => {
-        const { user } = getAuth(store)
         const room = getRoomData(store, roomId)
 
         const { maxPlayers } = getGameSettings(room.game)
 
         if (room.status !== RoomStatus.OPENED) {
           return "alreadyStarted"
-        } else if (room.playerOrder.length >= maxPlayers) {
+        }
+
+        if (room.playerOrder.length >= maxPlayers) {
           return "alreadyFull"
-        } else if (!user) {
+        }
+
+        if (!user) {
           return "notAuthenticated"
-        } else if (room.playerOrder.includes(user.userId)) {
+        }
+
+        if (room.playerOrder.includes(user.userId)) {
           return "alreadyInRoom"
-        } else if (!user.userInfo.userName) {
+        }
+
+        if (!user.userInfo.userName) {
           return "noUserName"
         }
 
         return undefined
       },
-      [roomId]
+      [roomId, user]
     )
   )
 

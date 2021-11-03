@@ -1,7 +1,7 @@
 import { Box } from "@boardgames/components"
 
 import { PlayerPanel } from "components/ui/GameView/PlayerPanel"
-import { useCurrentUserId } from "hooks/store/useCurrentUserId"
+import { useCurrentUserId } from "hooks/useCurrentUserId"
 
 import { GameBanner } from "./GameBanner"
 import { GameView } from "./GameView"

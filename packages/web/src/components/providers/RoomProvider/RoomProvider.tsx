@@ -4,7 +4,7 @@ import { ReactNode, useCallback, useEffect, useRef } from "react"
 import { toast } from "react-toastify"
 
 import { useDocumentListener } from "hooks/db/useDocumentListener"
-import { useCurrentUserId } from "hooks/store/useCurrentUserId"
+import { useCurrentUserId } from "hooks/useCurrentUserId"
 import { withSearchParams } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
 import { getRoomRef } from "lib/db/collections"

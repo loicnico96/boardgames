@@ -18,6 +18,9 @@ export class Logger {
   public constructor(prefix?: string, level: LogLevel = DEFAULT_LOG_LEVEL) {
     this.level = level
     this.prefix = prefix
+    this.log.bind(this)
+    this.warn.bind(this)
+    this.error.bind(this)
   }
 
   public log(message: string, ...args: unknown[]): void {

@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 
-import { useCurrentUserId } from "hooks/store/useCurrentUserId"
+import { useCurrentUserId } from "hooks/useCurrentUserId"
 
 import { usePapayooState } from "../store"
 
