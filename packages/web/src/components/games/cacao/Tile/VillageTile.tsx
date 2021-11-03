@@ -1,9 +1,9 @@
-import { dir, Direction } from "@boardgames/utils"
+import { getDir, Direction } from "@boardgames/utils"
 
 import { VillageType } from "lib/games/cacao/model"
 import { getVillageWorkers } from "lib/games/cacao/state/resolveState"
 
-import { useCacaoState } from "../store"
+import { useCacaoPlayer, useCacaoState } from "../store"
 
 import { BasicTile } from "./BasicTile"
 
@@ -26,21 +26,23 @@ export function VillageTile({
     state.playerOrder.indexOf(playerId)
   )
 
+  const playerName = useCacaoPlayer(playerId, player => player.name)
+
   const playerColor = ["yellow", "red", "purple", "white"][playerIndex]
 
   return (
-    <BasicTile background={playerColor} title={type} {...props}>
+    <BasicTile background={playerColor} title={playerName} {...props}>
       <div style={{ position: "absolute", top: 0 }}>
-        {getVillageWorkers(type, dir(Direction.NORTH - rot))}
+        {getVillageWorkers(type, getDir(Direction.NORTH - rot))}
       </div>
       <div style={{ position: "absolute", right: 4 }}>
-        {getVillageWorkers(type, dir(Direction.EAST - rot))}
+        {getVillageWorkers(type, getDir(Direction.EAST - rot))}
       </div>
       <div style={{ position: "absolute", bottom: 0 }}>
-        {getVillageWorkers(type, dir(Direction.SOUTH - rot))}
+        {getVillageWorkers(type, getDir(Direction.SOUTH - rot))}
       </div>
       <div style={{ position: "absolute", left: 4 }}>
-        {getVillageWorkers(type, dir(Direction.WEST - rot))}
+        {getVillageWorkers(type, getDir(Direction.WEST - rot))}
       </div>
     </BasicTile>
   )

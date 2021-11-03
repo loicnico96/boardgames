@@ -5,7 +5,139 @@ export default {
   },
   games: {
     cacao: {
+      actions: {
+        confirmSelection: {
+          label: "Confirm",
+        },
+        resetSelection: {
+          label: "Reset",
+        },
+        rotateLeft: {
+          label: "Rotate left",
+        },
+        rotateRight: {
+          label: "Rotate right",
+        },
+      },
+      banner: {
+        selectForestPosition: {
+          label: "Choose a Forest space to fill",
+        },
+        selectForestTile: {
+          label: "Choose a Forest tile from the display",
+        },
+        selectVillagePosition: {
+          label: "Choose a Village space to build on",
+        },
+        selectVillageTile: {
+          label: "Choose a Village tile from your hand",
+        },
+      },
+      forest: {
+        beans1: {
+          description:
+            "For each adjacent worker, add 1 Cacao bean to your storage (max 5).",
+          label: "Cacao plantation",
+        },
+        beans2: {
+          description:
+            "For each adjacent worker, add 2 Cacao beans to your storage (max 5).",
+          label: "Cacao plantation",
+        },
+        gold1: {
+          description: "For each adjacent worker, you get 1 Coin.",
+          label: "Gold mine",
+        },
+        gold2: {
+          description: "For each adjacent worker, you get 2 Coins.",
+          label: "Gold mine",
+        },
+        kitchen: {
+          description:
+            "For each adjacent worker, transform 1 Cacao bean in your storage into 1 Chocolate bar. Chocolate bars can be sold for 7 Coins in some markets.",
+          label: "Chocolate kitchen",
+        },
+        market2: {
+          description:
+            "For each adjacent worker, you may sell 1 Cacao bean for 2 Coins.",
+          label: "Market",
+        },
+        market3: {
+          description:
+            "For each adjacent worker, you may sell 1 Cacao bean for 3 Coins.",
+          label: "Market",
+        },
+        market3_chocolate: {
+          description:
+            "For each adjacent worker, you may sell 1 Cacao bean for 3 Coins or 1 Chocolate bar for 7 Coins.",
+          label: "Chocolate market",
+        },
+        market4: {
+          description:
+            "For each adjacent worker, you may sell 1 Cacao bean for 4 Coins.",
+          label: "Market",
+        },
+        market5: {
+          description:
+            "For each adjacent worker, you may sell 1 Cacao bean for 5 Coins.",
+          label: "Market",
+        },
+        sun: {
+          description:
+            "For each adjacent worker, you get 1 Sun Disk (max 3). After all Jungle tiles have been placed, players may spend Sun Disks to overbuild on their own tiles. Unused Sun Disks are worth 1 Coin each at the end of the game.",
+          label: "Sun-worshipping site",
+        },
+        temple6: {
+          description:
+            "At the end of the game, the player with the most adjacent workers gets 6 Coins. Second place also gives 3 Coins.",
+          label: "Temple",
+        },
+        temple8: {
+          description:
+            "At the end of the game, the player with the most adjacent workers gets 8 Coins. Second place only gives 1 Coin.",
+          label: "Golden temple",
+        },
+        tree: {
+          description:
+            "For each adjacent worker, you get 1 Coin. If there are no adjacent workers, gain 3 Coins instead.",
+          label: "Tree of Life",
+        },
+        water: {
+          description:
+            "For each adjacent worker, move your Water Carrier forward 1 space.",
+          label: "Water spring",
+        },
+      },
       name: "Cacao",
+      player: {
+        beans: {
+          label: "Storage: {{beans}} beans / {{max}}",
+        },
+        beansWithChocolate: {
+          label: "Storage: {{beans}} beans + {{chocolate}} bars / {{max}}",
+        },
+        name: {
+          label: "{{name}} ({{score}}pts)",
+        },
+        over: {
+          label: "Final score: {{score}}pts",
+        },
+        ready: {
+          label: "Ready",
+        },
+        sun: {
+          label: "Sun disks: {{sun}} / {{max}} ({{score}}pts)",
+        },
+        temple: {
+          label: "Temples: {{score}}pts",
+        },
+        waiting: {
+          label: "Waiting...",
+        },
+        water: {
+          label: "Water carrier: {{water}} / {{max}} ({{score}}pts)",
+        },
+      },
     },
     metropolys: {
       name: "Metropolys",

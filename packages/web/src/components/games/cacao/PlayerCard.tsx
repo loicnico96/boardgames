@@ -6,6 +6,8 @@ import {
   PlayerCardProps,
   PlayerCardRow,
 } from "components/ui/GameView/PlayerCard"
+import { replace } from "config/translations/replace"
+import { useTranslations } from "hooks/useTranslations"
 import { getTile } from "lib/games/cacao/board"
 import {
   BOARD_SIZE,
@@ -23,7 +25,11 @@ import { getTileWorkers } from "lib/games/cacao/state/resolveState"
 import { useCacaoPlayer, useCacaoState } from "./store"
 
 export function PlayerCard({ playerId }: PlayerCardProps) {
+  const currentPlayerId = useCacaoState(state => state.currentPlayerId)
   const over = useCacaoState(state => state.over)
+  const useChocolate = useCacaoState(state => state.options?.useChocolate)
+
+  const t = useTranslations()
 
   const { beans, chocolate, coins, name, ready, sun, water } = useCacaoPlayer(
     playerId,
@@ -95,27 +101,51 @@ export function PlayerCard({ playerId }: PlayerCardProps) {
     )
   )
 
+  const totalScore = coins + waterScore + sunScore + templeScore
+
   return (
     <PlayerCardContainer>
       <PlayerCardRow>
-        {name} ({coins}pts)
+        {currentPlayerId === playerId && "> "}
+        {replace(t.games.cacao.player.name.label, { name, score: coins })}
       </PlayerCardRow>
       <PlayerCardRow>
-        Cacao: {beans} + {chocolate} / {MAX_PLAYER_BEANS}
+        {replace(
+          useChocolate
+            ? t.games.cacao.player.beansWithChocolate.label
+            : t.games.cacao.player.beans.label,
+          { beans, chocolate, max: MAX_PLAYER_BEANS }
+        )}
       </PlayerCardRow>
       <PlayerCardRow>
-        Water: {water} / {MAX_WATER_LEVEL} ({waterScore}pts)
+        {replace(t.games.cacao.player.sun.label, {
+          sun,
+          max: MAX_PLAYER_SUN_DISKS,
+          score: sunScore,
+        })}
       </PlayerCardRow>
       <PlayerCardRow>
-        Sun disks: {sun} / {MAX_PLAYER_SUN_DISKS} ({sunScore}pts)
+        {replace(t.games.cacao.player.water.label, {
+          water,
+          max: MAX_WATER_LEVEL,
+          score: waterScore,
+        })}
       </PlayerCardRow>
-      <PlayerCardRow>Temples: {templeScore}pts</PlayerCardRow>
+      <PlayerCardRow>
+        {replace(t.games.cacao.player.temple.label, { score: templeScore })}
+      </PlayerCardRow>
       {over && (
         <PlayerCardRow>
-          Final Score: {coins + waterScore + sunScore + templeScore}pts
+          {replace(t.games.cacao.player.over.label, { score: totalScore })}
         </PlayerCardRow>
       )}
-      {!over && <PlayerCardRow>{ready ? "Ready" : "Waiting..."}</PlayerCardRow>}
+      {!over && (
+        <PlayerCardRow>
+          {ready
+            ? t.games.cacao.player.ready.label
+            : t.games.cacao.player.waiting.label}
+        </PlayerCardRow>
+      )}
     </PlayerCardContainer>
   )
 }

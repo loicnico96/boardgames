@@ -1,9 +1,10 @@
-import { dir, getAdjacentPositions, identity } from "@boardgames/utils"
+import { getDir, getAdjacentPositions, identity } from "@boardgames/utils"
 import { useCallback } from "react"
 
 import { AsyncButton } from "components/ui/AsyncButton"
 import { Banner } from "components/ui/GameView/Banner"
 import { usePlayerAction } from "hooks/usePlayerAction"
+import { useTranslations } from "hooks/useTranslations"
 import { isFillable } from "lib/games/cacao/board"
 import { VillageType } from "lib/games/cacao/model"
 import { GameType } from "lib/games/types"
@@ -23,6 +24,8 @@ export function GameBanner({ playerId }: GameBannerProps) {
   const forest = useCacaoStore(store => store.forest)
   const forests = useCacaoStore(store => store.forests)
   const village = useCacaoStore(store => store.village)
+
+  const t = useTranslations()
 
   const {
     confirmForestTile,
@@ -69,7 +72,7 @@ export function GameBanner({ playerId }: GameBannerProps) {
               ],
               village: {
                 index: village.index,
-                rot: dir(village.rot),
+                rot: getDir(village.rot),
                 pos: village.pos,
               },
             })
@@ -85,7 +88,7 @@ export function GameBanner({ playerId }: GameBannerProps) {
           forests: [],
           village: {
             index: village.index,
-            rot: dir(village.rot),
+            rot: getDir(village.rot),
             pos: village.pos,
           },
         })
@@ -116,16 +119,16 @@ export function GameBanner({ playerId }: GameBannerProps) {
     return (
       <Banner>
         {selectedForestTile !== null
-          ? "Choose a Forest space to fill"
-          : "Choose a Forest tile to place"}
+          ? t.games.cacao.banner.selectForestPosition.label
+          : t.games.cacao.banner.selectForestTile.label}
         <AsyncButton
           onClick={resetSelection}
-          translations={{ label: "Reset" }}
+          translations={t.games.cacao.actions.resetSelection}
         />
         <AsyncButton
           disabled={!isAbleToConfirm}
           onClick={confirmTile}
-          translations={{ label: "Confirm" }}
+          translations={t.games.cacao.actions.confirmSelection}
         />
       </Banner>
     )
@@ -139,22 +142,22 @@ export function GameBanner({ playerId }: GameBannerProps) {
   return (
     <Banner>
       {selectedVillageTile !== null
-        ? "Choose a Village space to build on"
-        : "Choose a Village tile to place"}
+        ? t.games.cacao.banner.selectVillagePosition.label
+        : t.games.cacao.banner.selectVillageTile.label}
       <AsyncButton
         disabled={!isAbleToRotate}
         onClick={() => rotateVillageTile(3)}
-        translations={{ label: "Rotate left" }}
+        translations={t.games.cacao.actions.rotateLeft}
       />
       <AsyncButton
         disabled={!isAbleToRotate}
         onClick={() => rotateVillageTile(1)}
-        translations={{ label: "Rotate right" }}
+        translations={t.games.cacao.actions.rotateRight}
       />
       <AsyncButton
         disabled={!isAbleToConfirm}
         onClick={confirmTile}
-        translations={{ label: "Confirm" }}
+        translations={t.games.cacao.actions.confirmSelection}
       />
     </Banner>
   )

@@ -2,7 +2,7 @@ import {
   generate,
   mutableSortBy,
   getAdjacentPositions,
-  dir,
+  getDir,
   Direction,
   Directions,
   movePos,
@@ -35,6 +35,8 @@ import {
 export async function gainBeans(
   context: CacaoContext,
   playerId: string,
+  pos: Pos,
+  dir: Direction,
   amount: number
 ): Promise<number> {
   const player = context.player(playerId)
@@ -46,7 +48,12 @@ export async function gainBeans(
 
   if (gained > 0) {
     context.updatePlayer(playerId, { beans: beans => beans + gained })
-    await context.post("gainBeans", { playerId, amount: gained })
+    await context.post("gainBeans", {
+      amount: gained,
+      dir,
+      playerId,
+      pos,
+    })
   }
 
   return gained
@@ -55,16 +62,25 @@ export async function gainBeans(
 export async function gainCoins(
   context: CacaoContext,
   playerId: string,
+  pos: Pos,
+  dir: Direction,
   amount: number
 ): Promise<number> {
   context.updatePlayer(playerId, { coins: coins => coins + amount })
-  await context.post("gainCoins", { playerId, amount })
+  await context.post("gainCoins", {
+    amount,
+    dir,
+    playerId,
+    pos,
+  })
   return amount
 }
 
 export async function gainSun(
   context: CacaoContext,
   playerId: string,
+  pos: Pos,
+  dir: Direction,
   amount: number
 ): Promise<number> {
   const player = context.player(playerId)
@@ -72,7 +88,12 @@ export async function gainSun(
 
   if (gained > 0) {
     context.updatePlayer(playerId, { sun: sun => sun + gained })
-    await context.post("gainSun", { playerId, amount: gained })
+    await context.post("gainSun", {
+      amount: gained,
+      dir,
+      playerId,
+      pos,
+    })
   }
 
   return gained
@@ -81,6 +102,8 @@ export async function gainSun(
 export async function gainWater(
   context: CacaoContext,
   playerId: string,
+  pos: Pos,
+  dir: Direction,
   amount: number
 ): Promise<number> {
   const player = context.player(playerId)
@@ -88,7 +111,12 @@ export async function gainWater(
 
   if (gained > 0) {
     context.updatePlayer(playerId, { water: water => water + gained })
-    await context.post("gainWater", { playerId, amount: gained })
+    await context.post("gainWater", {
+      amount: gained,
+      dir,
+      playerId,
+      pos,
+    })
   }
 
   return gained
@@ -113,6 +141,8 @@ export async function loseSun(
 export async function makeChocolate(
   context: CacaoContext,
   playerId: string,
+  pos: Pos,
+  dir: Direction,
   amount: number
 ): Promise<number> {
   const player = context.player(playerId)
@@ -125,8 +155,10 @@ export async function makeChocolate(
     })
 
     await context.post("makeChocolate", {
-      playerId,
       amount: made,
+      dir,
+      playerId,
+      pos,
     })
   }
 
@@ -153,6 +185,8 @@ export async function nextPlayer(
 export async function sellBeans(
   context: CacaoContext,
   playerId: string,
+  pos: Pos,
+  dir: Direction,
   amount: number,
   price: number
 ): Promise<number> {
@@ -166,8 +200,10 @@ export async function sellBeans(
     })
 
     await context.post("sellBeans", {
-      playerId,
       amount,
+      dir,
+      playerId,
+      pos,
       price,
     })
   }
@@ -178,6 +214,8 @@ export async function sellBeans(
 export async function sellChocolate(
   context: CacaoContext,
   playerId: string,
+  pos: Pos,
+  dir: Direction,
   amount: number
 ): Promise<number> {
   const player = context.player(playerId)
@@ -191,8 +229,10 @@ export async function sellChocolate(
     })
 
     await context.post("sellChocolate", {
-      playerId,
       amount,
+      dir,
+      playerId,
+      pos,
       price,
     })
   }
@@ -217,11 +257,8 @@ export function getVillageWorkers(
   }[type][direction]
 }
 
-export function getTileWorkers(
-  village: VillageTile,
-  direction: Direction
-): number {
-  return getVillageWorkers(village.type, dir(direction - village.rot))
+export function getTileWorkers(village: VillageTile, dir: Direction): number {
+  return getVillageWorkers(village.type, getDir(dir - village.rot))
 }
 
 export type WorkerResolution = {
@@ -243,6 +280,12 @@ export function sortResolutions(
     [ForestType.CACAO_1, ForestType.CACAO_2].includes(resolution.forest.type)
   )
 
+  const willGainChocolate =
+    (willGainCacao || player.beans > 0) &&
+    resolutions.some(resolution =>
+      [ForestType.KITCHEN].includes(resolution.forest.type)
+    )
+
   mutableSortBy(
     resolutions,
     resolution => {
@@ -252,6 +295,7 @@ export function sortResolutions(
         case ForestType.KITCHEN:
         case ForestType.MARKET_2:
         case ForestType.MARKET_3:
+        case ForestType.MARKET_3_CHOCOLATE:
         case ForestType.MARKET_4:
         case ForestType.MARKET_5:
           return 0
@@ -292,27 +336,43 @@ export function sortResolutions(
         case ForestType.KITCHEN: {
           const amount = workers
           const gained = clamp(amount, 0, player.beans)
-          return (willGainCacao && amount > gained ? amount - gained : -1) * 3
+          return (willGainCacao && amount > gained ? amount - gained : -1) * 35
         }
         case ForestType.MARKET_2: {
           const amount = workers
           const gained = clamp(amount, 0, player.beans)
-          return (willGainCacao && amount > gained ? amount - gained : -1) * 2
+          return (willGainCacao && amount > gained ? amount - gained : -1) * 20
         }
         case ForestType.MARKET_3: {
           const amount = workers
           const gained = clamp(amount, 0, player.beans)
-          return (willGainCacao && amount > gained ? amount - gained : -1) * 3
+          return (willGainCacao && amount > gained ? amount - gained : -1) * 30
+        }
+        case ForestType.MARKET_3_CHOCOLATE: {
+          const chocolateAmount = workers
+          const chocolateGained = clamp(chocolateAmount, 0, player.chocolate)
+          const cacaoAmount = chocolateAmount - chocolateGained
+          const cacaoGained = clamp(cacaoAmount, 0, player.beans)
+          return (
+            (willGainCacao && cacaoAmount > cacaoGained
+              ? cacaoAmount - cacaoGained
+              : -1) *
+              30 +
+            (willGainChocolate && chocolateAmount > chocolateGained
+              ? chocolateAmount - chocolateGained
+              : -1) *
+              70
+          )
         }
         case ForestType.MARKET_4: {
           const amount = workers
           const gained = clamp(amount, 0, player.beans)
-          return (willGainCacao && amount > gained ? amount - gained : -1) * 4
+          return (willGainCacao && amount > gained ? amount - gained : -1) * 40
         }
         case ForestType.MARKET_5: {
           const amount = workers
           const gained = clamp(amount, 0, player.beans)
-          return (willGainCacao && amount > gained ? amount - gained : -1) * 5
+          return (willGainCacao && amount > gained ? amount - gained : -1) * 50
         }
         default:
           return -workers
@@ -329,80 +389,97 @@ export async function resolveResolution(
   playerId: string,
   resolution: WorkerResolution
 ): Promise<void> {
-  const workers = getTileWorkers(resolution.village, resolution.direction)
+  const { direction, village, villagePos } = resolution
 
-  console.log(resolution)
-
-  await context.post("workers", {
-    dir: resolution.direction,
-    pos: resolution.villagePos,
-    playerId,
-    workers,
-  })
+  const workers = getTileWorkers(village, direction)
 
   switch (resolution.forest.type) {
     case ForestType.CACAO_1: {
-      await gainBeans(context, playerId, workers)
+      await gainBeans(context, playerId, villagePos, direction, workers)
       break
     }
 
     case ForestType.CACAO_2: {
-      await gainBeans(context, playerId, workers * 2)
+      await gainBeans(context, playerId, villagePos, direction, workers * 2)
       break
     }
 
     case ForestType.KITCHEN: {
-      await makeChocolate(context, playerId, workers)
+      await makeChocolate(context, playerId, villagePos, direction, workers)
       break
     }
 
     case ForestType.MARKET_2: {
-      await sellBeans(context, playerId, workers, 2)
+      await sellBeans(context, playerId, villagePos, direction, workers, 2)
       break
     }
 
     case ForestType.MARKET_3: {
-      const usedWorkers = await sellChocolate(context, playerId, workers)
-      await sellBeans(context, playerId, workers - usedWorkers, 3)
+      await sellBeans(context, playerId, villagePos, direction, workers, 3)
+      break
+    }
+
+    case ForestType.MARKET_3_CHOCOLATE: {
+      const usedWorkers = await sellChocolate(
+        context,
+        playerId,
+        villagePos,
+        direction,
+        workers
+      )
+      await sellBeans(
+        context,
+        playerId,
+        villagePos,
+        direction,
+        workers - usedWorkers,
+        3
+      )
       break
     }
 
     case ForestType.MARKET_4: {
-      await sellBeans(context, playerId, workers, 4)
+      await sellBeans(context, playerId, villagePos, direction, workers, 4)
       break
     }
 
     case ForestType.MARKET_5: {
-      await sellBeans(context, playerId, workers, 5)
+      await sellBeans(context, playerId, villagePos, direction, workers, 5)
       break
     }
 
     case ForestType.GOLD_1: {
-      await gainCoins(context, playerId, workers)
+      await gainCoins(context, playerId, villagePos, direction, workers)
       break
     }
 
     case ForestType.GOLD_2: {
-      await gainCoins(context, playerId, workers * 2)
+      await gainCoins(context, playerId, villagePos, direction, workers * 2)
       break
     }
 
     case ForestType.SUN_DISK: {
-      await gainSun(context, playerId, workers)
+      await gainSun(context, playerId, villagePos, direction, workers)
       break
     }
 
     case ForestType.TREE: {
       if (workers === 0) {
-        await gainCoins(context, playerId, TREE_NO_WORKER_SCORE)
+        await gainCoins(
+          context,
+          playerId,
+          villagePos,
+          direction,
+          TREE_NO_WORKER_SCORE
+        )
       } else {
-        await gainCoins(context, playerId, workers)
+        await gainCoins(context, playerId, villagePos, direction, workers)
       }
       break
     }
 
     case ForestType.WATER: {
-      await gainWater(context, playerId, workers)
+      await gainWater(context, playerId, villagePos, direction, workers)
       break
     }
 
@@ -463,7 +540,7 @@ export async function resolveWorkers(
           forest.type === ForestType.TREE
         ) {
           resolutions[adjacentVillage.playerId].push({
-            direction: dir(direction + 2),
+            direction: getDir(direction + 2),
             forest,
             forestPos,
             village: adjacentVillage,

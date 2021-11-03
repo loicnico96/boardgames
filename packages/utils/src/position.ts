@@ -14,7 +14,7 @@ export const Directions = [
   Direction.WEST,
 ]
 
-export function dir(rot: number): Direction {
+export function getDir(rot: number): Direction {
   return mod(rot, Directions.length)
 }
 
@@ -24,7 +24,7 @@ export type Pos = {
 }
 
 export function movePos(pos: Pos, rot: number, dis: number = 1): Pos {
-  switch (dir(rot)) {
+  switch (getDir(rot)) {
     case Direction.NORTH:
       return { x: pos.x, y: pos.y - dis }
     case Direction.EAST:

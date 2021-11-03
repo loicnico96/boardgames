@@ -9,6 +9,7 @@ export enum ForestType {
   KITCHEN = "kitchen",
   MARKET_2 = "market2",
   MARKET_3 = "market3",
+  MARKET_3_CHOCOLATE = "market3_chocolate",
   MARKET_4 = "market4",
   MARKET_5 = "market5",
   SUN_DISK = "sun",
@@ -76,19 +77,27 @@ export type CacaoEvent = ObjectUnion<
   {
     gainBeans: {
       amount: number
+      dir: Direction
       playerId: string
+      pos: Pos
     }
     gainCoins: {
       amount: number
+      dir: Direction
       playerId: string
+      pos: Pos
     }
     gainSun: {
       amount: number
+      dir: Direction
       playerId: string
+      pos: Pos
     }
     gainWater: {
       amount: number
+      dir: Direction
       playerId: string
+      pos: Pos
     }
     loseSun: {
       amount: number
@@ -96,7 +105,9 @@ export type CacaoEvent = ObjectUnion<
     }
     makeChocolate: {
       amount: number
+      dir: Direction
       playerId: string
+      pos: Pos
     }
     nextPlayer: {
       playerId: string
@@ -118,19 +129,17 @@ export type CacaoEvent = ObjectUnion<
     }
     sellBeans: {
       amount: number
+      dir: Direction
       playerId: string
+      pos: Pos
       price: number
     }
     sellChocolate: {
       amount: number
-      playerId: string
-      price: number
-    }
-    workers: {
-      pos: Pos
       dir: Direction
       playerId: string
-      workers: number
+      pos: Pos
+      price: number
     }
   }
 >

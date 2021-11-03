@@ -25,11 +25,14 @@ export function getForestDeck(
         [ForestType.GOLD_2]: options.useChocolate || options.useTree ? 0 : 1,
         [ForestType.KITCHEN]: options.useChocolate ? 2 : 0,
         [ForestType.MARKET_2]: 1, // + 1 used in board setup
-        [ForestType.MARKET_3]: options.useBigMarket ? 2 : 3,
+        [ForestType.MARKET_3]:
+          4 - (options.useChocolate ? 2 : 0) - (options.useBigMarket ? 1 : 0),
+        [ForestType.MARKET_3_CHOCOLATE]: options.useChocolate ? 3 : 0,
+        [ForestType.MARKET_3_CHOCOLATE]: options.useChocolate ? 2 : 0,
         [ForestType.MARKET_4]: 1,
         [ForestType.MARKET_5]: options.useBigMarket ? 1 : 0,
         [ForestType.SUN_DISK]: 1,
-        [ForestType.TEMPLE_6]: options.useBigTemple ? 3 : 4,
+        [ForestType.TEMPLE_6]: 4 - (options.useBigTemple ? 1 : 0),
         [ForestType.TEMPLE_8]: options.useBigTemple ? 1 : 0,
         [ForestType.TREE]: options.useTree ? 2 : 0,
         [ForestType.WATER]: 2,
@@ -42,11 +45,13 @@ export function getForestDeck(
         [ForestType.GOLD_2]: options.useChocolate || options.useTree ? 0 : 1,
         [ForestType.KITCHEN]: options.useChocolate ? 3 : 0,
         [ForestType.MARKET_2]: 1, // + 1 used in board setup
-        [ForestType.MARKET_3]: options.useBigMarket ? 3 : 4,
+        [ForestType.MARKET_3]:
+          4 - (options.useChocolate ? 3 : 0) - (options.useBigMarket ? 1 : 0),
+        [ForestType.MARKET_3_CHOCOLATE]: options.useChocolate ? 3 : 0,
         [ForestType.MARKET_4]: 1,
         [ForestType.MARKET_5]: options.useBigMarket ? 1 : 0,
         [ForestType.SUN_DISK]: 2,
-        [ForestType.TEMPLE_6]: options.useBigTemple ? 4 : 5,
+        [ForestType.TEMPLE_6]: 5 - (options.useBigTemple ? 1 : 0),
         [ForestType.TEMPLE_8]: options.useBigTemple ? 1 : 0,
         [ForestType.TREE]: options.useTree ? 3 : 0,
         [ForestType.WATER]: 3,
