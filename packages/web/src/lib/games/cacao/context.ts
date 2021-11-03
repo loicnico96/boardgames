@@ -4,45 +4,23 @@ import {
   BaseOptions,
   UserInfo,
 } from "@boardgames/common"
-import { generate, object, Pos } from "@boardgames/utils"
+import { boolean, generate, object, optional, Pos } from "@boardgames/utils"
 import update from "immutability-helper"
 
+import { validateAction } from "./action"
+import { getInitialBoard } from "./board"
+import { PLAYER_HAND_SIZE } from "./constants"
+import { getForestDeck, getVillageDeck } from "./deck"
 import {
   BoardTile,
   CacaoAction,
   CacaoModel,
   CacaoOptions,
-  CacaoPlayer,
   CacaoState,
 } from "./model"
-import {
-  getForestDeck,
-  getInitialBoard,
-  getVillageDeck,
-  PLAYER_HAND_SIZE,
-} from "./state/getInitialGameState"
 import { resolveState } from "./state/resolveState"
-import { validateAction } from "./state/validateAction"
 
 export class CacaoContext extends BaseContext<CacaoModel> {
-  getInitialPlayerState(userInfo: UserInfo, playerCount: number): CacaoPlayer {
-    const deck = getVillageDeck(playerCount)
-
-    this.generator.shuffle(deck)
-
-    return {
-      ...userInfo,
-      action: null,
-      beans: 0,
-      coins: 0,
-      deck: deck.slice(PLAYER_HAND_SIZE),
-      hand: deck.slice(0, PLAYER_HAND_SIZE),
-      ready: true,
-      sun: 0,
-      water: 0,
-    }
-  }
-
   getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,
@@ -53,32 +31,42 @@ export class CacaoContext extends BaseContext<CacaoModel> {
 
     const startingPlayerId = this.generator.pick(playerOrder)
 
-    const deck = getForestDeck(playerCount)
+    const forestDeck = getForestDeck(playerCount, options)
 
-    this.generator.shuffle(deck)
+    this.generator.shuffle(forestDeck)
 
     return {
       board: getInitialBoard(),
       currentPlayerId: null,
-      deck,
+      deck: forestDeck,
+      options,
       over: false,
       playerOrder,
-      players: generate(playerOrder, playerId => [
-        playerId,
-        this.getInitialPlayerState(players[playerId], playerCount),
-      ]),
+      players: generate(playerOrder, playerId => {
+        const playerDeck = getVillageDeck(playerCount, options)
+
+        this.generator.shuffle(playerDeck)
+
+        return [
+          playerId,
+          {
+            ...players[playerId],
+            action: null,
+            beans: 0,
+            chocolate: 0,
+            coins: 0,
+            deck: playerDeck.slice(PLAYER_HAND_SIZE),
+            hand: playerDeck.slice(0, PLAYER_HAND_SIZE),
+            ready: true,
+            sun: 0,
+            water: 0,
+          },
+        ]
+      }),
       seed,
       startingPlayerId,
       tiles: [null, null],
     }
-  }
-
-  tile(pos: Pos): BoardTile {
-    return this.state.board[pos.x]?.[pos.y] ?? { type: null }
-  }
-
-  isEmpty(pos: Pos): boolean {
-    return this.tile(pos).type === null
   }
 
   setTile(pos: Pos, tile: BoardTile): void {
@@ -103,10 +91,15 @@ export class CacaoContext extends BaseContext<CacaoModel> {
   }
 
   validateOptions(options: BaseOptions): CacaoOptions {
-    return object({})(options)
+    return object({
+      useBigMarket: optional(boolean()),
+      useBigTemple: optional(boolean()),
+      useChocolate: optional(boolean()),
+      useTree: optional(boolean()),
+    })(options)
   }
 
   validateAction(playerId: string, action: BaseAction): CacaoAction {
-    return validateAction(this, playerId, action)
+    return validateAction(this.state, playerId, action)
   }
 }

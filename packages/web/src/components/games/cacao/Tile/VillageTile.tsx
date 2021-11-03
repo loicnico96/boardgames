@@ -31,16 +31,16 @@ export function VillageTile({
   return (
     <BasicTile background={playerColor} title={type} {...props}>
       <div style={{ position: "absolute", top: 0 }}>
-        {getVillageWorkers(type, dir(Direction.NORTH + rot))}
+        {getVillageWorkers(type, dir(Direction.NORTH - rot))}
       </div>
       <div style={{ position: "absolute", right: 4 }}>
-        {getVillageWorkers(type, dir(Direction.WEST + rot))}
+        {getVillageWorkers(type, dir(Direction.EAST - rot))}
       </div>
       <div style={{ position: "absolute", bottom: 0 }}>
-        {getVillageWorkers(type, dir(Direction.EAST + rot))}
+        {getVillageWorkers(type, dir(Direction.SOUTH - rot))}
       </div>
       <div style={{ position: "absolute", left: 4 }}>
-        {getVillageWorkers(type, dir(Direction.SOUTH + rot))}
+        {getVillageWorkers(type, dir(Direction.WEST - rot))}
       </div>
     </BasicTile>
   )

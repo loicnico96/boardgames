@@ -14,9 +14,10 @@ export type StoreProviderProps = {
 }
 
 export type CreateStoreResult<S extends object, A extends object> = {
-  useStore: UseContextStore<Store<S, A>>
-  useActions: () => A
   Provider: ComponentType<StoreProviderProps>
+  useActions: () => A
+  useGetState: () => GetState<Store<S, A>>
+  useStore: UseContextStore<Store<S, A>>
 }
 
 export function createStore<S extends object, A extends object>(
@@ -30,15 +31,16 @@ export function createStore<S extends object, A extends object>(
       }))
     )
 
-  const { Provider, useStore } = createContext<Store<S, A>>()
+  const { Provider, useStore, useStoreApi } = createContext<Store<S, A>>()
 
   const StoreProvider = ({ children }: StoreProviderProps) => (
     <Provider createStore={createStoreInternal}>{children}</Provider>
   )
 
   return {
-    useStore,
-    useActions: () => useStore(store => store.actions),
     Provider: StoreProvider,
+    useActions: () => useStore(store => store.actions),
+    useGetState: () => useStoreApi().getState,
+    useStore,
   }
 }

@@ -24,7 +24,7 @@ export type AsyncButtonProps<Reason extends string = never> = Omit<
   ButtonProps,
   "children" | "onClick" | "onError" | "title"
 > & {
-  onClick: (event: ButtonClickEvent) => Promise<unknown>
+  onClick: (event: ButtonClickEvent) => unknown
   onError?: (error: Error) => unknown
   reason?: Reason
   translations: ButtonTranslations<Reason>

@@ -3,6 +3,7 @@ module.exports = {
     browser: true,
   },
   extends: [
+    "plugin:@next/next/recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:react/jsx-runtime",

@@ -12,7 +12,8 @@ const ForestDisplayContainer = styled.div`
 export function ForestDisplay() {
   const deckSize = useCacaoState(state => state.deck.length)
   const forestTiles = useCacaoState(state => state.tiles)
-
+  const forest = useCacaoStore(store => store.forest)
+  const forests = useCacaoStore(store => store.forests)
   const village = useCacaoStore(store => store.village)
 
   const { selectForestTile } = useCacaoActions()
@@ -21,11 +22,12 @@ export function ForestDisplay() {
     <ForestDisplayContainer>
       <BasicTile>{deckSize}</BasicTile>
       {forestTiles.map((type, index) =>
-        type ? (
+        type && !forests.some(f => f.index === index) ? (
           <ForestTile
             disabled={!village.confirmed}
             key={index}
             onClick={() => selectForestTile(index)}
+            selected={index === forest.index}
             type={type}
           />
         ) : (

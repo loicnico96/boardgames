@@ -7,7 +7,6 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
-    "plugin:@next/next/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:jest/recommended",
     "plugin:prettier/recommended",
@@ -86,7 +85,6 @@ module.exports = {
     // Best Practices
     "block-scoped-var": ["error"],
     "curly": ["error", "all"],
-    "default-case": ["error"],
     "default-case-last": ["error"],
     "eqeqeq": ["error", "always"],
     "no-alert": ["error"],

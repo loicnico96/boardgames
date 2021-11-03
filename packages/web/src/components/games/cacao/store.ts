@@ -62,7 +62,7 @@ export const {
         set({
           $merge: {
             forest: {
-              index: null,
+              index: forest.index === 0 ? 1 : 0,
               pos: null,
             },
           },
@@ -130,6 +130,7 @@ export const {
         forest: {
           $merge: {
             index,
+            pos: null,
           },
         },
       })
@@ -162,6 +163,7 @@ export const {
           village: {
             $merge: {
               index,
+              pos: null,
               rot: 0,
             },
           },

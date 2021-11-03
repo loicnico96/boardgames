@@ -73,7 +73,7 @@
       "text-summary"
     ],
     "moduleNameMapper": {
-      ".+\\.(css|png|jpg)$": "<rootDir>/test/fileMock.js",
+      ".+\\.(css|png|jpg)$": "<rootDir>/test/utils/fileMock.js",
       "^assets(.*)$": "<rootDir>/src/assets/$1",
       "^components(.*)$": "<rootDir>/src/components/$1",
       "^config(.*)$": "<rootDir>/src/config/$1",

@@ -39,9 +39,10 @@ export const initialState: GlobalState = {
 }
 
 export const {
-  useActions: useGlobalActions,
-  useStore: useGlobalStore,
   Provider: GlobalStoreProvider,
+  useActions: useGlobalActions,
+  useGetState: useGlobalState,
+  useStore: useGlobalStore,
 } = createStore<GlobalState, GlobalActions>(initialState, set => ({
   setGameResource(game, roomId, resource) {
     set({

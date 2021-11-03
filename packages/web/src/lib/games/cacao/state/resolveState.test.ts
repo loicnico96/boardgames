@@ -1,1207 +1,148 @@
-import { Direction } from "@boardgames/utils"
+import { fill, generate } from "@boardgames/utils"
 
+import { getInitialBoard } from "../board"
+import { PLAYER_HAND_SIZE } from "../constants"
 import { CacaoContext } from "../context"
-import { ForestType, VillageType } from "../model"
+import { CacaoAction, CacaoEvent, CacaoOptions } from "../model"
 
-import { MOCKS } from "./mocks"
+function createContext(
+  playerCount: number,
+  options?: CacaoOptions,
+  seed: number = 0
+): CacaoContext {
+  const playerOrder = fill(playerCount, index => `player${index}`)
 
-describe("resolveState", () => {
-  it("refills Forest tiles and assigns starting player", async () => {
-    const { initialState, playerOrder, players } = MOCKS[2]
+  const context = new CacaoContext()
 
-    const context = new CacaoContext()
+  context.initState(
+    playerOrder,
+    generate(playerOrder, playerId => [playerId, { name: playerId }]),
+    options ?? context.getDefaultOptions(),
+    seed
+  )
 
-    context.initState(playerOrder, players, { seed: 0 })
+  return context
+}
 
-    expect(context.state).toStrictEqual(initialState)
+async function next(
+  context: CacaoContext,
+  options: {
+    actions?: Record<string, CacaoAction>
+    events?: CacaoEvent[]
+  } = {}
+): Promise<CacaoContext> {
+  const events: CacaoEvent[] = []
 
-    const onStateChange = jest.fn()
+  if (options.actions) {
+    for (const playerId in options.actions) {
+      context.validateAction(playerId, options.actions[playerId])
+      context.setAction(playerId, options.actions[playerId])
+    }
+  }
 
-    await context.resolve(onStateChange)
-
-    expect(onStateChange).toHaveBeenCalledTimes(3)
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      1,
-      {
-        ...initialState,
-        deck: initialState.deck.slice(1),
-        tiles: [ForestType.TEMPLE, null],
-      },
-      {
-        code: "refillForest",
-        index: 0,
-        type: ForestType.TEMPLE,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      2,
-      {
-        ...initialState,
-        deck: initialState.deck.slice(2),
-        tiles: [ForestType.TEMPLE, ForestType.CACAO_1],
-      },
-      {
-        code: "refillForest",
-        index: 1,
-        type: ForestType.CACAO_1,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      3,
-      {
-        ...initialState,
-        currentPlayerId: initialState.startingPlayerId,
-        deck: initialState.deck.slice(2),
-        players: {
-          ...initialState.players,
-          player2: {
-            ...initialState.players.player2,
-            ready: false,
-          },
-        },
-        tiles: [ForestType.TEMPLE, ForestType.CACAO_1],
-      },
-      {
-        code: "nextPlayer",
-        playerId: "player2",
-      }
-    )
-
-    expect(context.state).toStrictEqual({
-      ...initialState,
-      currentPlayerId: initialState.startingPlayerId,
-      deck: initialState.deck.slice(2),
-      players: {
-        ...initialState.players,
-        player2: {
-          ...initialState.players.player2,
-          ready: false,
-        },
-      },
-      tiles: [ForestType.TEMPLE, ForestType.CACAO_1],
-    })
+  await context.resolve(async (_, event) => {
+    events.push(event)
   })
 
-  it("places a Village tile and resolves workers", async () => {
-    const { initialState, playerOrder, players } = MOCKS[2]
+  if (options.events) {
+    expect(events).toStrictEqual(options.events)
+  }
 
-    const context = new CacaoContext()
+  return context
+}
 
-    context.initState(playerOrder, players, { seed: 0 })
+describe("CacaoContext", () => {
+  it("initializes game state for 2 players", async () => {
+    const context = createContext(2)
 
-    expect(context.state).toStrictEqual(initialState)
+    expect(context.state.board).toStrictEqual(getInitialBoard())
+    expect(context.state.currentPlayerId).toBe(null)
+    expect(context.state.deck).toHaveLength(19)
+    expect(context.state.playerOrder).toHaveLength(2)
+    expect(context.state.tiles).toStrictEqual([null, null])
 
-    await context.resolve()
-
-    expect(context.state.players.player2.ready).toBe(false)
-
-    const action = context.validateAction("player2", {
-      code: "playTile",
-      forests: [],
-      village: {
-        index: 1,
-        pos: {
-          x: 8,
-          y: 9,
-        },
-        rot: 3,
-      },
-    })
-
-    context.setAction("player2", action)
-
-    const onStateChange = jest.fn()
-
-    await context.resolve(onStateChange)
-
-    expect(onStateChange).toHaveBeenCalledTimes(6)
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      1,
-      {
-        ...initialState,
-        board: {
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player2",
-        deck: initialState.deck.slice(2),
-        players: {
-          ...initialState.players,
-          player2: {
-            ...initialState.players.player2,
-            action,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-        },
-        tiles: [ForestType.TEMPLE, ForestType.CACAO_1],
-      },
-      {
-        code: "placeVillageTile",
-        overbuilt: false,
-        playerId: "player2",
-        pos: { x: 8, y: 9 },
-        rot: 3,
-        type: VillageType.VILLAGE_2101,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      2,
-      {
-        ...initialState,
-        board: {
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player2",
-        deck: initialState.deck.slice(2),
-        players: {
-          ...initialState.players,
-          player2: {
-            ...initialState.players.player2,
-            action,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-        },
-        tiles: [ForestType.TEMPLE, ForestType.CACAO_1],
-      },
-      {
-        code: "workers",
-        dir: Direction.NORTH,
-        playerId: "player2",
-        pos: { x: 8, y: 9 },
-        workers: 2,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      3,
-      {
-        ...initialState,
-        board: {
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player2",
-        deck: initialState.deck.slice(2),
-        players: {
-          ...initialState.players,
-          player2: {
-            ...initialState.players.player2,
-            action,
-            beans: 2,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-        },
-        tiles: [ForestType.TEMPLE, ForestType.CACAO_1],
-      },
-      {
-        code: "gainBeans",
-        playerId: "player2",
-        amount: 2,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      4,
-      {
-        ...initialState,
-        board: {
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player2",
-        deck: initialState.deck.slice(2),
-        players: {
-          ...initialState.players,
-          player2: {
-            ...initialState.players.player2,
-            action,
-            beans: 2,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-        },
-        tiles: [ForestType.TEMPLE, ForestType.CACAO_1],
-      },
-      {
-        code: "workers",
-        dir: Direction.EAST,
-        playerId: "player2",
-        pos: { x: 8, y: 9 },
-        workers: 1,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      5,
-      {
-        ...initialState,
-        board: {
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player2",
-        deck: initialState.deck.slice(2),
-        players: {
-          ...initialState.players,
-          player2: {
-            ...initialState.players.player2,
-            action,
-            beans: 1,
-            coins: 2,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-        },
-        tiles: [ForestType.TEMPLE, ForestType.CACAO_1],
-      },
-      {
-        code: "sellBeans",
-        playerId: "player2",
-        amount: 1,
-        price: 2,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      6,
-      {
-        ...initialState,
-        board: {
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player1",
-        deck: initialState.deck.slice(2),
-        players: {
-          player1: {
-            ...initialState.players.player1,
-            ready: false,
-          },
-          player2: {
-            ...initialState.players.player2,
-            action,
-            beans: 1,
-            coins: 2,
-            deck: initialState.players.player2.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_1111,
-            ],
-          },
-        },
-        tiles: [ForestType.TEMPLE, ForestType.CACAO_1],
-      },
-      {
-        code: "nextPlayer",
-        playerId: "player1",
-      }
-    )
+    for (const playerId of context.state.playerOrder) {
+      const player = context.state.players[playerId]
+      expect(player.beans).toBe(0)
+      expect(player.chocolate).toBe(0)
+      expect(player.coins).toBe(0)
+      expect(player.deck).toHaveLength(11 - PLAYER_HAND_SIZE)
+      expect(player.hand).toHaveLength(PLAYER_HAND_SIZE)
+      expect(player.sun).toBe(0)
+      expect(player.water).toBe(0)
+    }
   })
 
-  it("places a Village tile and fills adjacent Forests (2)", async () => {
-    const { initialState, playerOrder, players } = MOCKS[2]
+  it("initializes game state for 3 players", async () => {
+    const context = createContext(3)
 
-    const context = new CacaoContext()
+    expect(context.state.board).toStrictEqual(getInitialBoard())
+    expect(context.state.currentPlayerId).toBe(null)
+    expect(context.state.deck).toHaveLength(26)
+    expect(context.state.playerOrder).toHaveLength(3)
+    expect(context.state.tiles).toStrictEqual([null, null])
 
-    context.initState(playerOrder, players, { seed: 0 })
-
-    expect(context.state).toStrictEqual(initialState)
-
-    await context.resolve()
-
-    const actionPlayer2 = context.validateAction("player2", {
-      code: "playTile",
-      forests: [],
-      village: {
-        index: 1,
-        pos: {
-          x: 8,
-          y: 9,
-        },
-        rot: 3,
-      },
-    })
-
-    context.setAction("player2", actionPlayer2)
-
-    await context.resolve()
-
-    expect(context.state.players.player1.ready).toBe(false)
-
-    const actionPlayer1 = context.validateAction("player1", {
-      code: "playTile",
-      forests: [
-        {
-          index: 1,
-          pos: {
-            x: 7,
-            y: 9,
-          },
-        },
-      ],
-      village: {
-        index: 0,
-        pos: {
-          x: 7,
-          y: 8,
-        },
-        rot: 1,
-      },
-    })
-
-    context.setAction("player1", actionPlayer1)
-
-    const onStateChange = jest.fn()
-
-    await context.resolve(onStateChange)
-
-    expect(onStateChange).toHaveBeenCalledTimes(10)
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      1,
-      {
-        ...initialState,
-        board: {
-          7: {
-            8: {
-              playerId: "player1",
-              rot: 1,
-              type: VillageType.VILLAGE_3001,
-            },
-          },
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player1",
-        deck: initialState.deck.slice(2),
-        players: {
-          player1: {
-            ...initialState.players.player1,
-            action: actionPlayer1,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-          player2: {
-            ...initialState.players.player2,
-            action: actionPlayer2,
-            beans: 1,
-            coins: 2,
-            deck: initialState.players.player2.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_1111,
-            ],
-          },
-        },
-        tiles: [ForestType.TEMPLE, ForestType.CACAO_1],
-      },
-      {
-        code: "placeVillageTile",
-        overbuilt: false,
-        playerId: "player1",
-        pos: { x: 7, y: 8 },
-        rot: 1,
-        type: VillageType.VILLAGE_3001,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      2,
-      {
-        ...initialState,
-        board: {
-          7: {
-            8: {
-              playerId: "player1",
-              rot: 1,
-              type: VillageType.VILLAGE_3001,
-            },
-            9: {
-              type: ForestType.CACAO_1,
-            },
-          },
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player1",
-        deck: initialState.deck.slice(2),
-        players: {
-          player1: {
-            ...initialState.players.player1,
-            action: actionPlayer1,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-          player2: {
-            ...initialState.players.player2,
-            action: actionPlayer2,
-            beans: 1,
-            coins: 2,
-            deck: initialState.players.player2.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_1111,
-            ],
-          },
-        },
-        tiles: [ForestType.TEMPLE, null],
-      },
-      {
-        code: "placeForestTile",
-        pos: { x: 7, y: 9 },
-        type: ForestType.CACAO_1,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      3,
-      {
-        ...initialState,
-        board: {
-          7: {
-            8: {
-              playerId: "player1",
-              rot: 1,
-              type: VillageType.VILLAGE_3001,
-            },
-            9: {
-              type: ForestType.CACAO_1,
-            },
-          },
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player1",
-        deck: initialState.deck.slice(2),
-        players: {
-          player1: {
-            ...initialState.players.player1,
-            action: actionPlayer1,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-          player2: {
-            ...initialState.players.player2,
-            action: actionPlayer2,
-            beans: 1,
-            coins: 2,
-            deck: initialState.players.player2.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_1111,
-            ],
-          },
-        },
-        tiles: [ForestType.TEMPLE, null],
-      },
-      {
-        code: "workers",
-        dir: Direction.EAST,
-        playerId: "player1",
-        pos: { x: 7, y: 8 },
-        workers: 1,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      4,
-      {
-        ...initialState,
-        board: {
-          7: {
-            8: {
-              playerId: "player1",
-              rot: 1,
-              type: VillageType.VILLAGE_3001,
-            },
-            9: {
-              type: ForestType.CACAO_1,
-            },
-          },
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player1",
-        deck: initialState.deck.slice(2),
-        players: {
-          player1: {
-            ...initialState.players.player1,
-            action: actionPlayer1,
-            beans: 1,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-          player2: {
-            ...initialState.players.player2,
-            action: actionPlayer2,
-            beans: 1,
-            coins: 2,
-            deck: initialState.players.player2.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_1111,
-            ],
-          },
-        },
-        tiles: [ForestType.TEMPLE, null],
-      },
-      {
-        code: "gainBeans",
-        playerId: "player1",
-        amount: 1,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      5,
-      {
-        ...initialState,
-        board: {
-          7: {
-            8: {
-              playerId: "player1",
-              rot: 1,
-              type: VillageType.VILLAGE_3001,
-            },
-            9: {
-              type: ForestType.CACAO_1,
-            },
-          },
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player1",
-        deck: initialState.deck.slice(2),
-        players: {
-          player1: {
-            ...initialState.players.player1,
-            action: actionPlayer1,
-            beans: 1,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-          player2: {
-            ...initialState.players.player2,
-            action: actionPlayer2,
-            beans: 1,
-            coins: 2,
-            deck: initialState.players.player2.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_1111,
-            ],
-          },
-        },
-        tiles: [ForestType.TEMPLE, null],
-      },
-      {
-        code: "workers",
-        dir: Direction.SOUTH,
-        playerId: "player1",
-        pos: { x: 7, y: 8 },
-        workers: 3,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      6,
-      {
-        ...initialState,
-        board: {
-          7: {
-            8: {
-              playerId: "player1",
-              rot: 1,
-              type: VillageType.VILLAGE_3001,
-            },
-            9: {
-              type: ForestType.CACAO_1,
-            },
-          },
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player1",
-        deck: initialState.deck.slice(2),
-        players: {
-          player1: {
-            ...initialState.players.player1,
-            action: actionPlayer1,
-            beans: 4,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-          player2: {
-            ...initialState.players.player2,
-            action: actionPlayer2,
-            beans: 1,
-            coins: 2,
-            deck: initialState.players.player2.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_1111,
-            ],
-          },
-        },
-        tiles: [ForestType.TEMPLE, null],
-      },
-      {
-        code: "gainBeans",
-        playerId: "player1",
-        amount: 3,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      7,
-      {
-        ...initialState,
-        board: {
-          7: {
-            8: {
-              playerId: "player1",
-              rot: 1,
-              type: VillageType.VILLAGE_3001,
-            },
-            9: {
-              type: ForestType.CACAO_1,
-            },
-          },
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player1",
-        deck: initialState.deck.slice(2),
-        players: {
-          player1: {
-            ...initialState.players.player1,
-            action: actionPlayer1,
-            beans: 4,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-          player2: {
-            ...initialState.players.player2,
-            action: actionPlayer2,
-            beans: 1,
-            coins: 2,
-            deck: initialState.players.player2.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_1111,
-            ],
-          },
-        },
-        tiles: [ForestType.TEMPLE, null],
-      },
-      {
-        code: "workers",
-        dir: Direction.WEST,
-        playerId: "player2",
-        pos: { x: 8, y: 9 },
-        workers: 1,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      8,
-      {
-        ...initialState,
-        board: {
-          7: {
-            8: {
-              playerId: "player1",
-              rot: 1,
-              type: VillageType.VILLAGE_3001,
-            },
-            9: {
-              type: ForestType.CACAO_1,
-            },
-          },
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player1",
-        deck: initialState.deck.slice(2),
-        players: {
-          player1: {
-            ...initialState.players.player1,
-            action: actionPlayer1,
-            beans: 4,
-            hand: [VillageType.VILLAGE_2101, VillageType.VILLAGE_1111],
-          },
-          player2: {
-            ...initialState.players.player2,
-            action: actionPlayer2,
-            beans: 2,
-            coins: 2,
-            deck: initialState.players.player2.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_1111,
-            ],
-          },
-        },
-        tiles: [ForestType.TEMPLE, null],
-      },
-      {
-        code: "gainBeans",
-        playerId: "player2",
-        amount: 1,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      9,
-      {
-        ...initialState,
-        board: {
-          7: {
-            8: {
-              playerId: "player1",
-              rot: 1,
-              type: VillageType.VILLAGE_3001,
-            },
-            9: {
-              type: ForestType.CACAO_1,
-            },
-          },
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player1",
-        deck: initialState.deck.slice(3),
-        players: {
-          player1: {
-            ...initialState.players.player1,
-            action: actionPlayer1,
-            beans: 4,
-            deck: initialState.players.player1.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_3100,
-            ],
-          },
-          player2: {
-            ...initialState.players.player2,
-            action: actionPlayer2,
-            beans: 2,
-            coins: 2,
-            deck: initialState.players.player2.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_1111,
-            ],
-          },
-        },
-        tiles: [ForestType.TEMPLE, ForestType.TEMPLE],
-      },
-      {
-        code: "refillForest",
-        index: 1,
-        type: ForestType.TEMPLE,
-      }
-    )
-
-    expect(onStateChange).toHaveBeenNthCalledWith(
-      10,
-      {
-        ...initialState,
-        board: {
-          7: {
-            8: {
-              playerId: "player1",
-              rot: 1,
-              type: VillageType.VILLAGE_3001,
-            },
-            9: {
-              type: ForestType.CACAO_1,
-            },
-          },
-          8: {
-            8: {
-              type: ForestType.CACAO_1,
-            },
-            9: {
-              playerId: "player2",
-              rot: 3,
-              type: VillageType.VILLAGE_2101,
-            },
-          },
-          9: {
-            9: {
-              type: ForestType.MARKET_2,
-            },
-          },
-        },
-        currentPlayerId: "player2",
-        deck: initialState.deck.slice(3),
-        players: {
-          player1: {
-            ...initialState.players.player1,
-            action: actionPlayer1,
-            beans: 4,
-            deck: initialState.players.player1.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_3100,
-            ],
-          },
-          player2: {
-            ...initialState.players.player2,
-            beans: 2,
-            coins: 2,
-            deck: initialState.players.player2.deck.slice(1),
-            hand: [
-              VillageType.VILLAGE_2101,
-              VillageType.VILLAGE_1111,
-              VillageType.VILLAGE_1111,
-            ],
-            ready: false,
-          },
-        },
-        tiles: [ForestType.TEMPLE, ForestType.TEMPLE],
-      },
-      {
-        code: "nextPlayer",
-        playerId: "player2",
-      }
-    )
+    for (const playerId of context.state.playerOrder) {
+      const player = context.state.players[playerId]
+      expect(player.beans).toBe(0)
+      expect(player.chocolate).toBe(0)
+      expect(player.coins).toBe(0)
+      expect(player.deck).toHaveLength(10 - PLAYER_HAND_SIZE)
+      expect(player.hand).toHaveLength(PLAYER_HAND_SIZE)
+      expect(player.sun).toBe(0)
+      expect(player.water).toBe(0)
+    }
   })
 
-  it("places a Village tile and fills adjacent Forests", async () => {
-    const { initialState, playerOrder, players } = MOCKS[2]
+  it("initializes game state for 4 players", async () => {
+    const context = createContext(4)
 
-    const context = new CacaoContext()
+    expect(context.state.board).toStrictEqual(getInitialBoard())
+    expect(context.state.currentPlayerId).toBe(null)
+    expect(context.state.deck).toHaveLength(26)
+    expect(context.state.playerOrder).toHaveLength(4)
+    expect(context.state.tiles).toStrictEqual([null, null])
 
-    context.initState(playerOrder, players, { seed: 0 })
+    for (const playerId of context.state.playerOrder) {
+      const player = context.state.players[playerId]
+      expect(player.beans).toBe(0)
+      expect(player.chocolate).toBe(0)
+      expect(player.coins).toBe(0)
+      expect(player.deck).toHaveLength(9 - PLAYER_HAND_SIZE)
+      expect(player.hand).toHaveLength(PLAYER_HAND_SIZE)
+      expect(player.sun).toBe(0)
+      expect(player.water).toBe(0)
+    }
+  })
 
-    expect(context.state).toStrictEqual(initialState)
+  it("fills the Forest display and assigns the starting player", async () => {
+    const context = createContext(3)
 
-    await context.resolve()
+    const forestDeck = context.state.deck
 
-    context.setAction("player2", {
-      code: "playTile",
-      forests: [],
-      village: {
-        index: 1,
-        pos: {
-          x: 8,
-          y: 9,
-        },
-        rot: 3,
-      },
-    })
-
-    await context.resolve()
-
-    context.setAction("player1", {
-      code: "playTile",
-      forests: [
+    await next(context, {
+      events: [
         {
-          index: 1,
-          pos: {
-            x: 7,
-            y: 9,
-          },
-        },
-      ],
-      village: {
-        index: 0,
-        pos: {
-          x: 7,
-          y: 8,
-        },
-        rot: 1,
-      },
-    })
-
-    await context.resolve()
-
-    context.setAction("player2", {
-      code: "playTile",
-      forests: [
-        {
+          code: "refillForest",
           index: 0,
-          pos: {
-            x: 6,
-            y: 8,
-          },
+          type: forestDeck[0],
         },
-      ],
-      village: {
-        index: 2,
-        pos: {
-          x: 6,
-          y: 9,
-        },
-        rot: 0,
-      },
-    })
-
-    await context.resolve()
-
-    console.log(context.state)
-
-    context.setAction("player1", {
-      code: "playTile",
-      forests: [
         {
+          code: "refillForest",
           index: 1,
-          pos: {
-            x: 6,
-            y: 10,
-          },
+          type: forestDeck[1],
         },
         {
-          index: 0,
-          pos: {
-            x: 8,
-            y: 10,
-          },
+          code: "nextPlayer",
+          playerId: context.state.startingPlayerId,
         },
       ],
-      village: {
-        index: 0,
-        pos: {
-          x: 7,
-          y: 10,
-        },
-        rot: 0,
-      },
     })
 
-    await context.resolve()
+    expect(context.state.currentPlayerId).toBe(context.state.startingPlayerId)
+    expect(context.state.deck).toStrictEqual(forestDeck.slice(2))
+    expect(context.state.tiles).toStrictEqual(forestDeck.slice(0, 2))
 
-    console.log(context.state)
-
-    context.setAction("player2", {
-      code: "playTile",
-      forests: [
-        {
-          index: 1,
-          pos: {
-            x: 5,
-            y: 9,
-          },
-        },
-      ],
-      village: {
-        index: 0,
-        pos: {
-          x: 5,
-          y: 8,
-        },
-        rot: 0,
-      },
-    })
-
-    await context.resolve()
-
-    console.log(context.state)
+    expect(context.player(context.state.startingPlayerId).ready).toBe(false)
   })
 })

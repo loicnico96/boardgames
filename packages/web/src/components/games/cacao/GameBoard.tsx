@@ -1,9 +1,10 @@
 import { fill } from "@boardgames/utils"
 import styled from "@emotion/styled"
 
-import { BoardTile, InteractiveTile } from "./BoardTile"
+import { BOARD_SIZE } from "lib/games/cacao/constants"
 
-const BOARD_SIZE = 18
+import { BoardTile } from "./BoardTile"
+import { InteractiveTile } from "./InteractiveTile"
 
 const BoardContainer = styled.div`
   display: flex;

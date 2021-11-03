@@ -16,7 +16,7 @@ export type PlayerHandProps = {
 export function PlayerHand({ playerId }: PlayerHandProps) {
   const deckSize = useCacaoPlayer(playerId, player => player.deck.length)
   const villageTiles = useCacaoPlayer(playerId, player => player.hand)
-  const isReady = useCacaoPlayer(playerId, player => player.ready)
+  const isSelecting = useCacaoPlayer(playerId, player => !player.ready)
 
   const village = useCacaoStore(store => store.village)
 
@@ -27,9 +27,9 @@ export function PlayerHand({ playerId }: PlayerHandProps) {
       <BasicTile>{deckSize}</BasicTile>
       {villageTiles.map((type, index) => (
         <VillageTile
-          disabled={isReady || village.confirmed}
+          disabled={village.confirmed}
           key={index}
-          onClick={() => selectVillageTile(index)}
+          onClick={isSelecting ? () => selectVillageTile(index) : undefined}
           playerId={playerId}
           rot={index === village.index ? village.rot : undefined}
           selected={index === village.index}
