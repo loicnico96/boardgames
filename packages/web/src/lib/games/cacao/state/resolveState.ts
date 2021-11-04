@@ -9,7 +9,6 @@ import {
   Pos,
   samePos,
   assert,
-  clamp,
 } from "@boardgames/utils"
 
 import { getTile, isEmpty, isFillable } from "../board"
@@ -40,23 +39,22 @@ export async function gainBeans(
   amount: number
 ): Promise<number> {
   const player = context.player(playerId)
-  const gained = clamp(
+  const realAmount = Math.min(
     amount,
-    0,
     MAX_PLAYER_BEANS - player.beans - player.chocolate
   )
 
-  if (gained > 0) {
-    context.updatePlayer(playerId, { beans: beans => beans + gained })
+  if (realAmount > 0) {
+    context.updatePlayer(playerId, { beans: beans => beans + realAmount })
     await context.post("gainBeans", {
-      amount: gained,
+      amount: realAmount,
       dir,
       playerId,
       pos,
     })
   }
 
-  return gained
+  return realAmount
 }
 
 export async function gainCoins(
@@ -66,6 +64,8 @@ export async function gainCoins(
   dir: Direction,
   amount: number
 ): Promise<number> {
+  assert(amount > 0, "Invalid")
+
   context.updatePlayer(playerId, { coins: coins => coins + amount })
   await context.post("gainCoins", {
     amount,
@@ -73,6 +73,7 @@ export async function gainCoins(
     playerId,
     pos,
   })
+
   return amount
 }
 
@@ -84,19 +85,19 @@ export async function gainSun(
   amount: number
 ): Promise<number> {
   const player = context.player(playerId)
-  const gained = clamp(amount, 0, MAX_PLAYER_SUN_DISKS - player.sun)
+  const realAmount = Math.min(amount, MAX_PLAYER_SUN_DISKS - player.sun)
 
-  if (gained > 0) {
-    context.updatePlayer(playerId, { sun: sun => sun + gained })
+  if (realAmount > 0) {
+    context.updatePlayer(playerId, { sun: sun => sun + realAmount })
     await context.post("gainSun", {
-      amount: gained,
+      amount: realAmount,
       dir,
       playerId,
       pos,
     })
   }
 
-  return gained
+  return realAmount
 }
 
 export async function gainWater(
@@ -107,35 +108,35 @@ export async function gainWater(
   amount: number
 ): Promise<number> {
   const player = context.player(playerId)
-  const gained = clamp(amount, 0, MAX_WATER_LEVEL - player.water)
+  const realAmount = Math.min(amount, MAX_WATER_LEVEL - player.water)
 
-  if (gained > 0) {
-    context.updatePlayer(playerId, { water: water => water + gained })
+  if (realAmount > 0) {
+    context.updatePlayer(playerId, { water: water => water + realAmount })
     await context.post("gainWater", {
-      amount: gained,
+      amount: realAmount,
       dir,
       playerId,
       pos,
     })
   }
 
-  return gained
+  return realAmount
 }
 
-export async function loseSun(
+export async function spendSun(
   context: CacaoContext,
   playerId: string,
   amount: number
 ): Promise<number> {
   const player = context.player(playerId)
-  const lost = clamp(amount, 0, player.sun)
+  const realAmount = Math.min(amount, player.sun)
 
-  if (lost > 0) {
-    context.updatePlayer(playerId, { sun: sun => sun - lost })
-    await context.post("loseSun", { playerId, amount: lost })
+  if (realAmount > 0) {
+    context.updatePlayer(playerId, { sun: sun => sun - realAmount })
+    await context.post("spendSun", { playerId, amount: realAmount })
   }
 
-  return lost
+  return realAmount
 }
 
 export async function makeChocolate(
@@ -146,23 +147,81 @@ export async function makeChocolate(
   amount: number
 ): Promise<number> {
   const player = context.player(playerId)
-  const made = clamp(amount, 0, player.beans)
+  const realAmount = Math.min(amount, player.beans)
 
-  if (made > 0) {
+  if (realAmount > 0) {
     context.updatePlayer(playerId, {
-      beans: beans => beans - made,
-      chocolate: chocolate => chocolate + made,
+      beans: beans => beans - realAmount,
+      chocolate: chocolate => chocolate + realAmount,
     })
 
     await context.post("makeChocolate", {
-      amount: made,
+      amount: realAmount,
       dir,
       playerId,
       pos,
     })
   }
 
-  return made
+  return realAmount
+}
+
+export async function sellBeans(
+  context: CacaoContext,
+  playerId: string,
+  pos: Pos,
+  dir: Direction,
+  amount: number,
+  price: number
+): Promise<number> {
+  const player = context.player(playerId)
+  const realAmount = Math.min(amount, player.beans)
+
+  if (realAmount > 0) {
+    context.updatePlayer(playerId, {
+      beans: beans => beans - realAmount,
+      coins: coins => coins + realAmount * price,
+    })
+
+    await context.post("sellBeans", {
+      amount: realAmount,
+      dir,
+      playerId,
+      pos,
+      price,
+    })
+  }
+
+  return realAmount
+}
+
+export async function sellChocolate(
+  context: CacaoContext,
+  playerId: string,
+  pos: Pos,
+  dir: Direction,
+  amount: number
+): Promise<number> {
+  const player = context.player(playerId)
+  const realAmount = Math.min(amount, player.chocolate)
+  const price = CHOCOLATE_SCORE
+
+  if (realAmount > 0) {
+    context.updatePlayer(playerId, {
+      chocolate: chocolate => chocolate - realAmount,
+      coins: coins => coins + realAmount * price,
+    })
+
+    await context.post("sellChocolate", {
+      amount: realAmount,
+      dir,
+      playerId,
+      pos,
+      price,
+    })
+  }
+
+  return realAmount
 }
 
 export async function nextPlayer(
@@ -180,64 +239,6 @@ export async function nextPlayer(
   context.requireAction(playerId)
 
   await context.post("nextPlayer", { playerId })
-}
-
-export async function sellBeans(
-  context: CacaoContext,
-  playerId: string,
-  pos: Pos,
-  dir: Direction,
-  amount: number,
-  price: number
-): Promise<number> {
-  const player = context.player(playerId)
-  const sold = clamp(amount, 0, player.beans)
-
-  if (sold > 0) {
-    context.updatePlayer(playerId, {
-      beans: beans => beans - sold,
-      coins: coins => coins + sold * price,
-    })
-
-    await context.post("sellBeans", {
-      amount,
-      dir,
-      playerId,
-      pos,
-      price,
-    })
-  }
-
-  return sold
-}
-
-export async function sellChocolate(
-  context: CacaoContext,
-  playerId: string,
-  pos: Pos,
-  dir: Direction,
-  amount: number
-): Promise<number> {
-  const player = context.player(playerId)
-  const sold = clamp(amount, 0, player.chocolate)
-  const price = CHOCOLATE_SCORE
-
-  if (sold > 0) {
-    context.updatePlayer(playerId, {
-      chocolate: chocolate => chocolate - sold,
-      coins: coins => coins + sold * price,
-    })
-
-    await context.post("sellChocolate", {
-      amount,
-      dir,
-      playerId,
-      pos,
-      price,
-    })
-  }
-
-  return sold
 }
 
 export function getVillageWorkers(
@@ -276,12 +277,12 @@ export function sortResolutions(
 ): void {
   const player = context.player(playerId)
 
-  const willGainCacao = resolutions.some(resolution =>
+  const willGainsBeans = resolutions.some(resolution =>
     [ForestType.CACAO_1, ForestType.CACAO_2].includes(resolution.forest.type)
   )
 
   const willGainChocolate =
-    (willGainCacao || player.beans > 0) &&
+    (player.beans > 0 || willGainsBeans) &&
     resolutions.some(resolution =>
       [ForestType.KITCHEN].includes(resolution.forest.type)
     )
@@ -290,26 +291,16 @@ export function sortResolutions(
     resolutions,
     resolution => {
       switch (resolution.forest.type) {
-        case ForestType.CACAO_1:
-        case ForestType.CACAO_2:
-        case ForestType.KITCHEN:
-        case ForestType.MARKET_2:
-        case ForestType.MARKET_3:
-        case ForestType.MARKET_3_CHOCOLATE:
-        case ForestType.MARKET_4:
-        case ForestType.MARKET_5:
-          return 0
         case ForestType.GOLD_1:
         case ForestType.GOLD_2:
+        case ForestType.TREE:
           return 1
         case ForestType.SUN_DISK:
           return 2
         case ForestType.WATER:
           return 3
-        case ForestType.TREE:
-          return 4
         default:
-          return 5
+          return 0
       }
     },
     resolution => {
@@ -317,62 +308,73 @@ export function sortResolutions(
       switch (resolution.forest.type) {
         case ForestType.CACAO_1: {
           const amount = workers
-          const gained = clamp(
+          const gained = Math.min(
             amount,
-            0,
             MAX_PLAYER_BEANS - player.beans - player.chocolate
           )
           return amount - gained
         }
         case ForestType.CACAO_2: {
           const amount = workers * 2
-          const gained = clamp(
+          const gained = Math.min(
             amount,
-            0,
             MAX_PLAYER_BEANS - player.beans - player.chocolate
           )
           return amount - gained
         }
         case ForestType.KITCHEN: {
-          const amount = workers
-          const gained = clamp(amount, 0, player.beans)
-          return (willGainCacao && amount > gained ? amount - gained : -1) * 35
+          return -3.5
         }
         case ForestType.MARKET_2: {
           const amount = workers
-          const gained = clamp(amount, 0, player.beans)
-          return (willGainCacao && amount > gained ? amount - gained : -1) * 20
+          const gained = Math.min(amount, player.beans)
+          if (willGainsBeans && amount > gained) {
+            return (amount - gained) * 2
+          }
+
+          return -2
         }
         case ForestType.MARKET_3: {
           const amount = workers
-          const gained = clamp(amount, 0, player.beans)
-          return (willGainCacao && amount > gained ? amount - gained : -1) * 30
+          const gained = Math.min(amount, player.beans)
+          if (willGainsBeans && amount > gained) {
+            return (amount - gained) * 3
+          }
+
+          return -3
         }
         case ForestType.MARKET_3_CHOCOLATE: {
           const chocolateAmount = workers
-          const chocolateGained = clamp(chocolateAmount, 0, player.chocolate)
-          const cacaoAmount = chocolateAmount - chocolateGained
-          const cacaoGained = clamp(cacaoAmount, 0, player.beans)
-          return (
-            (willGainCacao && cacaoAmount > cacaoGained
-              ? cacaoAmount - cacaoGained
-              : -1) *
-              30 +
-            (willGainChocolate && chocolateAmount > chocolateGained
-              ? chocolateAmount - chocolateGained
-              : -1) *
-              70
-          )
+          const chocolateGained = Math.min(chocolateAmount, player.chocolate)
+          if (willGainChocolate && chocolateAmount > chocolateGained) {
+            return (chocolateAmount - chocolateGained) * 7
+          }
+
+          const beansAmount = chocolateAmount - chocolateGained
+          const beansGained = Math.min(beansAmount, player.beans)
+          if (willGainsBeans && beansAmount > beansGained) {
+            return (beansAmount - beansGained) * 3
+          }
+
+          return chocolateGained > 0 ? -7 : -3
         }
         case ForestType.MARKET_4: {
           const amount = workers
-          const gained = clamp(amount, 0, player.beans)
-          return (willGainCacao && amount > gained ? amount - gained : -1) * 40
+          const gained = Math.min(amount, player.beans)
+          if (willGainsBeans && amount > gained) {
+            return (amount - gained) * 4
+          }
+
+          return -4
         }
         case ForestType.MARKET_5: {
           const amount = workers
-          const gained = clamp(amount, 0, player.beans)
-          return (willGainCacao && amount > gained ? amount - gained : -1) * 50
+          const gained = Math.min(amount, player.beans)
+          if (willGainsBeans && amount > gained) {
+            return (amount - gained) * 5
+          }
+
+          return -5
         }
         default:
           return -workers
@@ -631,7 +633,7 @@ export async function placeVillageTile(
 
   if (overbuilt) {
     assert(player.sun > 0, "You have no Sun Disks.")
-    await loseSun(context, playerId, 1)
+    await spendSun(context, playerId, 1)
   }
 
   context.updatePlayer(playerId, {
@@ -712,6 +714,11 @@ export async function refillPlayerHand(
       hand: {
         $push: deck.slice(0, refillCount),
       },
+    })
+
+    await context.post("drawTiles", {
+      amount: refillCount,
+      playerId,
     })
   }
 }

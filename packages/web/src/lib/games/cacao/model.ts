@@ -75,6 +75,10 @@ export type CacaoAction = ObjectUnion<
 export type CacaoEvent = ObjectUnion<
   "code",
   {
+    drawTiles: {
+      amount: number
+      playerId: string
+    }
     gainBeans: {
       amount: number
       dir: Direction
@@ -98,10 +102,6 @@ export type CacaoEvent = ObjectUnion<
       dir: Direction
       playerId: string
       pos: Pos
-    }
-    loseSun: {
-      amount: number
-      playerId: string
     }
     makeChocolate: {
       amount: number
@@ -140,6 +140,10 @@ export type CacaoEvent = ObjectUnion<
       playerId: string
       pos: Pos
       price: number
+    }
+    spendSun: {
+      amount: number
+      playerId: string
     }
   }
 >
