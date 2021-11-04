@@ -8,7 +8,6 @@ import { useCurrentUserId } from "hooks/useCurrentUserId"
 import { withSearchParams } from "hooks/useSearchParams"
 import { useTranslations } from "hooks/useTranslations"
 import { getRoomRef } from "lib/db/collections"
-import { WithId } from "lib/db/types"
 import { GameType } from "lib/games/types"
 import { RoomData } from "lib/model/RoomData"
 import { useGlobalActions, useGlobalStore } from "lib/store/global"
@@ -37,10 +36,7 @@ export function RoomProvider({ children, game, roomId }: RoomProviderProps) {
   }, [previousRef, resource])
 
   const handleRedirects = useCallback(
-    async (
-      current: Resource<WithId<RoomData>>,
-      previous?: Resource<WithId<RoomData>>
-    ) => {
+    async (current: Resource<RoomData>, previous?: Resource<RoomData>) => {
       if (current.error?.message.match(/not found/i)) {
         if (previous?.data && previous.data.ownerId !== userId) {
           toast.info(t.room.closedByOwner)
@@ -68,7 +64,7 @@ export function RoomProvider({ children, game, roomId }: RoomProviderProps) {
       result => {
         handleRedirects(result, previousRef.current).then(
           () => setRoomResources({ [roomId]: result }),
-          error => Console.error(error)
+          Console.error
         )
       },
       [handleRedirects, previousRef, roomId, setRoomResources]

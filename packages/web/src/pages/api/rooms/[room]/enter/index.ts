@@ -1,10 +1,12 @@
+import update from "immutability-helper"
+
 import { ApiError } from "lib/api/error"
 import { handle, readParam } from "lib/api/server"
 import { getUserId, getUserInfo } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
 import { getRoomRef } from "lib/db/collections"
-import { DocRef, FieldValue, firestore } from "lib/firebase/admin"
-import { getGameSettings } from "lib/games/settings"
+import { DocRef, firestore } from "lib/firebase/admin"
+import { SETTINGS } from "lib/games/settings"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 import { Param } from "lib/utils/navigation"
 
@@ -35,15 +37,18 @@ export async function enterRoom(
     if (roomData.status !== RoomStatus.OPENED) {
       throw new ApiError(
         HttpStatus.FAILED_PRECONDITION,
-        "The game has already started"
+        "This game has already started"
       )
     }
 
     if (roomData.playerOrder.includes(userId)) {
-      return false
+      throw new ApiError(
+        HttpStatus.FAILED_PRECONDITION,
+        "You have already joined this room"
+      )
     }
 
-    const { maxPlayers } = getGameSettings(roomData.game)
+    const { maxPlayers } = SETTINGS[roomData.game]
 
     if (roomData.playerOrder.length >= maxPlayers) {
       throw new ApiError(
@@ -52,10 +57,21 @@ export async function enterRoom(
       )
     }
 
-    transaction.update(roomRef, {
-      playerOrder: FieldValue.arrayUnion(userId),
-      [`players.${userId}`]: { name: userName },
-    })
+    transaction.update(
+      roomRef,
+      update(roomData, {
+        playerOrder: {
+          $push: [userId],
+        },
+        players: {
+          [userId]: {
+            $set: {
+              name: userName,
+            },
+          },
+        },
+      })
+    )
 
     return true
   })

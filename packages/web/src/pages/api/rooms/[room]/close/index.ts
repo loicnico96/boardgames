@@ -25,7 +25,7 @@ export async function closeRoom(
     if (roomData.status !== RoomStatus.OPENED) {
       throw new ApiError(
         HttpStatus.FAILED_PRECONDITION,
-        "The game has already started"
+        "This game has already started"
       )
     }
 

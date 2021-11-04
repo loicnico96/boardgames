@@ -79,10 +79,10 @@ export function AsyncButton<Reason extends string = never>({
   )
 
   const label = getLabel(translations, disabled, loading)
-  const tooltip = getTooltip(translations, reason)
+  const tooltip = loading ? undefined : getTooltip(translations, reason)
 
   return (
-    <Tooltip solid text={tooltip}>
+    <Tooltip text={tooltip} position="top">
       <Button disabled={disabled || loading} onClick={onClickAsync} {...props}>
         {label}
       </Button>

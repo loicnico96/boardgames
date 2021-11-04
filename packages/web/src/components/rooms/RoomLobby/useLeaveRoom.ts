@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 
-import { getRoomData } from "hooks/useRoomData"
+import { getRoomData } from "hooks/store/useRoomData"
 import { leaveRoom } from "lib/api/client/leaveRoom"
 import { useAuthContext } from "lib/auth/context"
 import { RoomStatus } from "lib/model/RoomData"

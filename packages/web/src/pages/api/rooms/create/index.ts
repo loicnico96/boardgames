@@ -22,9 +22,7 @@ export async function createRoom<T extends GameType>(
     )
   }
 
-  const context = getGameContext(game)
-
-  const options = context.getDefaultOptions()
+  const options = getGameContext(game).getDefaultOptions()
 
   const roomData: RoomData<T> = {
     createdAt: Date.now(),

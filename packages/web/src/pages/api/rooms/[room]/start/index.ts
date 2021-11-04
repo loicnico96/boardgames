@@ -5,7 +5,7 @@ import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
 import { getClientRef, getRoomRef, getServerRef } from "lib/db/collections"
 import { DocRef, firestore } from "lib/firebase/admin"
 import { getGameContext } from "lib/games/context"
-import { getGameSettings } from "lib/games/settings"
+import { SETTINGS } from "lib/games/settings"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 import { Param } from "lib/utils/navigation"
 
@@ -27,7 +27,7 @@ export async function startGame(
     if (roomData.status !== RoomStatus.OPENED) {
       throw new ApiError(
         HttpStatus.FAILED_PRECONDITION,
-        "The game has already started"
+        "This game has already started"
       )
     }
 
@@ -38,7 +38,7 @@ export async function startGame(
       )
     }
 
-    const { minPlayers } = getGameSettings(roomData.game)
+    const { minPlayers } = SETTINGS[roomData.game]
 
     if (roomData.playerOrder.length < minPlayers) {
       throw new ApiError(

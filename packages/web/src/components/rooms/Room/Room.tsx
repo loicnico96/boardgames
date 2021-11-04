@@ -1,6 +1,6 @@
 import { GAME_COMPONENTS } from "components/games/GameComponent"
 import { RoomLobby } from "components/rooms/RoomLobby"
-import { useRoomData } from "hooks/useRoomData"
+import { useRoomData } from "hooks/store/useRoomData"
 import { useRoomId } from "hooks/useRoomId"
 import { GameType } from "lib/games/types"
 import { RoomData, RoomStatus } from "lib/model/RoomData"

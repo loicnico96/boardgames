@@ -5,10 +5,11 @@ import { ApiError } from "lib/api/error"
 import { handle, readBody, readParam } from "lib/api/server"
 import { getUserId } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
-import { getClientRef, getServerRef } from "lib/db/collections"
+import { getClientRef, getRoomRef, getServerRef } from "lib/db/collections"
 import { firestore } from "lib/firebase/admin"
 import { getGameContext } from "lib/games/context"
 import { GameState, GameType, isGameType } from "lib/games/types"
+import { RoomStatus } from "lib/model/RoomData"
 import { Param } from "lib/utils/navigation"
 
 export async function playerAction<T extends GameType>(
@@ -26,6 +27,13 @@ export async function playerAction<T extends GameType>(
       throw new ApiError(
         HttpStatus.NOT_FOUND,
         "This room does not exist or has been closed"
+      )
+    }
+
+    if (gameState.over) {
+      throw new ApiError(
+        HttpStatus.FAILED_PRECONDITION,
+        "This game has already finished"
       )
     }
 
@@ -64,6 +72,11 @@ export async function playerAction<T extends GameType>(
     }
 
     transaction.update(serverRef, context.state)
+
+    if (context.state.over) {
+      const roomRef = firestore.doc(getRoomRef(roomId))
+      transaction.update(roomRef, { status: RoomStatus.FINISHED })
+    }
 
     return true
   })

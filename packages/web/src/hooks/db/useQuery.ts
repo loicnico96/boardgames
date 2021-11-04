@@ -85,7 +85,6 @@ export function useQuery<T extends DocumentData>(
           onError(result.error)
         }
       },
-      revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
     }

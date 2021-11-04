@@ -14,7 +14,7 @@ export function useGamePlayer<T extends GameType, R>(
   return useGlobalStore(
     useCallback(
       store => {
-        const resource = store.games[game][roomId]
+        const resource = store.games[game].rooms[roomId]
 
         if (!resource?.data?.players[playerId]) {
           throw Error("Invalid game context")

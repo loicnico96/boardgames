@@ -10,23 +10,33 @@ import { createStore, Store } from "./utils/createStore"
 export type RoomResource = Resource<WithId<RoomData>>
 
 export type GlobalState = {
-  games: { [T in GameType]: Partial<Record<string, Resource<GameState<T>>>> }
-  rooms: Partial<Record<string, RoomResource>>
+  games: {
+    [T in GameType]: {
+      rooms: {
+        [roomId in string]?: Resource<GameState<T>>
+      }
+    }
+  }
+  rooms: {
+    [roomId in string]?: Resource<RoomData>
+  }
 }
 
 export type GlobalActions = {
-  setGameResource: <T extends GameType>(
+  setGameState: <T extends GameType>(
     game: T,
     roomId: string,
     resource: Resource<GameState<T>>
   ) => void
-  setRoomResources: (resources: Record<string, RoomResource>) => void
+  setRoomResources: (resources: {
+    [roomId in string]?: Resource<RoomData>
+  }) => void
 }
 
 export type GlobalStore = Store<GlobalState, GlobalActions>
 
 export const initialState: GlobalState = {
-  games: generate(Object.values(GameType), game => [game, {}]),
+  games: generate(Object.values(GameType), game => [game, { rooms: {} }]),
   rooms: {},
 }
 
@@ -36,12 +46,14 @@ export const {
   useGetState: useGlobalState,
   useStore: useGlobalStore,
 } = createStore<GlobalState, GlobalActions>(initialState, set => ({
-  setGameResource(game, roomId, resource) {
+  setGameState(game, roomId, resource) {
     set({
       games: {
         [game]: {
-          $merge: {
-            [roomId]: resource,
+          rooms: {
+            $merge: {
+              [roomId]: resource,
+            },
           },
         },
       },

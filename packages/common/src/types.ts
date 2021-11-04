@@ -41,8 +41,3 @@ export type GameModel<
   player: P
   state: S
 }
-
-export type GameSettings = {
-  minPlayers: number
-  maxPlayers: number
-}

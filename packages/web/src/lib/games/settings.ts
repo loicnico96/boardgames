@@ -1,18 +1,25 @@
-import { GameSettings } from "@boardgames/common"
-
-import { CacaoSettings } from "./cacao/settings"
-import { MetropolysSettings } from "./metropolys/settings"
-import { PapayooSettings } from "./papayoo/settings"
-import { RoborallySettings } from "./roborally/settings"
 import { GameType } from "./types"
 
-const SETTINGS: Record<GameType, GameSettings> = {
-  cacao: CacaoSettings,
-  metropolys: MetropolysSettings,
-  papayoo: PapayooSettings,
-  roborally: RoborallySettings,
+export type GameSettings = {
+  maxPlayers: number
+  minPlayers: number
 }
 
-export function getGameSettings<T extends GameType>(game: T): GameSettings {
-  return SETTINGS[game]
+export const SETTINGS: Record<GameType, GameSettings> = {
+  cacao: {
+    maxPlayers: 4,
+    minPlayers: 2,
+  },
+  metropolys: {
+    maxPlayers: 4,
+    minPlayers: 2,
+  },
+  papayoo: {
+    maxPlayers: 8,
+    minPlayers: 3,
+  },
+  roborally: {
+    maxPlayers: 8,
+    minPlayers: 1,
+  },
 }

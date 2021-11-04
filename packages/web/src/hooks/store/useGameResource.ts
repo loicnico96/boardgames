@@ -14,7 +14,7 @@ export function useGameResource<T extends GameType, R>(
   return useGlobalStore(
     useCallback(
       store => {
-        const resource = store.games[game][roomId]
+        const resource = store.games[game].rooms[roomId]
         return selector(resource ?? getLoadingResource())
       },
       [game, roomId, selector]

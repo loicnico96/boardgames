@@ -1,9 +1,9 @@
 import { useCallback } from "react"
 
-import { getRoomData } from "hooks/useRoomData"
+import { getRoomData } from "hooks/store/useRoomData"
 import { startGame } from "lib/api/client/startGame"
 import { useAuthContext } from "lib/auth/context"
-import { getGameSettings } from "lib/games/settings"
+import { SETTINGS } from "lib/games/settings"
 import { RoomStatus } from "lib/model/RoomData"
 import { useGlobalStore } from "lib/store/global"
 
@@ -15,18 +15,18 @@ export function useStartGame(roomId: string) {
       store => {
         const room = getRoomData(store, roomId)
 
-        const { minPlayers } = getGameSettings(room.game)
-
         if (room.status !== RoomStatus.OPENED) {
           return "alreadyStarted"
         }
 
-        if (room.playerOrder.length < minPlayers) {
-          return "notEnoughPlayers"
-        }
-
         if (room.ownerId !== user?.userId) {
           return "notOwner"
+        }
+
+        const { minPlayers } = SETTINGS[room.game]
+
+        if (room.playerOrder.length < minPlayers) {
+          return "notEnoughPlayers"
         }
 
         return undefined

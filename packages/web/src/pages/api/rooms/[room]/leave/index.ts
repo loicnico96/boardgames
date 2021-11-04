@@ -1,9 +1,12 @@
+import { remove } from "@boardgames/utils"
+import update from "immutability-helper"
+
 import { ApiError } from "lib/api/error"
 import { handle, readParam } from "lib/api/server"
 import { getUserId } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
 import { getRoomRef } from "lib/db/collections"
-import { DocRef, FieldValue, firestore } from "lib/firebase/admin"
+import { DocRef, firestore } from "lib/firebase/admin"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 import { Param } from "lib/utils/navigation"
 
@@ -25,7 +28,7 @@ export async function leaveRoom(
     if (roomData.status !== RoomStatus.OPENED) {
       throw new ApiError(
         HttpStatus.FAILED_PRECONDITION,
-        "The game has already started"
+        "This game has already started"
       )
     }
 
@@ -37,13 +40,21 @@ export async function leaveRoom(
     }
 
     if (!roomData.playerOrder.includes(userId)) {
-      return false
+      throw new ApiError(
+        HttpStatus.FAILED_PRECONDITION,
+        "You are not playing in this room"
+      )
     }
 
-    transaction.update(roomRef, {
-      playerOrder: FieldValue.arrayRemove(userId),
-      [`players.${userId}`]: FieldValue.delete(),
-    })
+    transaction.update(
+      roomRef,
+      update(roomData, {
+        playerOrder: playerOrder => remove(playerOrder, userId),
+        players: {
+          $unset: [userId],
+        },
+      })
+    )
 
     return true
   })

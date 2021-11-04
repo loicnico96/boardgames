@@ -230,6 +230,7 @@ export default {
         alreadyFull: "This room is already full",
         alreadyStarted: "The game has already started",
         notAuthenticated: "You must be signed in to create or join rooms",
+        notEnabled: "This game is not enabled",
         noUserName: "You must set an username to create or join rooms",
       },
       tooltip: "Join this room as a player",
@@ -252,6 +253,7 @@ export default {
       label: "Start",
       reason: {
         alreadyStarted: "The game has already started",
+        notEnabled: "This game is not enabled",
         notEnoughPlayers: "This room doesn't have enough players",
         notOwner: "Only the room's owner can start the game",
       },
@@ -265,6 +267,7 @@ export default {
       reason: {
         noGameSelected: "You must select a game",
         notAuthenticated: "You must be signed in to create or join rooms",
+        notEnabled: "This game is not enabled",
         noUserName: "You must set an username to create or join rooms",
       },
       success: "Room created",

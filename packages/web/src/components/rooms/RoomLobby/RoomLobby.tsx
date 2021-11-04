@@ -2,8 +2,8 @@ import { PageContent, Text } from "@boardgames/components"
 import { identity } from "@boardgames/utils"
 
 import { AsyncButton } from "components/ui/AsyncButton"
+import { useRoomData } from "hooks/store/useRoomData"
 import { useCurrentUserId } from "hooks/useCurrentUserId"
-import { useRoomData } from "hooks/useRoomData"
 import { useRoomId } from "hooks/useRoomId"
 import { useTranslations } from "hooks/useTranslations"
 

@@ -13,11 +13,11 @@ export function useCreateRoom(game: GameType | null) {
   const router = useRouter()
 
   const reason = user
-    ? user.userInfo.userName
-      ? game
+    ? game
+      ? user.userInfo.userName
         ? undefined
-        : "noGameSelected"
-      : "noUserName"
+        : "noUserName"
+      : "noGameSelected"
     : "notAuthenticated"
 
   const trigger = useCallback(async () => {

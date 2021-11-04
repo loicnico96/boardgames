@@ -1,5 +1,6 @@
 import { getDir, Direction } from "@boardgames/utils"
 
+import { Tooltip } from "components/ui/Tooltip"
 import { VillageType } from "lib/games/cacao/model"
 import { getVillageWorkers } from "lib/games/cacao/state/resolveState"
 
@@ -31,19 +32,21 @@ export function VillageTile({
   const playerColor = ["yellow", "red", "purple", "white"][playerIndex]
 
   return (
-    <BasicTile background={playerColor} title={playerName} {...props}>
-      <div style={{ position: "absolute", top: 0 }}>
-        {getVillageWorkers(type, getDir(Direction.NORTH - rot))}
-      </div>
-      <div style={{ position: "absolute", right: 4 }}>
-        {getVillageWorkers(type, getDir(Direction.EAST - rot))}
-      </div>
-      <div style={{ position: "absolute", bottom: 0 }}>
-        {getVillageWorkers(type, getDir(Direction.SOUTH - rot))}
-      </div>
-      <div style={{ position: "absolute", left: 4 }}>
-        {getVillageWorkers(type, getDir(Direction.WEST - rot))}
-      </div>
-    </BasicTile>
+    <Tooltip text={playerName}>
+      <BasicTile background={playerColor} {...props}>
+        <div style={{ position: "absolute", top: 0 }}>
+          {getVillageWorkers(type, getDir(Direction.NORTH - rot))}
+        </div>
+        <div style={{ position: "absolute", right: 4 }}>
+          {getVillageWorkers(type, getDir(Direction.EAST - rot))}
+        </div>
+        <div style={{ position: "absolute", bottom: 0 }}>
+          {getVillageWorkers(type, getDir(Direction.SOUTH - rot))}
+        </div>
+        <div style={{ position: "absolute", left: 4 }}>
+          {getVillageWorkers(type, getDir(Direction.WEST - rot))}
+        </div>
+      </BasicTile>
+    </Tooltip>
   )
 }

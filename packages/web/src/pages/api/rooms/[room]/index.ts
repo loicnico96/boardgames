@@ -35,7 +35,7 @@ export async function updateRoom<T extends GameType>(
     if (roomData.status !== RoomStatus.OPENED) {
       throw new ApiError(
         HttpStatus.FAILED_PRECONDITION,
-        "The game has already started"
+        "This game has already started"
       )
     }
 

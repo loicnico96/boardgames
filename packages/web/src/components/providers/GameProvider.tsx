@@ -27,14 +27,14 @@ export function GameProvider<T extends GameType>({
   const roomId = useRoomId()
   const t = useTranslations()
 
-  const { setGameResource } = useGlobalActions()
+  const { setGameState } = useGlobalActions()
 
   const error = useGlobalStore(
-    store => store.games[game][roomId]?.error ?? null
+    store => store.games[game].rooms[roomId]?.error ?? null
   )
 
   const loading = useGlobalStore(
-    store => store.games[game][roomId]?.loading !== false
+    store => store.games[game].rooms[roomId]?.loading !== false
   )
 
   const isResolving = useRef(false)
@@ -48,7 +48,7 @@ export function GameProvider<T extends GameType>({
 
         async function onStateChange(state: GameState<T>, event: GameEvent<T>) {
           logger.log("Event", event)
-          setGameResource(game, roomId, getLoadedResource(state))
+          setGameState(game, roomId, getLoadedResource(state))
           return wait(500)
         }
 
@@ -64,10 +64,10 @@ export function GameProvider<T extends GameType>({
                   ctx.setState(resource.data)
                   await ctx.resolve(onStateChange)
                   logger.log("State", ctx.state)
-                  setGameResource(game, roomId, getLoadedResource(ctx.state))
+                  setGameState(game, roomId, getLoadedResource(ctx.state))
                 } else if (resource?.error) {
                   logger.error(resource.error)
-                  setGameResource(game, roomId, resource)
+                  setGameState(game, roomId, resource)
                 }
               }
             } finally {
@@ -79,7 +79,7 @@ export function GameProvider<T extends GameType>({
         resourceQueue.current.push(result)
         resolveQueue().catch(console.error)
       },
-      [context, game, roomId, setGameResource]
+      [context, game, roomId, setGameState]
     )
   )
 
