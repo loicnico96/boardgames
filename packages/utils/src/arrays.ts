@@ -1,5 +1,9 @@
 import { Function, isFunction } from "./types"
 
+export function count<T>(array: ReadonlyArray<T>, value: T): number {
+  return array.filter(item => item === value).length
+}
+
 export function fill<T>(length: number, value: (index: number) => T): T[]
 export function fill<T>(length: number, value: Exclude<T, Function>): T[]
 export function fill<T>(length: number, value: T | ((index: number) => T)) {
@@ -70,4 +74,8 @@ export function sortBy<T>(
   const clone = array.slice()
   mutableSortBy(clone, ...sortFns)
   return clone
+}
+
+export function unique<T>(array: ReadonlyArray<T>): Array<T> {
+  return Array.from(new Set(array))
 }

@@ -8,6 +8,7 @@ import {
   array,
   assert,
   boolean,
+  count,
   Direction,
   enumValue,
   fill,
@@ -18,7 +19,7 @@ import {
   objectUnion,
 } from "@boardgames/utils"
 
-import { getDeck } from "./card"
+import { getDeck, isValidCard } from "./card"
 import { MAX_HAND_SIZE, SEQUENCE_COUNT } from "./constants"
 import {
   BoardId,
@@ -173,12 +174,38 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
   }
 
   validateAction(playerId: string, action: BaseAction): RoborallyAction {
-    return objectUnion("code", {
+    const player = this.player(playerId)
+
+    const validated = objectUnion("code", {
       program: {
         powerDown: boolean(),
-        program: array(nullable(integer()), { length: SEQUENCE_COUNT }),
+        program: array(nullable(integer())),
       },
       ready: {} as Record<string, never>,
     })(action)
+
+    if (validated.code === "program") {
+      assert(this.state.phase === GamePhase.PROGRAM, "Not available")
+      assert(validated.program.length === 5, "Program must contain 5 cards")
+
+      for (let index = 0; index < SEQUENCE_COUNT; index++) {
+        const card = validated.program[index]
+
+        if (player.powerDown) {
+          assert(card === null, "Cannot program cards while powered down")
+        } else if (player.program[index] !== null) {
+          assert(card === player.program[index], "Register is locked")
+        } else {
+          assert(card !== null, "Register is empty")
+          assert(isValidCard(card), "Invalid card")
+          assert(player.hand.includes(card), "Card is not in your hand")
+          assert(count(validated.program, card) === 1, "Duplicate card")
+        }
+      }
+    } else {
+      assert(this.state.phase === GamePhase.READY, "Not available")
+    }
+
+    return validated
   }
 }

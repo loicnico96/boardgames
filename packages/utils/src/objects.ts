@@ -5,7 +5,7 @@ export type ObjectUnion<
   U extends string,
   T extends Record<string, Record<string, unknown>>
 > = {
-  [S in Key<T>]: {
-    [K in Key<T[S]> | U]: K extends U ? S : T[S][K]
+  [S in Key<T>]: T[S] & {
+    [K in U]: S
   }
 }[Key<T>]
