@@ -18,6 +18,8 @@ import {
   objectUnion,
 } from "@boardgames/utils"
 
+import { getDeck } from "./card"
+import { MAX_HAND_SIZE, SEQUENCE_COUNT } from "./constants"
 import {
   BoardId,
   GamePhase,
@@ -34,18 +36,29 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
     options: RoborallyOptions,
     seed: number
   ): RoborallyState {
+    // TODO: Initialize checkpoints
+    const checkpoints = [
+      {
+        x: 3,
+        y: 3,
+      },
+      {
+        x: 7,
+        y: 7,
+      },
+    ]
+
     return {
       // TODO: Initialize board
       board: {
         cells: {},
         dimensions: {
-          x: 0,
-          y: 0,
+          x: 12,
+          y: 12,
         },
       },
       boardId: options.boardId,
-      // TODO: Initialize checkpoints
-      checkpoints: [],
+      checkpoints,
       currentPlayerId: null,
       over: false,
       phase: GamePhase.READY,
@@ -58,16 +71,11 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
           active: true,
           checkpoint: 0,
           damage: 0,
-          // TODO: Initialize direction
           dir: Direction.NORTH,
           hand: [],
-          // TODO: Initialize position
-          pos: {
-            x: 0,
-            y: 0,
-          },
+          pos: checkpoints[0],
           powerDown: false,
-          program: fill(5, null),
+          program: fill(SEQUENCE_COUNT, null),
           ready: false,
           virtual: true,
         },
@@ -81,10 +89,20 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
   async resolveState() {
     switch (this.state.phase) {
       case GamePhase.READY: {
+        const deck = getDeck()
+
+        this.generator.shuffle(deck)
+
         for (const playerId of this.state.playerOrder) {
           const player = this.player(playerId)
           assert(player.action?.code === "ready", "Invalid action")
-          // TODO: Deal cards
+          const handSize = MAX_HAND_SIZE - player.damage
+
+          this.updatePlayer(playerId, {
+            $merge: {
+              hand: deck.splice(0, handSize),
+            },
+          })
         }
 
         this.update({
@@ -107,7 +125,6 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
           this.updatePlayer(playerId, {
             $merge: {
               hand: [],
-              powerDown: player.action.powerDown,
               program: player.action.program,
             },
           })
@@ -122,6 +139,14 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
         })
 
         for (const playerId of this.state.playerOrder) {
+          const player = this.player(playerId)
+          assert(player.action?.code === "program", "Invalid action")
+          this.updatePlayer(playerId, {
+            $merge: {
+              powerDown: player.action.powerDown,
+            },
+          })
+
           this.requireAction(playerId)
         }
 
@@ -151,7 +176,7 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
     return objectUnion("code", {
       program: {
         powerDown: boolean(),
-        program: array(nullable(integer({ min: 0 })), { length: 5 }),
+        program: array(nullable(integer()), { length: SEQUENCE_COUNT }),
       },
       ready: {} as Record<string, never>,
     })(action)

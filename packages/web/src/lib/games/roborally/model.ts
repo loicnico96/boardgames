@@ -1,4 +1,4 @@
-import { BaseEvent, BasePlayer, BaseState, GameModel } from "@boardgames/common"
+import { BasePlayer, BaseState, GameModel } from "@boardgames/common"
 import { Direction, ObjectUnion, Pos } from "@boardgames/utils"
 
 export enum BoardId {
@@ -63,7 +63,12 @@ export type RoborallyAction = ObjectUnion<
   }
 >
 
-export type RoborallyEvent = BaseEvent
+export type RoborallyEvent = ObjectUnion<
+  "code",
+  {
+    // TODO
+  }
+>
 
 export type RoborallyOptions = {
   boardId: BoardId
