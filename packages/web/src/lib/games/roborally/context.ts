@@ -9,7 +9,6 @@ import {
   assert,
   boolean,
   count,
-  Direction,
   enumValue,
   fill,
   generate,
@@ -29,6 +28,8 @@ import {
   RoborallyOptions,
   RoborallyState,
 } from "./model"
+import { nextPhase } from "./resolve/nextPhase"
+import { resolveSequence } from "./resolve/resolveSequence"
 
 export class RoborallyContext extends BaseContext<RoborallyModel> {
   getInitialGameState(
@@ -69,15 +70,16 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
         {
           ...players[playerId],
           action: null,
-          active: true,
           checkpoint: 0,
+          checkpointDir: 0,
           damage: 0,
-          dir: Direction.NORTH,
+          destroyed: false,
           hand: [],
           pos: checkpoints[0],
           powerDown: false,
           program: fill(SEQUENCE_COUNT, null),
           ready: false,
+          rot: 0,
           virtual: true,
         },
       ]),
@@ -104,19 +106,11 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
               hand: deck.splice(0, handSize),
             },
           })
-        }
 
-        this.update({
-          $merge: {
-            phase: GamePhase.PROGRAM,
-          },
-        })
-
-        for (const playerId of this.state.playerOrder) {
           this.requireAction(playerId)
         }
 
-        return
+        return nextPhase(this, GamePhase.PROGRAM)
       }
 
       case GamePhase.PROGRAM: {
@@ -131,12 +125,19 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
           })
         }
 
-        // TODO: Resolve programs
+        for (let sequence = 0; sequence < SEQUENCE_COUNT; sequence++) {
+          await resolveSequence(this, sequence)
+
+          if (this.isOver()) {
+            return
+          }
+        }
 
         this.update({
           $merge: {
-            phase: GamePhase.READY,
+            sequence: null,
           },
+          turn: turn => turn + 1,
         })
 
         for (const playerId of this.state.playerOrder) {
@@ -144,14 +145,18 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
           assert(player.action?.code === "program", "Invalid action")
           this.updatePlayer(playerId, {
             $merge: {
+              // TODO: Respawn destroyed players
+              // TODO: Remove all damage if powered down
               powerDown: player.action.powerDown,
+              // TODO: Lock registers based on damage
+              program: [null, null, null, null, null],
             },
           })
 
           this.requireAction(playerId)
         }
 
-        return
+        return nextPhase(this, GamePhase.READY)
       }
 
       default:

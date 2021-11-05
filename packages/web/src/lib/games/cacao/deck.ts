@@ -26,7 +26,7 @@ export function getForestDeck(
         [ForestType.KITCHEN]: options.useChocolate ? 2 : 0,
         [ForestType.MARKET_2]: 1, // + 1 used in board setup
         [ForestType.MARKET_3]:
-          4 - (options.useChocolate ? 2 : 0) - (options.useBigMarket ? 1 : 0),
+          3 - (options.useChocolate ? 2 : 0) - (options.useBigMarket ? 1 : 0),
         [ForestType.MARKET_3_CHOCOLATE]: options.useChocolate ? 3 : 0,
         [ForestType.MARKET_3_CHOCOLATE]: options.useChocolate ? 2 : 0,
         [ForestType.MARKET_4]: 1,

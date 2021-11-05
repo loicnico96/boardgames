@@ -1,17 +1,22 @@
 import { PageError, PageLoader } from "@boardgames/components"
-import { wait } from "@boardgames/utils"
+import { toError, wait } from "@boardgames/utils"
 import { ReactNode, useCallback, useRef } from "react"
 
 import { useDocumentListener } from "hooks/db/useDocumentListener"
+import { useGameResource } from "hooks/store/useGameResource"
 import { useRoomId } from "hooks/useRoomId"
 import { useTranslations } from "hooks/useTranslations"
 import { getClientRef } from "lib/db/collections"
 import { WithId } from "lib/db/types"
 import { Constructor, GameContext } from "lib/games/context"
 import { GameEvent, GameState, GameType } from "lib/games/types"
-import { useGlobalActions, useGlobalStore } from "lib/store/global"
+import { useGlobalActions } from "lib/store/global"
 import { Logger } from "lib/utils/logger"
-import { getLoadedResource, Resource } from "lib/utils/resource"
+import {
+  getErrorResource,
+  getLoadedResource,
+  Resource,
+} from "lib/utils/resource"
 
 export type GameProviderProps<T extends GameType> = {
   children: ReactNode
@@ -29,13 +34,8 @@ export function GameProvider<T extends GameType>({
 
   const { setGameState } = useGlobalActions()
 
-  const error = useGlobalStore(
-    store => store.games[game].rooms[roomId]?.error ?? null
-  )
-
-  const loading = useGlobalStore(
-    store => store.games[game].rooms[roomId]?.loading !== false
-  )
+  const resourceError = useGameResource(game, roomId, res => res.error)
+  const resourceLoading = useGameResource(game, roomId, res => res.loading)
 
   const isResolving = useRef(false)
   const resourceQueue = useRef<Resource<WithId<GameState<T>>>[]>([])
@@ -60,11 +60,17 @@ export function GameProvider<T extends GameType>({
                 const resource = resourceQueue.current.shift()
                 if (resource?.data) {
                   logger.log("State", resource.data)
-                  const ctx = new context()
-                  ctx.setState(resource.data)
-                  await ctx.resolve(onStateChange)
-                  logger.log("State", ctx.state)
-                  setGameState(game, roomId, getLoadedResource(ctx.state))
+                  try {
+                    const ctx = new context()
+                    ctx.setState(resource.data)
+                    ctx.onStateChange(onStateChange)
+                    await ctx.resolve()
+                    logger.log("State", ctx.state)
+                    setGameState(game, roomId, getLoadedResource(ctx.state))
+                  } catch (error) {
+                    logger.error(error)
+                    setGameState(game, roomId, getErrorResource(toError(error)))
+                  }
                 } else if (resource?.error) {
                   logger.error(resource.error)
                   setGameState(game, roomId, resource)
@@ -83,12 +89,12 @@ export function GameProvider<T extends GameType>({
     )
   )
 
-  if (loading) {
+  if (resourceLoading) {
     return <PageLoader message={t.game.pageLoading} />
   }
 
-  if (error) {
-    return <PageError error={error} />
+  if (resourceError) {
+    return <PageError error={resourceError} />
   }
 
   return <>{children}</>

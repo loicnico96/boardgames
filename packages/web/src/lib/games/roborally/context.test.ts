@@ -1,70 +1,64 @@
-import { Direction, fill } from "@boardgames/utils"
+import { fill } from "@boardgames/utils"
+
+import { createTestContext, resolve } from "../test/utils"
 
 import { MAX_HAND_SIZE, SEQUENCE_COUNT } from "./constants"
 import { RoborallyContext } from "./context"
-import { GamePhase, RoborallyAction } from "./model"
+import { GamePhase } from "./model"
 
 describe("RoborallyContext", () => {
   it("starts a new game in Ready phase", async () => {
-    const context = new RoborallyContext()
+    const context = createTestContext(RoborallyContext, 4)
 
-    context.initState(
-      ["player1", "player2", "player3"],
-      {
-        player1: {
-          name: "Player 1",
-        },
-        player2: {
-          name: "Player 2",
-        },
-        player3: {
-          name: "Player 3",
-        },
-      },
-      context.getDefaultOptions(),
-      0
-    )
-
-    await context.resolve()
+    await resolve(context, {})
 
     expect(context.state.phase).toBe(GamePhase.READY)
-    expect(context.state.playerOrder).toHaveLength(3)
+    expect(context.state.playerOrder).toHaveLength(4)
     expect(context.state.turn).toBe(0)
 
     for (const playerId of context.state.playerOrder) {
       const player = context.player(playerId)
-      expect(player.active).toBe(true)
       expect(player.checkpoint).toBe(0)
       expect(player.damage).toBe(0)
-      expect(player.dir).toBe(Direction.NORTH)
+      expect(player.destroyed).toBe(false)
       expect(player.hand).toHaveLength(0)
       expect(player.pos).toStrictEqual(context.state.checkpoints[0])
       expect(player.powerDown).toBe(false)
       expect(player.program).toStrictEqual(fill(SEQUENCE_COUNT, null))
       expect(player.ready).toBe(false)
+      expect(player.rot).toBe(0)
       expect(player.virtual).toBe(true)
     }
+  })
 
-    const action: RoborallyAction = { code: "ready" }
+  it("deals cards and starts Program phase when all players are ready", async () => {
+    const context = createTestContext(RoborallyContext, 4)
 
-    context.validateAction("player1", action)
-    context.setAction("player1", action)
-
-    await context.resolve()
-
-    expect(context.state.phase).toBe(GamePhase.READY)
-
-    context.validateAction("player2", action)
-    context.setAction("player2", action)
-
-    await context.resolve()
+    await resolve(context, {})
 
     expect(context.state.phase).toBe(GamePhase.READY)
 
-    context.validateAction("player3", action)
-    context.setAction("player3", action)
+    for (const playerId of context.state.playerOrder) {
+      const player = context.player(playerId)
+      expect(player.hand).toHaveLength(0)
+      expect(player.powerDown).toBe(false)
+      expect(player.program).toStrictEqual(fill(SEQUENCE_COUNT, null))
+      expect(player.ready).toBe(false)
+    }
 
-    await context.resolve()
+    await resolve(context, { player1: { code: "ready" } })
+
+    expect(context.state.phase).toBe(GamePhase.READY)
+
+    await resolve(context, { player2: { code: "ready" } })
+
+    expect(context.state.phase).toBe(GamePhase.READY)
+
+    await resolve(context, { player3: { code: "ready" } })
+
+    expect(context.state.phase).toBe(GamePhase.READY)
+
+    await resolve(context, { player4: { code: "ready" } })
 
     expect(context.state.phase).toBe(GamePhase.PROGRAM)
 
@@ -77,25 +71,8 @@ describe("RoborallyContext", () => {
     }
   })
 
-  it("validates actions", () => {
-    const context = new RoborallyContext()
-
-    context.initState(
-      ["player1", "player2", "player3"],
-      {
-        player1: {
-          name: "Player 1",
-        },
-        player2: {
-          name: "Player 2",
-        },
-        player3: {
-          name: "Player 3",
-        },
-      },
-      context.getDefaultOptions(),
-      0
-    )
+  it("validates Ready action", () => {
+    const context = createTestContext(RoborallyContext, 4)
 
     expect(() =>
       context.validateAction("player1", {
@@ -108,9 +85,25 @@ describe("RoborallyContext", () => {
     context.validateAction("player1", {
       code: "ready",
     })
+  })
 
-    context.state.phase = GamePhase.PROGRAM
-    context.state.players.player1.hand = [1, 2, 3, 4, 5, 6, 7, 8]
+  it("validates Program action when powered up", () => {
+    const context = createTestContext(RoborallyContext, 4)
+
+    context.update({
+      $merge: {
+        phase: GamePhase.PROGRAM,
+      },
+      players: {
+        player1: {
+          $merge: {
+            hand: [1, 2, 3, 4, 5, 6, 7, 8],
+            powerDown: false,
+            program: [null, null, null, null, null],
+          },
+        },
+      },
+    })
 
     expect(() =>
       context.validateAction("player1", {
@@ -170,8 +163,25 @@ describe("RoborallyContext", () => {
       powerDown: false,
       program: [1, 2, 3, 4, 5],
     })
+  })
 
-    context.state.players.player1.powerDown = true
+  it("validates Program action when powered down", () => {
+    const context = createTestContext(RoborallyContext, 4)
+
+    context.update({
+      $merge: {
+        phase: GamePhase.PROGRAM,
+      },
+      players: {
+        player1: {
+          $merge: {
+            hand: [],
+            powerDown: true,
+            program: [null, null, null, null, null],
+          },
+        },
+      },
+    })
 
     expect(() =>
       context.validateAction("player1", {
@@ -186,15 +196,31 @@ describe("RoborallyContext", () => {
       powerDown: false,
       program: [null, null, null, null, null],
     })
+  })
 
-    context.state.players.player1.powerDown = false
-    context.state.players.player1.program = [null, null, null, 7, 8]
+  it("validates Program action with locked registers", () => {
+    const context = createTestContext(RoborallyContext, 4)
+
+    context.update({
+      $merge: {
+        phase: GamePhase.PROGRAM,
+      },
+      players: {
+        player1: {
+          $merge: {
+            hand: [1, 2, 3, 4, 5, 6],
+            powerDown: false,
+            program: [null, null, null, 7, 8],
+          },
+        },
+      },
+    })
 
     expect(() =>
       context.validateAction("player1", {
         code: "program",
         powerDown: true,
-        program: [1, 2, 3, 6, 8],
+        program: [1, 2, 3, 4, 8],
       })
     ).toThrow(/locked/i)
 

@@ -7,6 +7,11 @@ export enum Direction {
   WEST = 3,
 }
 
+export enum Rotation {
+  LEFT = -1,
+  RIGHT = 1,
+}
+
 export const Directions = [
   Direction.NORTH,
   Direction.EAST,

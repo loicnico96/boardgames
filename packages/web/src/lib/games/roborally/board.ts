@@ -4,10 +4,10 @@ import { Cell, CellType, RoborallyState } from "./model"
 
 export function isInBounds(state: RoborallyState, pos: Pos): boolean {
   return (
-    pos.x < 0 ||
-    pos.y < 0 ||
-    pos.x >= state.board.dimensions.x ||
-    pos.y >= state.board.dimensions.y
+    pos.x >= 0 &&
+    pos.y >= 0 &&
+    pos.x < state.board.dimensions.x &&
+    pos.y < state.board.dimensions.y
   )
 }
 

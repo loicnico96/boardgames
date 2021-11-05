@@ -1,5 +1,5 @@
 import { BasePlayer, BaseState, GameModel } from "@boardgames/common"
-import { Direction, ObjectUnion, Pos } from "@boardgames/utils"
+import { Direction, ObjectUnion, Pos, Rotation } from "@boardgames/utils"
 
 export enum BoardId {
   DEFAULT = "default",
@@ -24,7 +24,7 @@ export type Cell = ObjectUnion<
       water?: boolean
     }
     [CellType.GEAR]: {
-      rot: number
+      rot: Rotation
       water?: boolean
     }
     [CellType.CONVEYOR]: {
@@ -44,7 +44,7 @@ export type Cell = ObjectUnion<
 export enum GamePhase {
   READY = 0,
   PROGRAM = 1,
-  RESOLVE_PLAYER = 2,
+  RESOLVE_PROGRAM = 2,
   RESOLVE_CONVEYOR_FAST = 3,
   RESOLVE_CONVEYOR = 4,
   RESOLVE_GEAR = 5,
@@ -66,7 +66,49 @@ export type RoborallyAction = ObjectUnion<
 export type RoborallyEvent = ObjectUnion<
   "code",
   {
-    // TODO
+    nextPhase: {
+      phase: GamePhase
+    }
+    playerCard: {
+      card: number
+      playerId: string
+    }
+    playerCheckpoint: {
+      players: {
+        [playerId in string]: {
+          checkpoint: number
+        }
+      }
+    }
+    playerDamage: {
+      players: {
+        [playerId in string]: {
+          damage: number
+        }
+      }
+    }
+    playerDestroy: {
+      players: {
+        [playerId in string]: {
+          destroyed: boolean
+        }
+      }
+    }
+    playerMove: {
+      players: {
+        [playerId in string]: {
+          dir?: Direction
+          rot?: number
+        }
+      }
+    }
+    playerRepair: {
+      players: {
+        [playerId in string]: {
+          repair: number
+        }
+      }
+    }
   }
 >
 
@@ -76,12 +118,13 @@ export type RoborallyOptions = {
 }
 
 export type RoborallyPlayer = BasePlayer<RoborallyAction> & {
-  active: boolean
   checkpoint: number
+  checkpointDir: Direction
   damage: number
-  dir: Direction
+  destroyed: boolean
   hand: number[]
   pos: Pos
+  rot: number
   powerDown: boolean
   program: (number | null)[]
   virtual: boolean

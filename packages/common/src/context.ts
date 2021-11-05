@@ -141,8 +141,11 @@ export abstract class BaseContext<M extends GameModel> {
     } as Spec<M["player"]>)
   }
 
-  public async resolve(onStateChange?: StateChangeHandler<M>): Promise<void> {
+  public onStateChange(onStateChange: StateChangeHandler<M>): void {
     this.__onStateChange = onStateChange
+  }
+
+  public async resolve(): Promise<void> {
     while (!this.isOver() && !this.isWaitingForAction()) {
       await this.resolveState()
     }

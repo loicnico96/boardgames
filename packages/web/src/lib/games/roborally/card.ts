@@ -14,7 +14,7 @@ const ACTION_COUNTS = [
     count: 6,
   },
   {
-    actions: [CardAction.ROTATE_LEFT, CardAction.ROTATE_BACK],
+    actions: [CardAction.ROTATE_LEFT, CardAction.ROTATE_RIGHT],
     count: 18,
   },
   {

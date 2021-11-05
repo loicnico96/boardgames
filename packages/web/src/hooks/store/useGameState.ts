@@ -4,6 +4,8 @@ import { useRoomId } from "hooks/useRoomId"
 import { GameState, GameType } from "lib/games/types"
 import { useGlobalStore } from "lib/store/global"
 
+import { getGameResource } from "./useGameResource"
+
 export function useGameState<T extends GameType, R>(
   game: T,
   selector: (state: GameState<T>) => R
@@ -13,9 +15,9 @@ export function useGameState<T extends GameType, R>(
   return useGlobalStore(
     useCallback(
       store => {
-        const resource = store.games[game].rooms[roomId]
+        const resource = getGameResource(store, game, roomId)
 
-        if (!resource?.data) {
+        if (!resource.data) {
           throw Error("Invalid game context")
         }
 
