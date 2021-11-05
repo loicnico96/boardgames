@@ -67,8 +67,8 @@ export abstract class BaseContext<M extends GameModel> {
   }
 
   public isWaitingForAction(): boolean {
-    const { playerOrder, players } = this.state
-    return playerOrder.some(playerId => !players[playerId].ready)
+    const { playerOrder } = this.state
+    return playerOrder.some(playerId => !this.player(playerId).ready)
   }
 
   public player(playerId: string): M["player"] {
@@ -107,22 +107,6 @@ export abstract class BaseContext<M extends GameModel> {
     } as Spec<M["state"]>)
   }
 
-  public setSeed(seed: number): void {
-    this.update({
-      $merge: {
-        seed,
-      },
-    } as Spec<M["state"]>)
-  }
-
-  public endGame(): void {
-    this.update({
-      $merge: {
-        over: true,
-      },
-    } as Spec<M["state"]>)
-  }
-
   public requireAction(playerId: string): void {
     this.updatePlayer(playerId, {
       $merge: {
@@ -141,22 +125,39 @@ export abstract class BaseContext<M extends GameModel> {
     } as Spec<M["player"]>)
   }
 
+  public setSeed(seed: number): void {
+    this.update({
+      $merge: {
+        seed,
+      },
+    } as Spec<M["state"]>)
+  }
+
   public onStateChange(onStateChange: StateChangeHandler<M>): void {
     this.__onStateChange = onStateChange
   }
 
-  public async resolve(): Promise<void> {
+  public async resolve(): Promise<M["state"]> {
     while (!this.isOver() && !this.isWaitingForAction()) {
       await this.resolveState()
     }
+
+    return this.state
   }
 
-  public async post<C extends M["event"]["code"]>(
-    code: C,
-    data: Omit<Extract<M["event"], { code: C }>, "code">
-  ): Promise<void> {
+  public async post(event: M["event"]): Promise<void> {
     if (this.__onStateChange) {
-      await this.__onStateChange(this.state, { code, ...data })
+      await this.__onStateChange(this.state, event)
     }
+  }
+
+  public async endGame(event: M["event"]): Promise<void> {
+    this.update({
+      $merge: {
+        over: true,
+      },
+    } as Spec<M["state"]>)
+
+    return this.post(event)
   }
 }

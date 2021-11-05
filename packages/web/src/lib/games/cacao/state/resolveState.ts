@@ -46,7 +46,9 @@ export async function gainBeans(
 
   if (realAmount > 0) {
     context.updatePlayer(playerId, { beans: beans => beans + realAmount })
-    await context.post("gainBeans", {
+
+    await context.post({
+      code: "gainBeans",
       amount: realAmount,
       dir,
       playerId,
@@ -67,7 +69,9 @@ export async function gainCoins(
   assert(amount > 0, "Invalid")
 
   context.updatePlayer(playerId, { coins: coins => coins + amount })
-  await context.post("gainCoins", {
+
+  await context.post({
+    code: "gainCoins",
     amount,
     dir,
     playerId,
@@ -89,7 +93,9 @@ export async function gainSun(
 
   if (realAmount > 0) {
     context.updatePlayer(playerId, { sun: sun => sun + realAmount })
-    await context.post("gainSun", {
+
+    await context.post({
+      code: "gainSun",
       amount: realAmount,
       dir,
       playerId,
@@ -112,7 +118,9 @@ export async function gainWater(
 
   if (realAmount > 0) {
     context.updatePlayer(playerId, { water: water => water + realAmount })
-    await context.post("gainWater", {
+
+    await context.post({
+      code: "gainWater",
       amount: realAmount,
       dir,
       playerId,
@@ -133,7 +141,12 @@ export async function spendSun(
 
   if (realAmount > 0) {
     context.updatePlayer(playerId, { sun: sun => sun - realAmount })
-    await context.post("spendSun", { playerId, amount: realAmount })
+
+    await context.post({
+      code: "spendSun",
+      amount: realAmount,
+      playerId,
+    })
   }
 
   return realAmount
@@ -155,7 +168,8 @@ export async function makeChocolate(
       chocolate: chocolate => chocolate + realAmount,
     })
 
-    await context.post("makeChocolate", {
+    await context.post({
+      code: "makeChocolate",
       amount: realAmount,
       dir,
       playerId,
@@ -183,7 +197,8 @@ export async function sellBeans(
       coins: coins => coins + realAmount * price,
     })
 
-    await context.post("sellBeans", {
+    await context.post({
+      code: "sellBeans",
       amount: realAmount,
       dir,
       playerId,
@@ -212,7 +227,8 @@ export async function sellChocolate(
       coins: coins => coins + realAmount * price,
     })
 
-    await context.post("sellChocolate", {
+    await context.post({
+      code: "sellChocolate",
       amount: realAmount,
       dir,
       playerId,
@@ -229,16 +245,23 @@ export async function nextPlayer(
   playerId: string
 ): Promise<void> {
   if (context.player(playerId).hand.length === 0) {
-    context.update({ $merge: { currentPlayerId: null } })
-    context.endGame()
-    return
+    return context.endGame({
+      code: "win",
+    })
   }
 
-  context.update({ $merge: { currentPlayerId: playerId } })
+  context.update({
+    $merge: {
+      currentPlayerId: playerId,
+    },
+  })
 
   context.requireAction(playerId)
 
-  await context.post("nextPlayer", { playerId })
+  return context.post({
+    code: "nextPlayer",
+    playerId,
+  })
 }
 
 export function getVillageWorkers(
@@ -590,7 +613,11 @@ export async function fillForest(
 
   context.setTile(forestPos, { type })
 
-  await context.post("placeForestTile", { pos: forestPos, type })
+  return context.post({
+    code: "placeForestTile",
+    pos: forestPos,
+    type,
+  })
 }
 
 export async function fillForestFromDeck(
@@ -613,7 +640,11 @@ export async function fillForestFromDeck(
 
   context.setTile(forestPos, { type })
 
-  await context.post("placeForestTile", { pos: forestPos, type })
+  return context.post({
+    code: "placeForestTile",
+    pos: forestPos,
+    type,
+  })
 }
 
 export async function placeVillageTile(
@@ -648,7 +679,8 @@ export async function placeVillageTile(
     type,
   })
 
-  await context.post("placeVillageTile", {
+  return context.post({
+    code: "placeVillageTile",
     overbuilt,
     playerId,
     pos: villagePos,
@@ -695,7 +727,7 @@ export async function resolvePlayerAction(
     }
   }
 
-  await resolveWorkers(context, action.village.pos, filledPositions)
+  return resolveWorkers(context, action.village.pos, filledPositions)
 }
 
 export async function refillPlayerHand(
@@ -716,7 +748,8 @@ export async function refillPlayerHand(
       },
     })
 
-    await context.post("drawTiles", {
+    await context.post({
+      code: "drawTiles",
       amount: refillCount,
       playerId,
     })
@@ -737,7 +770,11 @@ export async function refillForestTiles(context: CacaoContext) {
         },
       })
 
-      await context.post("refillForest", { index, type })
+      await context.post({
+        code: "refillForest",
+        index,
+        type,
+      })
     }
   }
 }

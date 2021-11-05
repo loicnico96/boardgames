@@ -26,7 +26,7 @@ export type GameProviderProps<T extends GameType> = {
 
 export function GameProvider<T extends GameType>({
   children,
-  context,
+  context: Context,
   game,
 }: GameProviderProps<T>) {
   const roomId = useRoomId()
@@ -49,7 +49,23 @@ export function GameProvider<T extends GameType>({
         async function onStateChange(state: GameState<T>, event: GameEvent<T>) {
           logger.log("Event", event)
           setGameState(game, roomId, getLoadedResource(state))
-          return wait(500)
+          return wait(600)
+        }
+
+        async function handleState(state: GameState<T>) {
+          logger.log("State", state)
+          setGameState(game, roomId, getLoadedResource(state))
+
+          try {
+            const context = new Context()
+            context.onStateChange(onStateChange)
+            context.setState(state)
+            await context.resolve()
+            logger.log("State", context.state)
+          } catch (error) {
+            logger.error(error)
+            setGameState(game, roomId, getErrorResource(toError(error)))
+          }
         }
 
         async function resolveQueue() {
@@ -59,18 +75,7 @@ export function GameProvider<T extends GameType>({
               while (resourceQueue.current.length > 0) {
                 const resource = resourceQueue.current.shift()
                 if (resource?.data) {
-                  logger.log("State", resource.data)
-                  try {
-                    const ctx = new context()
-                    ctx.setState(resource.data)
-                    ctx.onStateChange(onStateChange)
-                    await ctx.resolve()
-                    logger.log("State", ctx.state)
-                    setGameState(game, roomId, getLoadedResource(ctx.state))
-                  } catch (error) {
-                    logger.error(error)
-                    setGameState(game, roomId, getErrorResource(toError(error)))
-                  }
+                  await handleState(resource.data)
                 } else if (resource?.error) {
                   logger.error(resource.error)
                   setGameState(game, roomId, resource)
@@ -85,7 +90,7 @@ export function GameProvider<T extends GameType>({
         resourceQueue.current.push(result)
         resolveQueue().catch(console.error)
       },
-      [context, game, roomId, setGameState]
+      [Context, game, roomId, setGameState]
     )
   )
 

@@ -25,7 +25,9 @@ export async function nextGame(context: PapayooContext) {
     context.requireAction(playerId)
   }
 
-  await context.post("nextGame", {})
+  await context.post({
+    code: "nextGame",
+  })
 }
 
 export async function nextPlayer(context: PapayooContext, playerId: string) {
@@ -37,7 +39,8 @@ export async function nextPlayer(context: PapayooContext, playerId: string) {
 
   context.requireAction(playerId)
 
-  await context.post("nextPlayer", {
+  await context.post({
+    code: "nextPlayer",
     playerId,
   })
 }
@@ -51,7 +54,8 @@ export async function nextRound(context: PapayooContext) {
     },
   })
 
-  await context.post("nextRound", {
+  await context.post({
+    code: "nextRound",
     playerId: startingPlayerId,
   })
 
@@ -72,7 +76,8 @@ export async function endRound(context: PapayooContext) {
     score: total => total + score,
   })
 
-  await context.post("score", {
+  await context.post({
+    code: "score",
     playerId: highestCardPlayerId,
     cards,
     score,
@@ -106,7 +111,8 @@ export async function playCard(
     },
   })
 
-  await context.post("playCard", {
+  await context.post({
+    code: "playCard",
     playerId,
     card,
   })
@@ -130,7 +136,9 @@ export async function swapCards(context: PapayooContext) {
     })
   }
 
-  await context.post("swapCard", {})
+  await context.post({
+    code: "swapCard",
+  })
 
   context.update({
     $merge: {

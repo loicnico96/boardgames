@@ -26,6 +26,9 @@ export async function destroyPlayers(
   }
 
   if (Object.keys(players).length > 0) {
-    await context.post("playerDestroy", { players })
+    await context.post({
+      code: "playerDestroy",
+      players,
+    })
   }
 }

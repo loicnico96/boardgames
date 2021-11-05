@@ -38,7 +38,8 @@ export async function resolveProgramCard(
   const player = context.player(playerId)
   const action = getCardAction(card)
 
-  await context.post("playerCard", {
+  await context.post({
+    code: "playerCard",
     playerId,
     card,
   })

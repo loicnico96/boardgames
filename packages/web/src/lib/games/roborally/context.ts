@@ -128,8 +128,17 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
         for (let sequence = 0; sequence < SEQUENCE_COUNT; sequence++) {
           await resolveSequence(this, sequence)
 
-          if (this.isOver()) {
-            return
+          const winnerId = this.state.playerOrder.find(playerId => {
+            const checkpointCount = this.state.checkpoints.length - 1
+            const player = this.player(playerId)
+            return player.checkpoint === checkpointCount
+          })
+
+          if (winnerId !== undefined) {
+            return this.endGame({
+              code: "win",
+              playerId: winnerId,
+            })
           }
         }
 

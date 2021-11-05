@@ -26,6 +26,9 @@ export async function resolveRepairs(context: RoborallyContext): Promise<void> {
   }
 
   if (Object.keys(players).length > 0) {
-    await context.post("playerRepair", { players })
+    await context.post({
+      code: "playerRepair",
+      players,
+    })
   }
 }

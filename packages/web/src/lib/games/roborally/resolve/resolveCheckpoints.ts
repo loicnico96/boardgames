@@ -35,14 +35,13 @@ export async function resolveCheckpoints(
           checkpointDir: getDir(player.rot),
         },
       })
-
-      if (checkpoint === checkpoints.length - 1) {
-        context.endGame()
-      }
     }
   }
 
   if (Object.keys(players).length > 0) {
-    await context.post("playerCheckpoint", { players })
+    await context.post({
+      code: "playerCheckpoint",
+      players,
+    })
   }
 }

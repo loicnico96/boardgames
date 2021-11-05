@@ -34,7 +34,10 @@ export async function resolveMoves(
   }
 
   if (Object.keys(players).length > 0) {
-    await context.post("playerMove", { players })
+    await context.post({
+      code: "playerMove",
+      players,
+    })
 
     await checkHoles(context)
   }

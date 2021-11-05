@@ -109,6 +109,9 @@ export type RoborallyEvent = ObjectUnion<
         }
       }
     }
+    win: {
+      playerId: string
+    }
   }
 >
 

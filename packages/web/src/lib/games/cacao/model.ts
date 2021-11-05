@@ -145,6 +145,7 @@ export type CacaoEvent = ObjectUnion<
       amount: number
       playerId: string
     }
+    win: {}
   }
 >
 
