@@ -50,6 +50,8 @@ describe("resolveSequence", () => {
 
     const events = await run(context, resolveSequence, 1)
 
+    expect(context.state.sequence).toBe(1)
+
     const player = context.player("player1")
 
     expect(player.pos).toStrictEqual({ x: 3, y: 2 })

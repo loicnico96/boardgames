@@ -18,8 +18,8 @@ import {
   objectUnion,
 } from "@boardgames/utils"
 
-import { getDeck, isValidCard } from "./card"
-import { MAX_HAND_SIZE, SEQUENCE_COUNT } from "./constants"
+import { isValidCard } from "./card"
+import { SEQUENCE_COUNT } from "./constants"
 import {
   BoardId,
   GamePhase,
@@ -28,8 +28,8 @@ import {
   RoborallyOptions,
   RoborallyState,
 } from "./model"
-import { nextPhase } from "./resolve/nextPhase"
-import { resolveSequence } from "./resolve/resolveSequence"
+import { resolveTurn } from "./resolve/resolveTurn"
+import { startTurn } from "./resolve/startTurn"
 
 export class RoborallyContext extends BaseContext<RoborallyModel> {
   getInitialGameState(
@@ -77,6 +77,7 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
           hand: [],
           pos: checkpoints[0],
           powerDown: false,
+          powerDownNext: false,
           program: fill(SEQUENCE_COUNT, null),
           ready: false,
           rot: 0,
@@ -91,83 +92,10 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
 
   async resolveState() {
     switch (this.state.phase) {
-      case GamePhase.READY: {
-        const deck = getDeck()
-
-        this.generator.shuffle(deck)
-
-        for (const playerId of this.state.playerOrder) {
-          const player = this.player(playerId)
-          assert(player.action?.code === "ready", "Invalid action")
-          const handSize = MAX_HAND_SIZE - player.damage
-
-          this.updatePlayer(playerId, {
-            $merge: {
-              hand: deck.splice(0, handSize),
-            },
-          })
-
-          this.requireAction(playerId)
-        }
-
-        return nextPhase(this, GamePhase.PROGRAM)
-      }
-
-      case GamePhase.PROGRAM: {
-        for (const playerId of this.state.playerOrder) {
-          const player = this.player(playerId)
-          assert(player.action?.code === "program", "Invalid action")
-          this.updatePlayer(playerId, {
-            $merge: {
-              hand: [],
-              program: player.action.program,
-            },
-          })
-        }
-
-        for (let sequence = 0; sequence < SEQUENCE_COUNT; sequence++) {
-          await resolveSequence(this, sequence)
-
-          const winnerId = this.state.playerOrder.find(playerId => {
-            const checkpointCount = this.state.checkpoints.length - 1
-            const player = this.player(playerId)
-            return player.checkpoint === checkpointCount
-          })
-
-          if (winnerId !== undefined) {
-            return this.endGame({
-              code: "win",
-              playerId: winnerId,
-            })
-          }
-        }
-
-        this.update({
-          $merge: {
-            sequence: null,
-          },
-          turn: turn => turn + 1,
-        })
-
-        for (const playerId of this.state.playerOrder) {
-          const player = this.player(playerId)
-          assert(player.action?.code === "program", "Invalid action")
-          this.updatePlayer(playerId, {
-            $merge: {
-              // TODO: Respawn destroyed players
-              // TODO: Remove all damage if powered down
-              powerDown: player.action.powerDown,
-              // TODO: Lock registers based on damage
-              program: [null, null, null, null, null],
-            },
-          })
-
-          this.requireAction(playerId)
-        }
-
-        return nextPhase(this, GamePhase.READY)
-      }
-
+      case GamePhase.READY:
+        return startTurn(this)
+      case GamePhase.PROGRAM:
+        return resolveTurn(this)
       default:
         throw Error("Invalid status")
     }

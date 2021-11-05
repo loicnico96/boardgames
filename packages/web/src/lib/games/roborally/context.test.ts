@@ -2,7 +2,7 @@ import { fill } from "@boardgames/utils"
 
 import { createTestContext, resolve } from "../test/utils"
 
-import { MAX_HAND_SIZE, SEQUENCE_COUNT } from "./constants"
+import { SEQUENCE_COUNT } from "./constants"
 import { RoborallyContext } from "./context"
 import { GamePhase } from "./model"
 
@@ -28,46 +28,6 @@ describe("RoborallyContext", () => {
       expect(player.ready).toBe(false)
       expect(player.rot).toBe(0)
       expect(player.virtual).toBe(true)
-    }
-  })
-
-  it("deals cards and starts Program phase when all players are ready", async () => {
-    const context = createTestContext(RoborallyContext, 4)
-
-    await resolve(context, {})
-
-    expect(context.state.phase).toBe(GamePhase.READY)
-
-    for (const playerId of context.state.playerOrder) {
-      const player = context.player(playerId)
-      expect(player.hand).toHaveLength(0)
-      expect(player.powerDown).toBe(false)
-      expect(player.program).toStrictEqual(fill(SEQUENCE_COUNT, null))
-      expect(player.ready).toBe(false)
-    }
-
-    await resolve(context, { player1: { code: "ready" } })
-
-    expect(context.state.phase).toBe(GamePhase.READY)
-
-    await resolve(context, { player2: { code: "ready" } })
-
-    expect(context.state.phase).toBe(GamePhase.READY)
-
-    await resolve(context, { player3: { code: "ready" } })
-
-    expect(context.state.phase).toBe(GamePhase.READY)
-
-    await resolve(context, { player4: { code: "ready" } })
-
-    expect(context.state.phase).toBe(GamePhase.PROGRAM)
-
-    for (const playerId of context.state.playerOrder) {
-      const player = context.player(playerId)
-      expect(player.hand).toHaveLength(MAX_HAND_SIZE)
-      expect(player.powerDown).toBe(false)
-      expect(player.program).toStrictEqual(fill(SEQUENCE_COUNT, null))
-      expect(player.ready).toBe(false)
     }
   })
 

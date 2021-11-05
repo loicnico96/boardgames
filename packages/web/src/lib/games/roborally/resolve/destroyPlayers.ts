@@ -20,6 +20,7 @@ export async function destroyPlayers(
     context.updatePlayer(playerId, {
       $merge: {
         destroyed: true,
+        powerDownNext: false,
         program: [null, null, null, null, null],
       },
     })

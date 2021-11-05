@@ -109,6 +109,14 @@ export type RoborallyEvent = ObjectUnion<
         }
       }
     }
+    playerRespawn: {
+      players: {
+        [playerId in string]: {
+          dir: Direction
+          pos: Pos
+        }
+      }
+    }
     win: {
       playerId: string
     }
@@ -129,6 +137,7 @@ export type RoborallyPlayer = BasePlayer<RoborallyAction> & {
   pos: Pos
   rot: number
   powerDown: boolean
+  powerDownNext: boolean
   program: (number | null)[]
   virtual: boolean
 }
