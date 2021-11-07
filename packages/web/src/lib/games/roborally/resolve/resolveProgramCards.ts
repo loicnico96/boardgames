@@ -1,5 +1,6 @@
 import { Direction, getDir, mutableSortBy, Rotation } from "@boardgames/utils"
 
+import { getCell } from "../board"
 import { CardAction, getCardAction, getCardPriority } from "../card"
 import { RoborallyContext } from "../context"
 
@@ -11,10 +12,11 @@ export async function resolvePlayerMove(
   dir: Direction,
   dis: number
 ): Promise<void> {
-  for (let count = 0; count < dis; count++) {
-    const player = context.player(playerId)
+  const cell = getCell(context.state, context.player(playerId).pos)
+  const realDis = cell.water ? dis - 1 : dis
 
-    if (player.destroyed) {
+  for (let count = 0; count < realDis; count++) {
+    if (context.player(playerId).destroyed) {
       return
     }
 

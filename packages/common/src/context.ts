@@ -126,6 +126,7 @@ export abstract class BaseContext<M extends GameModel> {
   }
 
   public setSeed(seed: number): void {
+    this.__generator = new Random(seed)
     this.update({
       $merge: {
         seed,
