@@ -41,19 +41,468 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
     // TODO: Initialize checkpoints
     const checkpoints = [
       {
-        x: 3,
-        y: 3,
+        x: 2,
+        y: 9,
       },
       {
-        x: 7,
-        y: 7,
+        x: 9,
+        y: 6,
+      },
+      {
+        x: 5,
+        y: 4,
+      },
+      {
+        x: 9,
+        y: 2,
+      },
+      {
+        x: 1,
+        y: 5,
       },
     ]
 
     return {
       // TODO: Initialize board
       board: {
-        cells: {},
+        cells: {
+          0: {
+            2: {
+              type: 0,
+              walls: {
+                3: 1,
+              },
+            },
+            4: {
+              type: 0,
+              walls: {
+                3: 1,
+              },
+            },
+            7: {
+              type: 0,
+              walls: {
+                3: 1,
+              },
+            },
+            9: {
+              type: 0,
+              walls: {
+                3: 1,
+              },
+            },
+          },
+          1: {
+            1: {
+              type: 4,
+              dir: 1,
+            },
+            2: {
+              type: 4,
+              dir: 0,
+            },
+            3: {
+              type: 4,
+              dir: 0,
+            },
+            4: {
+              type: 4,
+              dir: 0,
+            },
+            7: {
+              type: 4,
+              dir: 1,
+            },
+            8: {
+              type: 4,
+              dir: 0,
+            },
+            9: {
+              type: 4,
+              dir: 0,
+            },
+            10: {
+              type: 4,
+              dir: 0,
+            },
+          },
+          2: {
+            0: {
+              type: 0,
+              walls: {
+                0: 1,
+              },
+            },
+            1: {
+              type: 4,
+              dir: 1,
+            },
+            2: {
+              type: 2,
+              rot: 1,
+            },
+            3: {
+              type: 5,
+            },
+            4: {
+              type: 4,
+              dir: 3,
+            },
+            6: {
+              type: 2,
+              rot: -1,
+            },
+            7: {
+              type: 4,
+              dir: 1,
+            },
+            8: {
+              type: 2,
+              rot: 1,
+            },
+            10: {
+              type: 4,
+              dir: 3,
+            },
+            11: {
+              type: 0,
+              walls: {
+                2: 1,
+              },
+            },
+          },
+          3: {
+            1: {
+              type: 4,
+              dir: 1,
+            },
+            2: {
+              type: 0,
+              walls: {
+                2: 1,
+              },
+            },
+            3: {
+              type: 2,
+              rot: 1,
+            },
+            4: {
+              type: 4,
+              dir: 3,
+            },
+            6: {
+              type: 0,
+              walls: {
+                2: 1,
+              },
+            },
+            7: {
+              type: 4,
+              dir: 1,
+            },
+            8: {
+              type: 5,
+            },
+            9: {
+              type: 2,
+              rot: 1,
+            },
+            10: {
+              type: 4,
+              dir: 3,
+            },
+          },
+          4: {
+            0: {
+              type: 0,
+              walls: {
+                0: 1,
+              },
+            },
+            1: {
+              type: 4,
+              dir: 2,
+            },
+            2: {
+              type: 4,
+              dir: 2,
+            },
+            3: {
+              type: 4,
+              dir: 2,
+            },
+            4: {
+              type: 4,
+              dir: 3,
+            },
+            5: {
+              type: 2,
+              rot: -1,
+            },
+            7: {
+              type: 4,
+              dir: 2,
+            },
+            8: {
+              type: 4,
+              dir: 2,
+            },
+            9: {
+              type: 4,
+              dir: 2,
+            },
+            10: {
+              type: 4,
+              dir: 3,
+            },
+            11: {
+              type: 0,
+              walls: {
+                2: 1,
+              },
+            },
+          },
+          5: {
+            2: {
+              type: 2,
+              rot: -1,
+            },
+            3: {
+              type: 0,
+              walls: {
+                3: 1,
+              },
+            },
+            7: {
+              type: 2,
+              rot: -1,
+            },
+            8: {
+              type: 0,
+              walls: {
+                3: 1,
+              },
+            },
+          },
+          6: {
+            3: {
+              type: 0,
+              walls: {
+                1: 1,
+              },
+            },
+            4: {
+              type: 2,
+              rot: -1,
+            },
+            8: {
+              type: 0,
+              walls: {
+                1: 1,
+              },
+            },
+            9: {
+              type: 2,
+              rot: -1,
+            },
+          },
+          7: {
+            0: {
+              type: 0,
+              walls: {
+                0: 1,
+              },
+            },
+            1: {
+              type: 4,
+              dir: 1,
+            },
+            2: {
+              type: 4,
+              dir: 0,
+            },
+            3: {
+              type: 4,
+              dir: 0,
+            },
+            4: {
+              type: 4,
+              dir: 0,
+            },
+            6: {
+              type: 2,
+              rot: -1,
+            },
+            7: {
+              type: 4,
+              dir: 1,
+            },
+            8: {
+              type: 4,
+              dir: 0,
+            },
+            9: {
+              type: 4,
+              dir: 0,
+            },
+            10: {
+              type: 4,
+              dir: 0,
+            },
+            11: {
+              type: 0,
+              walls: {
+                2: 1,
+              },
+            },
+          },
+          8: {
+            1: {
+              type: 4,
+              dir: 1,
+            },
+            2: {
+              type: 2,
+              rot: 1,
+            },
+            3: {
+              type: 5,
+            },
+            4: {
+              type: 4,
+              dir: 3,
+            },
+            5: {
+              type: 0,
+              walls: {
+                0: 1,
+              },
+            },
+            7: {
+              type: 4,
+              dir: 1,
+            },
+            8: {
+              type: 2,
+              rot: 1,
+            },
+            9: {
+              type: 0,
+              walls: {
+                0: 1,
+              },
+            },
+            10: {
+              type: 4,
+              dir: 3,
+            },
+          },
+          9: {
+            0: {
+              type: 0,
+              walls: {
+                0: 1,
+              },
+            },
+            1: {
+              type: 4,
+              dir: 1,
+            },
+            3: {
+              type: 2,
+              rot: 1,
+            },
+            4: {
+              type: 4,
+              dir: 3,
+            },
+            5: {
+              type: 2,
+              rot: -1,
+            },
+            7: {
+              type: 4,
+              dir: 1,
+            },
+            8: {
+              type: 5,
+            },
+            9: {
+              type: 2,
+              rot: 1,
+            },
+            10: {
+              type: 4,
+              dir: 3,
+            },
+            11: {
+              type: 0,
+              walls: {
+                2: 1,
+              },
+            },
+          },
+          10: {
+            1: {
+              type: 4,
+              dir: 2,
+            },
+            2: {
+              type: 4,
+              dir: 2,
+            },
+            3: {
+              type: 4,
+              dir: 2,
+            },
+            4: {
+              type: 4,
+              dir: 3,
+            },
+            7: {
+              type: 4,
+              dir: 2,
+            },
+            8: {
+              type: 4,
+              dir: 2,
+            },
+            9: {
+              type: 4,
+              dir: 2,
+            },
+            10: {
+              type: 4,
+              dir: 3,
+            },
+          },
+          11: {
+            2: {
+              type: 0,
+              walls: {
+                1: 1,
+              },
+            },
+            4: {
+              type: 0,
+              walls: {
+                1: 1,
+              },
+            },
+            7: {
+              type: 0,
+              walls: {
+                1: 1,
+              },
+            },
+            9: {
+              type: 0,
+              walls: {
+                1: 1,
+              },
+            },
+          },
+        },
         dimensions: {
           x: 12,
           y: 12,

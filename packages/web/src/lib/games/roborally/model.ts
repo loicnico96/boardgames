@@ -14,32 +14,31 @@ export enum CellType {
   REPAIR = 5,
 }
 
+export enum WallType {
+  NONE = 0,
+  NORMAL = 1,
+}
+
 export type Cell = ObjectUnion<
   "type",
   {
-    [CellType.NORMAL]: {
-      water?: boolean
-    }
-    [CellType.HOLE]: {
-      water?: boolean
-    }
+    [CellType.NORMAL]: {}
+    [CellType.HOLE]: {}
     [CellType.GEAR]: {
       rot: Rotation
-      water?: boolean
     }
     [CellType.CONVEYOR]: {
       dir: Direction
-      water?: boolean
     }
     [CellType.CONVEYOR_FAST]: {
       dir: Direction
-      water?: boolean
     }
-    [CellType.REPAIR]: {
-      water?: boolean
-    }
+    [CellType.REPAIR]: {}
   }
->
+> & {
+  walls?: Partial<Record<Direction, WallType>>
+  water?: boolean
+}
 
 export enum GamePhase {
   READY = 0,

@@ -1,6 +1,6 @@
-import { Pos } from "@boardgames/utils"
+import { Direction, getDir, movePos, Pos } from "@boardgames/utils"
 
-import { Cell, CellType, RoborallyState } from "./model"
+import { Cell, CellType, RoborallyState, WallType } from "./model"
 
 export function isInBounds(state: RoborallyState, pos: Pos): boolean {
   return (
@@ -17,4 +17,23 @@ export function getCell(state: RoborallyState, pos: Pos): Cell {
   }
 
   return { type: CellType.HOLE }
+}
+
+export function getWall(
+  state: RoborallyState,
+  pos: Pos,
+  dir: Direction
+): WallType {
+  return getCell(state, pos).walls?.[dir] ?? WallType.NONE
+}
+
+export function isPassable(
+  state: RoborallyState,
+  pos: Pos,
+  dir: Direction
+): boolean {
+  return (
+    getWall(state, pos, dir) === WallType.NONE &&
+    getWall(state, movePos(pos, dir), getDir(dir + 2)) === WallType.NONE
+  )
 }

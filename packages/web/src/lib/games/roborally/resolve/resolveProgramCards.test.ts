@@ -4,11 +4,14 @@ import { createTestContext, run } from "lib/games/test/utils"
 
 import { CardAction, getCardAction } from "../card"
 import { RoborallyContext } from "../context"
+import { CellType } from "../model"
 
 import { resolveProgramCard, resolveProgramCards } from "./resolveProgramCards"
 
 describe("playerCard", () => {
   it("resolves Move 1", async () => {
+    expect(getCardAction(63)).toBe(CardAction.MOVE_1)
+
     const context = createTestContext(RoborallyContext, 1)
 
     context.update({
@@ -25,22 +28,21 @@ describe("playerCard", () => {
       },
     })
 
-    const card = 63
+    const events = await run(context, resolveProgramCard, "player1", 63)
 
-    expect(getCardAction(card)).toBe(CardAction.MOVE_1)
-
-    const events = await run(context, resolveProgramCard, "player1", card)
-
-    const player = context.player("player1")
-
-    expect(player.pos).toStrictEqual({ x: 1, y: 0 })
-    expect(player.rot).toBe(Direction.NORTH)
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 0,
+      },
+      rot: Direction.NORTH,
+    })
 
     expect(events).toStrictEqual([
       {
         code: "playerCard",
         playerId: "player1",
-        card,
+        card: 63,
       },
       {
         code: "playerMove",
@@ -54,6 +56,8 @@ describe("playerCard", () => {
   })
 
   it("resolves Move 2", async () => {
+    expect(getCardAction(72)).toBe(CardAction.MOVE_2)
+
     const context = createTestContext(RoborallyContext, 1)
 
     context.update({
@@ -70,22 +74,21 @@ describe("playerCard", () => {
       },
     })
 
-    const card = 72
+    const events = await run(context, resolveProgramCard, "player1", 72)
 
-    expect(getCardAction(card)).toBe(CardAction.MOVE_2)
-
-    const events = await run(context, resolveProgramCard, "player1", card)
-
-    const player = context.player("player1")
-
-    expect(player.pos).toStrictEqual({ x: 3, y: 1 })
-    expect(player.rot).toBe(Direction.EAST)
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 3,
+        y: 1,
+      },
+      rot: Direction.EAST,
+    })
 
     expect(events).toStrictEqual([
       {
         code: "playerCard",
         playerId: "player1",
-        card,
+        card: 72,
       },
       {
         code: "playerMove",
@@ -107,6 +110,8 @@ describe("playerCard", () => {
   })
 
   it("resolves Move 3", async () => {
+    expect(getCardAction(81)).toBe(CardAction.MOVE_3)
+
     const context = createTestContext(RoborallyContext, 1)
 
     context.update({
@@ -123,22 +128,21 @@ describe("playerCard", () => {
       },
     })
 
-    const card = 81
+    const events = await run(context, resolveProgramCard, "player1", 81)
 
-    expect(getCardAction(card)).toBe(CardAction.MOVE_3)
-
-    const events = await run(context, resolveProgramCard, "player1", card)
-
-    const player = context.player("player1")
-
-    expect(player.pos).toStrictEqual({ x: 1, y: 4 })
-    expect(player.rot).toBe(Direction.SOUTH)
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 4,
+      },
+      rot: Direction.SOUTH,
+    })
 
     expect(events).toStrictEqual([
       {
         code: "playerCard",
         playerId: "player1",
-        card,
+        card: 81,
       },
       {
         code: "playerMove",
@@ -168,6 +172,8 @@ describe("playerCard", () => {
   })
 
   it("destroys the player immediately upon moving into a hole", async () => {
+    expect(getCardAction(81)).toBe(CardAction.MOVE_3)
+
     const context = createTestContext(RoborallyContext, 1)
 
     context.update({
@@ -184,22 +190,22 @@ describe("playerCard", () => {
       },
     })
 
-    const card = 81
+    const events = await run(context, resolveProgramCard, "player1", 81)
 
-    expect(getCardAction(card)).toBe(CardAction.MOVE_3)
-
-    const events = await run(context, resolveProgramCard, "player1", card)
-
-    const player = context.player("player1")
-
-    expect(player.destroyed).toBe(true)
-    expect(player.pos).toStrictEqual({ x: -1, y: 1 })
+    expect(context.player("player1")).toMatchObject({
+      destroyed: true,
+      pos: {
+        x: -1,
+        y: 1,
+      },
+      rot: Direction.WEST,
+    })
 
     expect(events).toStrictEqual([
       {
         code: "playerCard",
         playerId: "player1",
-        card,
+        card: 81,
       },
       {
         code: "playerMove",
@@ -228,7 +234,149 @@ describe("playerCard", () => {
     ])
   })
 
+  it("moves 1 less space if starting from water", async () => {
+    expect(getCardAction(81)).toBe(CardAction.MOVE_3)
+
+    const context = createTestContext(RoborallyContext, 1)
+
+    context.update({
+      board: {
+        cells: {
+          $set: {
+            1: {
+              1: {
+                type: CellType.NORMAL,
+                water: true,
+              },
+            },
+          },
+        },
+      },
+      players: {
+        player1: {
+          $merge: {
+            pos: {
+              x: 1,
+              y: 1,
+            },
+            rot: Direction.SOUTH,
+          },
+        },
+      },
+    })
+
+    const events = await run(context, resolveProgramCard, "player1", 81)
+
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 3,
+      },
+      rot: Direction.SOUTH,
+    })
+
+    expect(events).toStrictEqual([
+      {
+        code: "playerCard",
+        playerId: "player1",
+        card: 81,
+      },
+      {
+        code: "playerMove",
+        players: {
+          player1: {
+            dir: Direction.SOUTH,
+          },
+        },
+      },
+      {
+        code: "playerMove",
+        players: {
+          player1: {
+            dir: Direction.SOUTH,
+          },
+        },
+      },
+    ])
+  })
+
+  it("normally moves through water", async () => {
+    expect(getCardAction(81)).toBe(CardAction.MOVE_3)
+
+    const context = createTestContext(RoborallyContext, 1)
+
+    context.update({
+      board: {
+        cells: {
+          $set: {
+            1: {
+              2: {
+                type: CellType.NORMAL,
+                water: true,
+              },
+            },
+          },
+        },
+      },
+      players: {
+        player1: {
+          $merge: {
+            pos: {
+              x: 1,
+              y: 1,
+            },
+            rot: Direction.SOUTH,
+          },
+        },
+      },
+    })
+
+    const events = await run(context, resolveProgramCard, "player1", 81)
+
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 4,
+      },
+      rot: Direction.SOUTH,
+    })
+
+    expect(events).toStrictEqual([
+      {
+        code: "playerCard",
+        playerId: "player1",
+        card: 81,
+      },
+      {
+        code: "playerMove",
+        players: {
+          player1: {
+            dir: Direction.SOUTH,
+          },
+        },
+      },
+      {
+        code: "playerMove",
+        players: {
+          player1: {
+            dir: Direction.SOUTH,
+          },
+        },
+      },
+      {
+        code: "playerMove",
+        players: {
+          player1: {
+            dir: Direction.SOUTH,
+          },
+        },
+      },
+    ])
+  })
+
   it("resolves Move Back", async () => {
+    expect(getCardAction(45)).toBe(CardAction.MOVE_BACK)
+
     const context = createTestContext(RoborallyContext, 1)
 
     context.update({
@@ -245,22 +393,21 @@ describe("playerCard", () => {
       },
     })
 
-    const card = 45
+    const events = await run(context, resolveProgramCard, "player1", 45)
 
-    expect(getCardAction(card)).toBe(CardAction.MOVE_BACK)
-
-    const events = await run(context, resolveProgramCard, "player1", card)
-
-    const player = context.player("player1")
-
-    expect(player.pos).toStrictEqual({ x: 2, y: 1 })
-    expect(player.rot).toBe(Direction.WEST)
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 2,
+        y: 1,
+      },
+      rot: Direction.WEST,
+    })
 
     expect(events).toStrictEqual([
       {
         code: "playerCard",
         playerId: "player1",
-        card,
+        card: 45,
       },
       {
         code: "playerMove",
@@ -274,6 +421,8 @@ describe("playerCard", () => {
   })
 
   it("resolves Rotate Left", async () => {
+    expect(getCardAction(18)).toBe(CardAction.ROTATE_LEFT)
+
     const context = createTestContext(RoborallyContext, 1)
 
     context.update({
@@ -290,22 +439,21 @@ describe("playerCard", () => {
       },
     })
 
-    const card = 18
+    const events = await run(context, resolveProgramCard, "player1", 18)
 
-    expect(getCardAction(card)).toBe(CardAction.ROTATE_LEFT)
-
-    const events = await run(context, resolveProgramCard, "player1", card)
-
-    const player = context.player("player1")
-
-    expect(player.pos).toStrictEqual({ x: 1, y: 1 })
-    expect(player.rot).toBe(Direction.NORTH)
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 1,
+      },
+      rot: Direction.NORTH,
+    })
 
     expect(events).toStrictEqual([
       {
         code: "playerCard",
         playerId: "player1",
-        card,
+        card: 18,
       },
       {
         code: "playerMove",
@@ -319,6 +467,8 @@ describe("playerCard", () => {
   })
 
   it("resolves Rotate Right", async () => {
+    expect(getCardAction(15)).toBe(CardAction.ROTATE_RIGHT)
+
     const context = createTestContext(RoborallyContext, 1)
 
     context.update({
@@ -335,22 +485,21 @@ describe("playerCard", () => {
       },
     })
 
-    const card = 15
+    const events = await run(context, resolveProgramCard, "player1", 15)
 
-    expect(getCardAction(card)).toBe(CardAction.ROTATE_RIGHT)
-
-    const events = await run(context, resolveProgramCard, "player1", card)
-
-    const player = context.player("player1")
-
-    expect(player.pos).toStrictEqual({ x: 1, y: 1 })
-    expect(player.rot).toBe(Direction.SOUTH)
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 1,
+      },
+      rot: Direction.SOUTH,
+    })
 
     expect(events).toStrictEqual([
       {
         code: "playerCard",
         playerId: "player1",
-        card,
+        card: 15,
       },
       {
         code: "playerMove",
@@ -364,6 +513,8 @@ describe("playerCard", () => {
   })
 
   it("resolves U-Turn", async () => {
+    expect(getCardAction(3)).toBe(CardAction.ROTATE_BACK)
+
     const context = createTestContext(RoborallyContext, 1)
 
     context.update({
@@ -380,22 +531,21 @@ describe("playerCard", () => {
       },
     })
 
-    const card = 3
+    const events = await run(context, resolveProgramCard, "player1", 3)
 
-    expect(getCardAction(card)).toBe(CardAction.ROTATE_BACK)
-
-    const events = await run(context, resolveProgramCard, "player1", card)
-
-    const player = context.player("player1")
-
-    expect(player.pos).toStrictEqual({ x: 1, y: 1 })
-    expect(player.rot).toBe(Direction.WEST)
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 1,
+      },
+      rot: Direction.WEST,
+    })
 
     expect(events).toStrictEqual([
       {
         code: "playerCard",
         playerId: "player1",
-        card,
+        card: 3,
       },
       {
         code: "playerMove",

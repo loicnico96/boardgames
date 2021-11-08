@@ -1,12 +1,13 @@
-import { Pos, samePos } from "@boardgames/utils"
+import { Direction, Directions, Pos, samePos } from "@boardgames/utils"
 import styled from "@emotion/styled"
 
 import { getCell } from "lib/games/roborally/board"
-import { CellType, RoborallyState } from "lib/games/roborally/model"
+import { CellType, RoborallyState, WallType } from "lib/games/roborally/model"
 
 import { useRoborallyState } from "./store"
 
 export const CELL_SIZE = 60
+export const WALL_SIZE = 6
 
 export type BoardCellProps = {
   x: number
@@ -26,8 +27,26 @@ const StyledCell = styled.div<StyledCellProps>`
   font-size: 30px;
   height: ${CELL_SIZE}px;
   justify-content: center;
+  position: relative;
   text-align: center;
   width: ${CELL_SIZE}px;
+`
+
+type StyledWallProps = {
+  direction: Direction
+  type: WallType
+}
+
+const StyledWall = styled.div<StyledWallProps>`
+  background-color: yellow;
+  border: 1px solid black;
+  height: ${props =>
+    [WALL_SIZE, CELL_SIZE, WALL_SIZE, CELL_SIZE][props.direction]}px;
+  position: absolute;
+  ${props => ["top", "top", "bottom", "top"][props.direction]}: -1px;
+  ${props => ["left", "right", "left", "left"][props.direction]}: -1px;
+  width: ${props =>
+    [CELL_SIZE, WALL_SIZE, CELL_SIZE, WALL_SIZE][props.direction]}px;
 `
 
 export function getCellColor(state: RoborallyState, pos: Pos): string {
@@ -123,10 +142,23 @@ export function BoardCell({ x, y }: BoardCellProps) {
   const color = useRoborallyState(state => getCellColor(state, { x, y }))
   const symbol = useRoborallyState(state => getCellSymbol(state, { x, y }))
   const tooltip = useRoborallyState(state => getCellTooltip(state, { x, y }))
+  const walls = useRoborallyState(state => getCell(state, { x, y }).walls)
 
   return (
     <StyledCell background={color} title={tooltip}>
       {symbol}
+      {walls !== undefined &&
+        Directions.map(dir => {
+          const wall = walls[dir]
+
+          if (wall === undefined) {
+            return null
+          }
+
+          return (
+            <StyledWall key={dir} direction={dir} title="Wall" type={wall} />
+          )
+        })}
     </StyledCell>
   )
 }
