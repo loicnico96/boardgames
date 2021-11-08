@@ -48,4 +48,4 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Run tests
-        run: yarn web test
+        run: yarn web test:coverage
