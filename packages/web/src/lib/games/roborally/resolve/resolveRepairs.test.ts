@@ -11,8 +11,8 @@ describe("resolveRepairs", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             3: {
               3: {
                 type: CellType.REPAIR,

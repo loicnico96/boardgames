@@ -1,5 +1,5 @@
 import { RoborallyContext } from "../context"
-import { GamePhase } from "../model"
+import { BoardFeature, GamePhase } from "../model"
 
 import { checkHoles } from "./checkHoles"
 import { nextPhase } from "./nextPhase"
@@ -17,32 +17,48 @@ export async function resolveSequence(
 ): Promise<void> {
   context.update({ $merge: { sequence } })
 
-  await nextPhase(context, GamePhase.RESOLVE_TRAP)
-  await checkHoles(context)
+  const { features } = context.state.board
+
+  if (features.includes(BoardFeature.TRAP)) {
+    await nextPhase(context, GamePhase.RESOLVE_TRAP)
+    await checkHoles(context)
+  }
 
   await nextPhase(context, GamePhase.RESOLVE_PROGRAM)
   await resolveProgramCards(context)
 
-  await nextPhase(context, GamePhase.RESOLVE_CONVEYOR_FAST)
-  await resolveConveyors(context, true)
+  if (features.includes(BoardFeature.CONVEYOR_FAST)) {
+    await nextPhase(context, GamePhase.RESOLVE_CONVEYOR_FAST)
+    await resolveConveyors(context, true)
+  }
 
-  await nextPhase(context, GamePhase.RESOLVE_CONVEYOR)
-  await resolveConveyors(context)
+  if (features.includes(BoardFeature.CONVEYOR)) {
+    await nextPhase(context, GamePhase.RESOLVE_CONVEYOR)
+    await resolveConveyors(context)
+  }
 
-  await nextPhase(context, GamePhase.RESOLVE_PUSHER)
-  await resolvePushers(context)
+  if (features.includes(BoardFeature.PUSHER)) {
+    await nextPhase(context, GamePhase.RESOLVE_PUSHER)
+    await resolvePushers(context)
+  }
 
-  await nextPhase(context, GamePhase.RESOLVE_CRUSHER)
-  await resolveCrushers(context)
+  if (features.includes(BoardFeature.CRUSHER)) {
+    await nextPhase(context, GamePhase.RESOLVE_CRUSHER)
+    await resolveCrushers(context)
+  }
 
-  await nextPhase(context, GamePhase.RESOLVE_GEAR)
-  await resolveGears(context)
+  if (features.includes(BoardFeature.GEAR)) {
+    await nextPhase(context, GamePhase.RESOLVE_GEAR)
+    await resolveGears(context)
+  }
 
   // await nextPhase(context, GamePhase.RESOLVE_LASER)
   // TODO: await resolveLasers(context, sequence)
 
-  await nextPhase(context, GamePhase.RESOLVE_REPAIR)
-  await resolveRepairs(context)
+  if (features.includes(BoardFeature.REPAIR)) {
+    await nextPhase(context, GamePhase.RESOLVE_REPAIR)
+    await resolveRepairs(context)
+  }
 
   await nextPhase(context, GamePhase.RESOLVE_CHECKPOINT)
   await resolveCheckpoints(context)

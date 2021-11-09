@@ -12,8 +12,8 @@ describe("resolveTurnEnd", () => {
     const context = createTestContext(RoborallyContext, 4)
 
     context.update({
-      checkpoints: {
-        $set: [
+      $merge: {
+        checkpoints: [
           {
             x: 0,
             y: 0,

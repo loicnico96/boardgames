@@ -6,6 +6,20 @@ export enum BoardId {
   DEFAULT = "default",
 }
 
+export enum BoardFeature {
+  CONVEYOR = "conveyor",
+  CONVEYOR_FAST = "conveyorFast",
+  CRUSHER = "crusher",
+  GEAR = "gear",
+  LASER = "laser",
+  PORTAL = "portal",
+  PUSHER = "pusher",
+  REPAIR = "repair",
+  TELEPORT = "teleport",
+  TRAP = "trap",
+  WATER = "water",
+}
+
 export enum CellType {
   NORMAL = 0,
   HOLE = 1,
@@ -171,6 +185,7 @@ export type RoborallyState = BaseState<RoborallyPlayer> & {
       x: number
       y: number
     }
+    features: BoardFeature[]
   }
   boardId: BoardId
   checkpoints: Position[]

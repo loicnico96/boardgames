@@ -11,8 +11,8 @@ describe("resolveCheckpoints", () => {
     const context = createTestContext(RoborallyContext, 6)
 
     context.update({
-      checkpoints: {
-        $set: [
+      $merge: {
+        checkpoints: [
           {
             x: 0,
             y: 0,

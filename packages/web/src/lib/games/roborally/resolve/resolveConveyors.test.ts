@@ -13,8 +13,8 @@ describe("resolveConveyors", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             2: {
               2: {
                 type: CellType.CONVEYOR,
@@ -118,8 +118,8 @@ describe("resolveConveyors", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             2: {
               2: {
                 type: CellType.CONVEYOR,

@@ -13,8 +13,8 @@ describe("checkPortals", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             2: {
               2: {
                 type: CellType.PORTAL,
@@ -127,8 +127,8 @@ describe("checkPortals", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             2: {
               2: {
                 type: CellType.PORTAL,
@@ -220,8 +220,8 @@ describe("checkPortals", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             2: {
               2: {
                 type: CellType.PORTAL,

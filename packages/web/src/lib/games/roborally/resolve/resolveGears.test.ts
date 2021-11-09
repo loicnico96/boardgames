@@ -13,8 +13,8 @@ describe("resolveGears", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             2: {
               2: {
                 type: CellType.GEAR,

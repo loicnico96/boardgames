@@ -241,8 +241,8 @@ describe("playerCard", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             1: {
               1: {
                 type: CellType.NORMAL,
@@ -307,8 +307,8 @@ describe("playerCard", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             1: {
               2: {
                 type: CellType.NORMAL,
@@ -381,8 +381,8 @@ describe("playerCard", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             1: {
               1: {
                 type: CellType.TELEPORT,
@@ -447,8 +447,8 @@ describe("playerCard", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             1: {
               1: {
                 type: CellType.TELEPORT,
@@ -513,8 +513,8 @@ describe("playerCard", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             1: {
               1: {
                 type: CellType.TELEPORT,
@@ -597,8 +597,8 @@ describe("playerCard", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             1: {
               2: {
                 type: CellType.PORTAL,

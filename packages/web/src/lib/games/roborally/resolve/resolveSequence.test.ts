@@ -3,7 +3,7 @@ import { Direction, Rotation } from "@boardgames/utils"
 import { createTestContext, run } from "lib/games/test/utils"
 
 import { RoborallyContext } from "../context"
-import { CellType, GamePhase } from "../model"
+import { BoardFeature, CellType, GamePhase } from "../model"
 
 import { resolveSequence } from "./resolveSequence"
 
@@ -13,8 +13,8 @@ describe("resolveSequence", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             2: {
               1: {
                 type: CellType.CONVEYOR_FAST,
@@ -32,6 +32,7 @@ describe("resolveSequence", () => {
               },
             },
           },
+          features: Object.values(BoardFeature),
         },
       },
       players: {

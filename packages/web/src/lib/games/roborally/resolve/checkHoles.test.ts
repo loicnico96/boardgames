@@ -14,8 +14,8 @@ describe("checkHoles", () => {
         sequence: 3,
       },
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             3: {
               3: {
                 type: CellType.HOLE,

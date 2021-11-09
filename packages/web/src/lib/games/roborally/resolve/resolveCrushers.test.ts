@@ -14,8 +14,8 @@ describe("resolveCrushers", () => {
         sequence: 1,
       },
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             5: {
               5: {
                 type: CellType.NORMAL,

@@ -12,11 +12,6 @@ describe("resolveMoves", () => {
     const context = createTestContext(RoborallyContext, 4)
 
     context.update({
-      board: {
-        cells: {
-          $set: {},
-        },
-      },
       players: {
         player1: {
           $merge: {
@@ -128,8 +123,8 @@ describe("resolveMoves", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             4: {
               4: {
                 type: CellType.NORMAL,
@@ -192,11 +187,6 @@ describe("resolveMoves", () => {
     const context = createTestContext(RoborallyContext, 3)
 
     context.update({
-      board: {
-        cells: {
-          $set: {},
-        },
-      },
       players: {
         player1: {
           $merge: {
@@ -264,11 +254,6 @@ describe("resolveMoves", () => {
     const context = createTestContext(RoborallyContext, 2)
 
     context.update({
-      board: {
-        cells: {
-          $set: {},
-        },
-      },
       players: {
         player1: {
           $merge: {
@@ -310,8 +295,8 @@ describe("resolveMoves", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             6: {
               4: {
                 type: CellType.NORMAL,
@@ -375,11 +360,6 @@ describe("resolveMoves", () => {
     const context = createTestContext(RoborallyContext, 3)
 
     context.update({
-      board: {
-        cells: {
-          $set: {},
-        },
-      },
       players: {
         player1: {
           $merge: {
@@ -441,11 +421,6 @@ describe("resolveMoves", () => {
     const context = createTestContext(RoborallyContext, 3)
 
     context.update({
-      board: {
-        cells: {
-          $set: {},
-        },
-      },
       players: {
         player1: {
           $merge: {
@@ -510,11 +485,6 @@ describe("resolveMoves", () => {
     const context = createTestContext(RoborallyContext, 3)
 
     context.update({
-      board: {
-        cells: {
-          $set: {},
-        },
-      },
       players: {
         player1: {
           $merge: {
@@ -576,11 +546,6 @@ describe("resolveMoves", () => {
     const context = createTestContext(RoborallyContext, 3)
 
     context.update({
-      board: {
-        cells: {
-          $set: {},
-        },
-      },
       players: {
         player1: {
           $merge: {
@@ -636,11 +601,6 @@ describe("resolveMoves", () => {
     const context = createTestContext(RoborallyContext, 3)
 
     context.update({
-      board: {
-        cells: {
-          $set: {},
-        },
-      },
       players: {
         player1: {
           $merge: {
@@ -697,11 +657,6 @@ describe("resolveMoves", () => {
     const context = createTestContext(RoborallyContext, 3)
 
     context.update({
-      board: {
-        cells: {
-          $set: {},
-        },
-      },
       players: {
         player1: {
           $merge: {
@@ -774,11 +729,6 @@ describe("resolveMoves", () => {
     const context = createTestContext(RoborallyContext, 2)
 
     context.update({
-      board: {
-        cells: {
-          $set: {},
-        },
-      },
       players: {
         player1: {
           $merge: {
@@ -823,8 +773,8 @@ describe("resolveMoves", () => {
 
     context.update({
       board: {
-        cells: {
-          $set: {
+        $merge: {
+          cells: {
             5: {
               4: {
                 type: CellType.NORMAL,
@@ -904,11 +854,6 @@ describe("resolveMoves", () => {
     const context = createTestContext(RoborallyContext, 3)
 
     context.update({
-      board: {
-        cells: {
-          $set: {},
-        },
-      },
       players: {
         player1: {
           $merge: {
