@@ -1,6 +1,5 @@
 import { getCell } from "../board"
 import { RoborallyContext } from "../context"
-import { CellType } from "../model"
 import { isAffectedByBoard } from "../player"
 
 import { Move, resolveMoves } from "./resolveMoves"
@@ -16,9 +15,9 @@ export async function resolveGears(context: RoborallyContext) {
     if (isAffectedByBoard(player)) {
       const cell = getCell(context.state, player.pos)
 
-      if (cell.type === CellType.GEAR) {
+      if (cell.gear) {
         moves[playerId] = {
-          rot: cell.rot,
+          rot: cell.gear.rot,
         }
       }
     }

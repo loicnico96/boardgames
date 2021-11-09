@@ -1,4 +1,4 @@
-import { getCell, isActiveCrusher } from "../board"
+import { getCell } from "../board"
 import { RoborallyContext } from "../context"
 import { isAffectedByBoard } from "../player"
 
@@ -15,7 +15,9 @@ export async function resolveCrushers(context: RoborallyContext) {
       if (isAffectedByBoard(player)) {
         const cell = getCell(context.state, player.pos)
 
-        return isActiveCrusher(cell, sequence)
+        if (cell.crush) {
+          return cell.crush.active.includes(sequence)
+        }
       }
 
       return false

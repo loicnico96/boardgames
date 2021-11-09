@@ -2,7 +2,6 @@ import { size } from "@boardgames/utils"
 
 import { getCell } from "../board"
 import { RoborallyContext } from "../context"
-import { CellType } from "../model"
 import { isAffectedByBoard } from "../player"
 
 export async function resolveRepairs(context: RoborallyContext) {
@@ -16,7 +15,7 @@ export async function resolveRepairs(context: RoborallyContext) {
     if (isAffectedByBoard(player)) {
       const cell = getCell(context.state, player.pos)
 
-      if (cell.type === CellType.REPAIR && player.damage > 0) {
+      if (cell.repair && player.damage > 0) {
         players[playerId] = { repair: 1 }
 
         context.updatePlayer(playerId, {

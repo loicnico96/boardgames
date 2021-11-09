@@ -3,7 +3,7 @@ import { Direction, Rotation } from "@boardgames/utils"
 import { createTestContext, run } from "lib/games/test/utils"
 
 import { RoborallyContext } from "../context"
-import { BoardFeature, CellType, GamePhase } from "../model"
+import { BoardFeature, GamePhase } from "../model"
 
 import { resolveTurn } from "./resolveTurn"
 
@@ -38,11 +38,12 @@ describe("resolveTurn", () => {
           cells: {
             4: {
               2: {
-                type: CellType.GEAR,
-                rot: Rotation.RIGHT,
+                gear: {
+                  rot: Rotation.RIGHT,
+                },
               },
               3: {
-                type: CellType.REPAIR,
+                repair: true,
               },
             },
           },

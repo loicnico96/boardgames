@@ -3,7 +3,6 @@ import { Direction, Rotation } from "@boardgames/utils"
 import { createTestContext, run } from "lib/games/test/utils"
 
 import { RoborallyContext } from "../context"
-import { CellType, WallType } from "../model"
 
 import { resolveMoves } from "./resolveMoves"
 
@@ -127,18 +126,12 @@ describe("resolveMoves", () => {
           cells: {
             4: {
               4: {
-                type: CellType.NORMAL,
-                walls: {
-                  [Direction.NORTH]: WallType.NORMAL,
-                },
+                walls: [Direction.NORTH],
               },
             },
             6: {
               5: {
-                type: CellType.NORMAL,
-                walls: {
-                  [Direction.SOUTH]: WallType.NORMAL,
-                },
+                walls: [Direction.SOUTH],
               },
             },
           },
@@ -299,10 +292,7 @@ describe("resolveMoves", () => {
           cells: {
             6: {
               4: {
-                type: CellType.NORMAL,
-                walls: {
-                  [Direction.EAST]: WallType.NORMAL,
-                },
+                walls: [Direction.EAST],
               },
             },
           },
@@ -777,10 +767,7 @@ describe("resolveMoves", () => {
           cells: {
             5: {
               4: {
-                type: CellType.NORMAL,
-                walls: {
-                  [Direction.EAST]: WallType.NORMAL,
-                },
+                walls: [Direction.EAST],
               },
             },
           },

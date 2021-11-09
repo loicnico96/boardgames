@@ -1,7 +1,6 @@
 import { createTestContext, run } from "lib/games/test/utils"
 
 import { RoborallyContext } from "../context"
-import { CellType } from "../model"
 
 import { resolveRepairs } from "./resolveRepairs"
 
@@ -15,7 +14,7 @@ describe("resolveRepairs", () => {
           cells: {
             3: {
               3: {
-                type: CellType.REPAIR,
+                repair: true,
               },
             },
           },

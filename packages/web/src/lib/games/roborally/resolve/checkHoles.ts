@@ -1,4 +1,4 @@
-import { getCell, isHole } from "../board"
+import { getCell } from "../board"
 import { RoborallyContext } from "../context"
 import { isAffectedByBoard } from "../player"
 
@@ -15,7 +15,9 @@ export async function checkHoles(context: RoborallyContext) {
       if (isAffectedByBoard(player)) {
         const cell = getCell(context.state, player.pos)
 
-        return isHole(cell, sequence)
+        if (cell.hole) {
+          return cell.hole === true || cell.hole.active.includes(sequence)
+        }
       }
 
       return false

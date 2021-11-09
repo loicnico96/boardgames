@@ -1,6 +1,6 @@
 import { Direction, getDir, movePos, Position } from "@boardgames/utils"
 
-import { Cell, CellType, RoborallyState, WallType } from "./model"
+import { Cell, RoborallyState } from "./model"
 
 export function isInBounds(state: RoborallyState, pos: Position): boolean {
   return (
@@ -13,33 +13,18 @@ export function isInBounds(state: RoborallyState, pos: Position): boolean {
 
 export function getCell(state: RoborallyState, pos: Position): Cell {
   if (isInBounds(state, pos)) {
-    return state.board.cells[pos.x]?.[pos.y] ?? { type: CellType.NORMAL }
+    return state.board.cells[pos.x]?.[pos.y] ?? {}
   }
 
-  return { type: CellType.HOLE }
+  return { hole: true }
 }
 
-export function getWall(
+export function isWall(
   state: RoborallyState,
   pos: Position,
   dir: Direction
-): WallType {
-  return getCell(state, pos).walls?.[dir] ?? WallType.NONE
-}
-
-export function getActivePusher(
-  cell: Cell,
-  sequence: number
-): Direction | null {
-  return cell.push?.includes(sequence) ? cell.pushDir ?? null : null
-}
-
-export function isActiveCrusher(cell: Cell, sequence: number): boolean {
-  return cell.crush?.includes(sequence) ?? false
-}
-
-export function isHole(cell: Cell, sequence: number): boolean {
-  return cell.type === CellType.HOLE && (cell.seq?.includes(sequence) ?? true)
+): boolean {
+  return getCell(state, pos).walls?.includes(dir) ?? false
 }
 
 export function isPassable(
@@ -48,7 +33,7 @@ export function isPassable(
   dir: Direction
 ): boolean {
   return (
-    getWall(state, pos, dir) === WallType.NONE &&
-    getWall(state, movePos(pos, dir), getDir(dir + 2)) === WallType.NONE
+    !isWall(state, pos, dir) &&
+    !isWall(state, movePos(pos, dir), getDir(dir + 2))
   )
 }

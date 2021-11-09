@@ -1,7 +1,6 @@
 import { createTestContext, run } from "lib/games/test/utils"
 
 import { RoborallyContext } from "../context"
-import { CellType } from "../model"
 
 import { checkHoles } from "./checkHoles"
 
@@ -18,24 +17,26 @@ describe("checkHoles", () => {
           cells: {
             3: {
               3: {
-                type: CellType.HOLE,
+                hole: true,
               },
             },
             4: {
               4: {
-                type: CellType.HOLE,
+                hole: true,
               },
             },
             5: {
               5: {
-                type: CellType.HOLE,
-                seq: [1, 3],
+                hole: {
+                  active: [1, 3],
+                },
               },
             },
             6: {
               6: {
-                type: CellType.HOLE,
-                seq: [2, 4],
+                hole: {
+                  active: [2, 4],
+                },
               },
             },
           },

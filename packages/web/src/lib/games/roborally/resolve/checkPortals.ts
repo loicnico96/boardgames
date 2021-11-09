@@ -2,7 +2,6 @@ import { Position, isSamePos, size } from "@boardgames/utils"
 
 import { getCell } from "../board"
 import { RoborallyContext } from "../context"
-import { CellType } from "../model"
 import { isAffectedByBoard, isAffectedByPlayers } from "../player"
 
 import { Move } from "./resolveMoves"
@@ -19,21 +18,22 @@ export async function checkPortals(
     if (isAffectedByBoard(player) && moves[playerId].dir !== undefined) {
       const cell = getCell(context.state, player.pos)
 
-      if (cell.type === CellType.PORTAL) {
+      if (cell.portal) {
+        const portalPos = cell.portal.pos
         const isOccupied = Object.values(context.state.players).some(
           otherPlayer =>
             isAffectedByPlayers(otherPlayer) &&
-            isSamePos(otherPlayer.pos, cell.pos)
+            isSamePos(otherPlayer.pos, portalPos)
         )
 
         if (!isOccupied) {
           players[playerId] = {
-            pos: cell.pos,
+            pos: portalPos,
           }
 
           context.updatePlayer(playerId, {
             $merge: {
-              pos: cell.pos,
+              pos: portalPos,
             },
           })
         }

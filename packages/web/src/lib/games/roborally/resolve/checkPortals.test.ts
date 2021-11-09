@@ -3,7 +3,6 @@ import { Direction, Rotation } from "@boardgames/utils"
 import { createTestContext, run } from "lib/games/test/utils"
 
 import { RoborallyContext } from "../context"
-import { CellType } from "../model"
 
 import { checkPortals } from "./checkPortals"
 
@@ -17,37 +16,41 @@ describe("checkPortals", () => {
           cells: {
             2: {
               2: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 6,
-                  y: 6,
+                portal: {
+                  pos: {
+                    x: 6,
+                    y: 6,
+                  },
                 },
               },
             },
             4: {
               4: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 8,
-                  y: 8,
+                portal: {
+                  pos: {
+                    x: 8,
+                    y: 8,
+                  },
                 },
               },
             },
             6: {
               6: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 2,
-                  y: 2,
+                portal: {
+                  pos: {
+                    x: 2,
+                    y: 2,
+                  },
                 },
               },
             },
             8: {
               8: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 4,
-                  y: 4,
+                portal: {
+                  pos: {
+                    x: 4,
+                    y: 4,
+                  },
                 },
               },
             },
@@ -131,37 +134,41 @@ describe("checkPortals", () => {
           cells: {
             2: {
               2: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 6,
-                  y: 6,
+                portal: {
+                  pos: {
+                    x: 6,
+                    y: 6,
+                  },
                 },
               },
             },
             4: {
               4: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 8,
-                  y: 8,
+                portal: {
+                  pos: {
+                    x: 8,
+                    y: 8,
+                  },
                 },
               },
             },
             6: {
               6: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 2,
-                  y: 2,
+                portal: {
+                  pos: {
+                    x: 2,
+                    y: 2,
+                  },
                 },
               },
             },
             8: {
               8: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 4,
-                  y: 4,
+                portal: {
+                  pos: {
+                    x: 4,
+                    y: 4,
+                  },
                 },
               },
             },
@@ -224,37 +231,41 @@ describe("checkPortals", () => {
           cells: {
             2: {
               2: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 6,
-                  y: 6,
+                portal: {
+                  pos: {
+                    x: 6,
+                    y: 6,
+                  },
                 },
               },
             },
             4: {
               4: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 8,
-                  y: 8,
+                portal: {
+                  pos: {
+                    x: 8,
+                    y: 8,
+                  },
                 },
               },
             },
             6: {
               6: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 2,
-                  y: 2,
+                portal: {
+                  pos: {
+                    x: 2,
+                    y: 2,
+                  },
                 },
               },
             },
             8: {
               8: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 4,
-                  y: 4,
+                portal: {
+                  pos: {
+                    x: 4,
+                    y: 4,
+                  },
                 },
               },
             },

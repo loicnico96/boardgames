@@ -3,7 +3,6 @@ import { Direction } from "@boardgames/utils"
 import { createTestContext, run } from "lib/games/test/utils"
 
 import { RoborallyContext } from "../context"
-import { CellType } from "../model"
 
 import { resolvePushers } from "./resolvePushers"
 
@@ -20,16 +19,18 @@ describe("resolvePushers", () => {
           cells: {
             5: {
               5: {
-                type: CellType.NORMAL,
-                push: [1, 3],
-                pushDir: Direction.EAST,
+                push: {
+                  active: [1, 3],
+                  dir: Direction.EAST,
+                },
               },
             },
             6: {
               6: {
-                type: CellType.NORMAL,
-                push: [2, 4],
-                pushDir: Direction.WEST,
+                push: {
+                  active: [2, 4],
+                  dir: Direction.WEST,
+                },
               },
             },
           },

@@ -1,7 +1,6 @@
 import { createTestContext, run } from "lib/games/test/utils"
 
 import { RoborallyContext } from "../context"
-import { CellType } from "../model"
 
 import { resolveCrushers } from "./resolveCrushers"
 
@@ -18,20 +17,23 @@ describe("resolveCrushers", () => {
           cells: {
             5: {
               5: {
-                type: CellType.NORMAL,
-                crush: [1, 3],
+                crush: {
+                  active: [1, 3],
+                },
               },
             },
             6: {
               6: {
-                type: CellType.NORMAL,
-                crush: [1, 3],
+                crush: {
+                  active: [1, 3],
+                },
               },
             },
             7: {
               7: {
-                type: CellType.NORMAL,
-                crush: [3, 4],
+                crush: {
+                  active: [2, 4],
+                },
               },
             },
           },

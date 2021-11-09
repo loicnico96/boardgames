@@ -4,7 +4,6 @@ import { createTestContext, run } from "lib/games/test/utils"
 
 import { CardAction, getCardAction } from "../card"
 import { RoborallyContext } from "../context"
-import { CellType, WallType } from "../model"
 
 import { resolveProgramCard, resolveProgramCards } from "./resolveProgramCards"
 
@@ -245,7 +244,6 @@ describe("playerCard", () => {
           cells: {
             1: {
               1: {
-                type: CellType.NORMAL,
                 water: true,
               },
             },
@@ -311,7 +309,6 @@ describe("playerCard", () => {
           cells: {
             1: {
               2: {
-                type: CellType.NORMAL,
                 water: true,
               },
             },
@@ -385,13 +382,11 @@ describe("playerCard", () => {
           cells: {
             1: {
               1: {
-                type: CellType.TELEPORT,
-                walls: {
-                  [Direction.SOUTH]: WallType.NORMAL,
-                },
+                teleport: true,
+                walls: [Direction.SOUTH],
               },
               2: {
-                type: CellType.HOLE,
+                hole: true,
               },
             },
           },
@@ -451,13 +446,11 @@ describe("playerCard", () => {
           cells: {
             1: {
               1: {
-                type: CellType.TELEPORT,
-                walls: {
-                  [Direction.SOUTH]: WallType.NORMAL,
-                },
+                teleport: true,
+                walls: [Direction.SOUTH],
               },
               2: {
-                type: CellType.HOLE,
+                hole: true,
               },
             },
           },
@@ -517,7 +510,7 @@ describe("playerCard", () => {
           cells: {
             1: {
               1: {
-                type: CellType.TELEPORT,
+                teleport: true,
               },
             },
           },
@@ -601,19 +594,21 @@ describe("playerCard", () => {
           cells: {
             1: {
               2: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 6,
-                  y: 7,
+                portal: {
+                  pos: {
+                    x: 6,
+                    y: 7,
+                  },
                 },
               },
             },
             6: {
               7: {
-                type: CellType.PORTAL,
-                pos: {
-                  x: 1,
-                  y: 2,
+                portal: {
+                  pos: {
+                    x: 1,
+                    y: 2,
+                  },
                 },
               },
             },

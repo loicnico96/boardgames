@@ -3,7 +3,6 @@ import { Direction } from "@boardgames/utils"
 import { createTestContext, run } from "lib/games/test/utils"
 
 import { RoborallyContext } from "../context"
-import { CellType } from "../model"
 
 import { resolveConveyors } from "./resolveConveyors"
 
@@ -17,14 +16,17 @@ describe("resolveConveyors", () => {
           cells: {
             2: {
               2: {
-                type: CellType.CONVEYOR,
-                dir: Direction.EAST,
+                conveyor: {
+                  dir: Direction.EAST,
+                },
               },
             },
             3: {
               3: {
-                type: CellType.CONVEYOR_FAST,
-                dir: Direction.SOUTH,
+                conveyor: {
+                  dir: Direction.SOUTH,
+                  fast: true,
+                },
               },
             },
           },
@@ -122,14 +124,17 @@ describe("resolveConveyors", () => {
           cells: {
             2: {
               2: {
-                type: CellType.CONVEYOR,
-                dir: Direction.EAST,
+                conveyor: {
+                  dir: Direction.EAST,
+                },
               },
             },
             3: {
               3: {
-                type: CellType.CONVEYOR_FAST,
-                dir: Direction.SOUTH,
+                conveyor: {
+                  dir: Direction.SOUTH,
+                  fast: true,
+                },
               },
             },
           },

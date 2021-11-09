@@ -1,8 +1,8 @@
-import { Direction, Directions, Position, isSamePos } from "@boardgames/utils"
+import { Direction, Position, isSamePos } from "@boardgames/utils"
 import styled from "@emotion/styled"
 
 import { getCell } from "lib/games/roborally/board"
-import { CellType, RoborallyState, WallType } from "lib/games/roborally/model"
+import { RoborallyState } from "lib/games/roborally/model"
 
 import { useRoborallyState } from "./store"
 
@@ -34,7 +34,6 @@ const StyledCell = styled.div<StyledCellProps>`
 
 type StyledWallProps = {
   direction: Direction
-  type: WallType
 }
 
 const StyledWall = styled.div<StyledWallProps>`
@@ -52,8 +51,10 @@ const StyledWall = styled.div<StyledWallProps>`
 export function getCellColor(state: RoborallyState, pos: Position): string {
   const cell = getCell(state, pos)
 
-  if (cell.type === CellType.HOLE) {
-    return cell.water ? "darkblue" : "black"
+  if (cell.hole) {
+    if (cell.hole === true || cell.hole.active.includes(state.sequence)) {
+      return cell.water ? "darkblue" : "black"
+    }
   }
 
   return cell.water ? "royalblue" : "lightgray"
@@ -95,62 +96,110 @@ export function getCellSymbol(
     ][checkpoint]
   }
 
-  switch (cell.type) {
-    case CellType.GEAR:
-      return cell.rot > 0 ? "\u21BB" : "\u21BA"
-    case CellType.CONVEYOR:
-      return ["\u2191", "\u2192", "\u2193", "\u2190"][cell.dir]
-    case CellType.CONVEYOR_FAST:
-      return ["\u21C8", "\u21C9", "\u21CA", "\u21C7"][cell.dir]
-    case CellType.REPAIR:
-      return "\u2692"
-    case CellType.TELEPORT:
-      return "T"
-    case CellType.PORTAL:
-      return "P"
-    default:
-      return null
+  if (cell.gear) {
+    return cell.gear.rot > 0 ? "\u21BB" : "\u21BA"
   }
+
+  if (cell.conveyor) {
+    if (cell.conveyor.fast) {
+      return ["\u21C8", "\u21C9", "\u21CA", "\u21C7"][cell.conveyor.dir]
+    }
+
+    return ["\u2191", "\u2192", "\u2193", "\u2190"][cell.conveyor.dir]
+  }
+
+  if (cell.repair) {
+    return "\u2692"
+  }
+
+  if (cell.teleport) {
+    // TODO
+    return "T"
+  }
+
+  if (cell.portal) {
+    // TODO
+    return "P"
+  }
+
+  if (cell.crush) {
+    // TODO
+    return "C"
+  }
+
+  return null
 }
 
-export function getCellTooltip(
-  state: RoborallyState,
-  pos: Position
-): string | undefined {
+export function getCellTooltip(state: RoborallyState, pos: Position): string {
   const cell = getCell(state, pos)
+  const tooltips: string[] = []
 
   const checkpoint = state.checkpoints.findIndex(checkpointPos =>
     isSamePos(pos, checkpointPos)
   )
 
   if (checkpoint >= 0) {
-    return checkpoint === 0
-      ? "Starting position"
-      : `Checkpoint ${checkpoint} / ${state.checkpoints.length - 1}`
+    if (checkpoint === 0) {
+      tooltips.push("Starting position")
+    } else {
+      const checkpointCount = state.checkpoints.length - 1
+      tooltips.push(`Checkpoint ${checkpoint} / ${checkpointCount}`)
+    }
   }
 
-  switch (cell.type) {
-    case CellType.HOLE:
-      return cell.water ? "Water drain" : "Hole"
-    case CellType.GEAR:
-      return `Gear (${cell.rot > 0 ? "clockwise" : "counter-clockwise"})`
-    case CellType.CONVEYOR:
-      return `${cell.water ? "Conveyor" : "Water current"} (${
-        ["North", "East", "South", "West"][cell.dir]
-      })`
-    case CellType.CONVEYOR_FAST:
-      return `${cell.water ? "Express conveyor" : "Water current"} (${
-        ["North", "East", "South", "West"][cell.dir]
-      })`
-    case CellType.REPAIR:
-      return "Repair site"
-    case CellType.TELEPORT:
-      return "Teleporter"
-    case CellType.PORTAL:
-      return `Portal (${cell.pos.x} - ${cell.pos.y})`
-    default:
-      return cell.water ? "Water" : undefined
+  if (cell.portal) {
+    tooltips.push(`Portal (${cell.portal.pos.x}-${cell.portal.pos.y})`)
   }
+
+  if (cell.teleport) {
+    tooltips.push("Teleporter")
+  }
+
+  if (cell.hole) {
+    if (cell.hole === true) {
+      tooltips.push(cell.water ? "Water drain" : "Hole")
+    } else {
+      const active = cell.hole.active.map(i => i + 1).join("-")
+      tooltips.push(`${cell.water ? "Water drain" : "Trap"} (${active})`)
+    }
+  }
+
+  if (cell.conveyor) {
+    const dir = ["North", "East", "South", "West"][cell.conveyor.dir]
+    if (cell.water) {
+      tooltips.push(`Water current (${dir})`)
+    } else if (cell.conveyor.fast) {
+      tooltips.push(`Express conveyor (${dir})`)
+    } else {
+      tooltips.push(`Conveyor (${dir})`)
+    }
+  }
+
+  if (cell.push) {
+    const dir = ["North", "East", "South", "West"][cell.push.dir]
+    const active = cell.push.active.map(i => i + 1).join("-")
+    tooltips.push(`Pusher (${dir}, ${active})`)
+  }
+
+  if (cell.crush) {
+    const active = cell.crush.active.map(i => i + 1).join("-")
+    tooltips.push(`Crusher (${active})`)
+  }
+
+  if (cell.gear) {
+    const rot = cell.gear.rot > 0 ? "clockwise" : "counter-clockwise"
+    tooltips.push(`Gear (${rot})`)
+  }
+
+  if (cell.repair) {
+    tooltips.push("Repair site")
+  }
+
+  if (cell.water && cell.hole !== true && !cell.conveyor) {
+    tooltips.push("Water")
+  }
+
+  return tooltips.join("\n")
 }
 
 export function BoardCell({ x, y }: BoardCellProps) {
@@ -162,18 +211,9 @@ export function BoardCell({ x, y }: BoardCellProps) {
   return (
     <StyledCell background={color} title={tooltip}>
       {symbol}
-      {walls !== undefined &&
-        Directions.map(dir => {
-          const wall = walls[dir]
-
-          if (wall === undefined) {
-            return null
-          }
-
-          return (
-            <StyledWall key={dir} direction={dir} title="Wall" type={wall} />
-          )
-        })}
+      {walls?.map(dir => (
+        <StyledWall key={dir} direction={dir} title="Wall" />
+      ))}
     </StyledCell>
   )
 }

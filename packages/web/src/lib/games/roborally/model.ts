@@ -20,49 +20,32 @@ export enum BoardFeature {
   WATER = "water",
 }
 
-export enum CellType {
-  NORMAL = 0,
-  HOLE = 1,
-  GEAR = 2,
-  CONVEYOR = 3,
-  CONVEYOR_FAST = 4,
-  REPAIR = 5,
-  TELEPORT = 6,
-  PORTAL = 7,
-}
-
-export enum WallType {
-  NONE = 0,
-  NORMAL = 1,
-}
-
-export type Cell = ObjectUnion<
-  "type",
-  {
-    [CellType.NORMAL]: {}
-    [CellType.HOLE]: {
-      seq?: number[]
-    }
-    [CellType.GEAR]: {
-      rot: Rotation
-    }
-    [CellType.CONVEYOR]: {
-      dir: Direction
-    }
-    [CellType.CONVEYOR_FAST]: {
-      dir: Direction
-    }
-    [CellType.REPAIR]: {}
-    [CellType.TELEPORT]: {}
-    [CellType.PORTAL]: {
-      pos: Position
-    }
+export type Cell = {
+  conveyor?: {
+    dir: Direction
+    fast?: boolean
   }
-> & {
-  crush?: number[]
-  push?: number[]
-  pushDir?: Direction
-  walls?: Partial<Record<Direction, WallType>>
+  crush?: {
+    active: number[]
+  }
+  gear?: {
+    rot: Rotation
+  }
+  hole?:
+    | boolean
+    | {
+        active: number[]
+      }
+  portal?: {
+    pos: Position
+  }
+  push?: {
+    active: number[]
+    dir: Direction
+  }
+  repair?: boolean
+  teleport?: boolean
+  walls?: Direction[]
   water?: boolean
 }
 

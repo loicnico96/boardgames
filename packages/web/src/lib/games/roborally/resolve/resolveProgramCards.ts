@@ -10,7 +10,7 @@ import {
 import { getCell } from "../board"
 import { CardAction, getCardAction, getCardPriority } from "../card"
 import { RoborallyContext } from "../context"
-import { CellType, RoborallyPlayer, RoborallyState } from "../model"
+import { RoborallyPlayer, RoborallyState } from "../model"
 import { isAbleToMove, isAffectedByPlayers } from "../player"
 
 import { resolveMoves } from "./resolveMoves"
@@ -44,7 +44,7 @@ export async function resolvePlayerMove(
   const cell = getCell(context.state, player.pos)
   const dir = getDir(player.rot + rot)
 
-  if (cell.type === CellType.TELEPORT) {
+  if (cell.teleport) {
     const teleportPos = movePos(player.pos, dir, teleportDistance)
     if (isAbleToTeleport(context.state, player, teleportPos)) {
       context.updatePlayer(playerId, {

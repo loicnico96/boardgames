@@ -3,7 +3,7 @@ import { Direction, Rotation } from "@boardgames/utils"
 import { createTestContext, run } from "lib/games/test/utils"
 
 import { RoborallyContext } from "../context"
-import { BoardFeature, CellType, GamePhase } from "../model"
+import { BoardFeature, GamePhase } from "../model"
 
 import { resolveSequence } from "./resolveSequence"
 
@@ -17,18 +17,23 @@ describe("resolveSequence", () => {
           cells: {
             2: {
               1: {
-                type: CellType.CONVEYOR_FAST,
-                dir: Direction.SOUTH,
+                conveyor: {
+                  dir: Direction.SOUTH,
+                  fast: true,
+                },
               },
               2: {
-                type: CellType.CONVEYOR_FAST,
-                dir: Direction.EAST,
+                conveyor: {
+                  dir: Direction.EAST,
+                  fast: true,
+                },
               },
             },
             3: {
               2: {
-                type: CellType.GEAR,
-                rot: Rotation.RIGHT,
+                gear: {
+                  rot: Rotation.RIGHT,
+                },
               },
             },
           },
