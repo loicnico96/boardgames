@@ -1,34 +1,33 @@
 import { getCell } from "../board"
 import { RoborallyContext } from "../context"
 import { CellType } from "../model"
+import { isAffectedByBoard } from "../player"
 
 import { Move, resolveMoves } from "./resolveMoves"
 
 export async function resolveConveyors(
   context: RoborallyContext,
   fastConveyorsOnly: boolean = false
-): Promise<void> {
-  const { playerOrder, players } = context.state
+) {
+  const { playerOrder } = context.state
 
   const moves: Record<string, Move> = {}
 
   for (const playerId of playerOrder) {
-    const player = players[playerId]
+    const player = context.player(playerId)
 
-    if (player.destroyed) {
-      continue
-    }
+    if (isAffectedByBoard(player)) {
+      const cell = getCell(context.state, player.pos)
 
-    const cell = getCell(context.state, player.pos)
+      if (cell.type === CellType.CONVEYOR_FAST) {
+        // TODO: Conveyor rotations
+        moves[playerId] = { dir: cell.dir }
+      }
 
-    if (cell.type === CellType.CONVEYOR_FAST) {
-      // TODO: Conveyor rotations
-      moves[playerId] = { dir: cell.dir }
-    }
-
-    if (cell.type === CellType.CONVEYOR && !fastConveyorsOnly) {
-      // TODO: Conveyor rotations
-      moves[playerId] = { dir: cell.dir }
+      if (cell.type === CellType.CONVEYOR && !fastConveyorsOnly) {
+        // TODO: Conveyor rotations
+        moves[playerId] = { dir: cell.dir }
+      }
     }
   }
 

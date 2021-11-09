@@ -1,8 +1,8 @@
 import {
-  getAdjacentPositions,
-  isAdjacent,
+  getAdjacentPos,
+  isAdjacentPos,
   isString,
-  samePos,
+  isSamePos,
 } from "@boardgames/utils"
 import { useCallback } from "react"
 
@@ -51,11 +51,11 @@ export function InteractiveTile({ playerId, x, y }: InteractiveTileProps) {
       state => {
         const pos = { x, y }
 
-        if (forest.index !== null && forest.pos && samePos(forest.pos, pos)) {
+        if (forest.index !== null && forest.pos && isSamePos(forest.pos, pos)) {
           return state.tiles[forest.index]
         }
 
-        const confirmedForest = forests.find(f => samePos(f.pos, pos))
+        const confirmedForest = forests.find(f => isSamePos(f.pos, pos))
 
         if (confirmedForest) {
           return state.tiles[confirmedForest.index]
@@ -76,7 +76,7 @@ export function InteractiveTile({ playerId, x, y }: InteractiveTileProps) {
         if (
           village.index !== null &&
           village.pos &&
-          samePos(village.pos, pos)
+          isSamePos(village.pos, pos)
         ) {
           return player.hand[village.index]
         }
@@ -111,7 +111,7 @@ export function InteractiveTile({ playerId, x, y }: InteractiveTileProps) {
             return false
           }
 
-          if (village.pos === null || !isAdjacent(pos, village.pos)) {
+          if (village.pos === null || !isAdjacentPos(pos, village.pos)) {
             return false
           }
 
@@ -146,7 +146,7 @@ export function InteractiveTile({ playerId, x, y }: InteractiveTileProps) {
           return existingTile.playerId === playerId
         }
 
-        return getAdjacentPositions(pos).some(p => !isEmpty(state, p))
+        return getAdjacentPos(pos).some(p => !isEmpty(state, p))
       },
       [forest, playerId, village, x, y]
     )

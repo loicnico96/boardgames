@@ -1,7 +1,8 @@
 import { BasePlayer, BaseState, GameModel } from "@boardgames/common"
-import { Direction, ObjectUnion, Pos, Rotation } from "@boardgames/utils"
+import { Direction, ObjectUnion, Position, Rotation } from "@boardgames/utils"
 
 export enum BoardId {
+  // TODO
   DEFAULT = "default",
 }
 
@@ -25,7 +26,9 @@ export type Cell = ObjectUnion<
   "type",
   {
     [CellType.NORMAL]: {}
-    [CellType.HOLE]: {}
+    [CellType.HOLE]: {
+      seq?: number[]
+    }
     [CellType.GEAR]: {
       rot: Rotation
     }
@@ -38,10 +41,13 @@ export type Cell = ObjectUnion<
     [CellType.REPAIR]: {}
     [CellType.TELEPORT]: {}
     [CellType.PORTAL]: {
-      pos: Pos
+      pos: Position
     }
   }
 > & {
+  crush?: number[]
+  push?: number[]
+  pushDir?: Direction
   walls?: Partial<Record<Direction, WallType>>
   water?: boolean
 }
@@ -49,15 +55,16 @@ export type Cell = ObjectUnion<
 export enum GamePhase {
   READY = 0,
   PROGRAM = 1,
-  RESOLVE_PROGRAM = 2,
-  RESOLVE_CONVEYOR_FAST = 3,
-  RESOLVE_CONVEYOR = 4,
-  RESOLVE_GEAR = 5,
+  RESOLVE_TRAP = 2,
+  RESOLVE_PROGRAM = 3,
+  RESOLVE_CONVEYOR_FAST = 4,
+  RESOLVE_CONVEYOR = 5,
   RESOLVE_PUSHER = 6,
   RESOLVE_CRUSHER = 7,
-  RESOLVE_LASER = 8,
-  RESOLVE_REPAIR = 9,
-  RESOLVE_CHECKPOINT = 10,
+  RESOLVE_GEAR = 8,
+  RESOLVE_LASER = 9,
+  RESOLVE_REPAIR = 10,
+  RESOLVE_CHECKPOINT = 11,
 }
 
 export type RoborallyAction = ObjectUnion<
@@ -121,14 +128,14 @@ export type RoborallyEvent = ObjectUnion<
       players: {
         [playerId in string]: {
           dir: Direction
-          pos: Pos
+          pos: Position
         }
       }
     }
     playerTeleport: {
       players: {
         [playerId in string]: {
-          pos: Pos
+          pos: Position
         }
       }
     }
@@ -149,7 +156,7 @@ export type RoborallyPlayer = BasePlayer<RoborallyAction> & {
   damage: number
   destroyed: boolean
   hand: number[]
-  pos: Pos
+  pos: Position
   rot: number
   powerDown: boolean
   powerDownNext: boolean
@@ -166,10 +173,10 @@ export type RoborallyState = BaseState<RoborallyPlayer> & {
     }
   }
   boardId: BoardId
-  checkpoints: Pos[]
+  checkpoints: Position[]
   currentPlayerId: string | null
   phase: GamePhase
-  sequence: number | null
+  sequence: number
   turn: number
 }
 

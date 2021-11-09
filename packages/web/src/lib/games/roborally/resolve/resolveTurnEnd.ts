@@ -1,19 +1,13 @@
-import { Direction, Pos } from "@boardgames/utils"
+import { Direction, Position, size } from "@boardgames/utils"
 
 import { RESPAWN_DAMAGE } from "../constants"
 import { RoborallyContext } from "../context"
 import { getLockedProgram } from "../player"
 
-export async function resolveTurnEnd(context: RoborallyContext): Promise<void> {
+export async function resolveTurnEnd(context: RoborallyContext) {
   const { checkpoints, playerOrder } = context.state
 
-  context.update({
-    $merge: {
-      sequence: null,
-    },
-  })
-
-  const players: Record<string, { pos: Pos; dir: Direction }> = {}
+  const players: Record<string, { pos: Position; dir: Direction }> = {}
 
   for (const playerId of playerOrder) {
     const player = context.player(playerId)
@@ -67,7 +61,7 @@ export async function resolveTurnEnd(context: RoborallyContext): Promise<void> {
     }
   }
 
-  if (Object.keys(players).length > 0) {
+  if (size(players) > 0) {
     await context.post({
       code: "playerRespawn",
       players,

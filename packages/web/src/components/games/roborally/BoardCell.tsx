@@ -1,4 +1,4 @@
-import { Direction, Directions, Pos, samePos } from "@boardgames/utils"
+import { Direction, Directions, Position, isSamePos } from "@boardgames/utils"
 import styled from "@emotion/styled"
 
 import { getCell } from "lib/games/roborally/board"
@@ -49,7 +49,7 @@ const StyledWall = styled.div<StyledWallProps>`
     [CELL_SIZE, WALL_SIZE, CELL_SIZE, WALL_SIZE][props.direction]}px;
 `
 
-export function getCellColor(state: RoborallyState, pos: Pos): string {
+export function getCellColor(state: RoborallyState, pos: Position): string {
   const cell = getCell(state, pos)
 
   if (cell.type === CellType.HOLE) {
@@ -59,11 +59,14 @@ export function getCellColor(state: RoborallyState, pos: Pos): string {
   return cell.water ? "royalblue" : "lightgray"
 }
 
-export function getCellSymbol(state: RoborallyState, pos: Pos): string | null {
+export function getCellSymbol(
+  state: RoborallyState,
+  pos: Position
+): string | null {
   const cell = getCell(state, pos)
 
   const checkpoint = state.checkpoints.findIndex(checkpointPos =>
-    samePos(pos, checkpointPos)
+    isSamePos(pos, checkpointPos)
   )
 
   if (checkpoint >= 0) {
@@ -112,12 +115,12 @@ export function getCellSymbol(state: RoborallyState, pos: Pos): string | null {
 
 export function getCellTooltip(
   state: RoborallyState,
-  pos: Pos
+  pos: Position
 ): string | undefined {
   const cell = getCell(state, pos)
 
   const checkpoint = state.checkpoints.findIndex(checkpointPos =>
-    samePos(pos, checkpointPos)
+    isSamePos(pos, checkpointPos)
   )
 
   if (checkpoint >= 0) {

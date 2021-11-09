@@ -1,5 +1,5 @@
 import { BasePlayer, BaseState, GameModel } from "@boardgames/common"
-import { Direction, Pos, ObjectUnion, isEnum } from "@boardgames/utils"
+import { Direction, Position, ObjectUnion, isEnum } from "@boardgames/utils"
 
 export enum ForestType {
   CACAO_1 = "beans1",
@@ -61,11 +61,11 @@ export type CacaoAction = ObjectUnion<
     playTile: {
       forests: {
         index: number
-        pos: Pos
+        pos: Position
       }[]
       village: {
         index: number
-        pos: Pos
+        pos: Position
         rot: number
       }
     }
@@ -83,43 +83,43 @@ export type CacaoEvent = ObjectUnion<
       amount: number
       dir: Direction
       playerId: string
-      pos: Pos
+      pos: Position
     }
     gainCoins: {
       amount: number
       dir: Direction
       playerId: string
-      pos: Pos
+      pos: Position
     }
     gainSun: {
       amount: number
       dir: Direction
       playerId: string
-      pos: Pos
+      pos: Position
     }
     gainWater: {
       amount: number
       dir: Direction
       playerId: string
-      pos: Pos
+      pos: Position
     }
     makeChocolate: {
       amount: number
       dir: Direction
       playerId: string
-      pos: Pos
+      pos: Position
     }
     nextPlayer: {
       playerId: string
     }
     placeForestTile: {
-      pos: Pos
+      pos: Position
       type: ForestType
     }
     placeVillageTile: {
       overbuilt: boolean
       playerId: string
-      pos: Pos
+      pos: Position
       rot: number
       type: VillageType
     }
@@ -131,14 +131,14 @@ export type CacaoEvent = ObjectUnion<
       amount: number
       dir: Direction
       playerId: string
-      pos: Pos
+      pos: Position
       price: number
     }
     sellChocolate: {
       amount: number
       dir: Direction
       playerId: string
-      pos: Pos
+      pos: Position
       price: number
     }
     spendSun: {

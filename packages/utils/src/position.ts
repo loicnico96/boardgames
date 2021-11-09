@@ -1,15 +1,15 @@
 import { mod } from "./math"
 
+export type Position = {
+  x: number
+  y: number
+}
+
 export enum Direction {
   NORTH = 0,
   EAST = 1,
   SOUTH = 2,
   WEST = 3,
-}
-
-export enum Rotation {
-  LEFT = -1,
-  RIGHT = 1,
 }
 
 export const Directions = [
@@ -19,16 +19,16 @@ export const Directions = [
   Direction.WEST,
 ]
 
+export enum Rotation {
+  LEFT = -1,
+  RIGHT = 1,
+}
+
 export function getDir(rot: number): Direction {
   return mod(rot, Directions.length)
 }
 
-export type Pos = {
-  x: number
-  y: number
-}
-
-export function movePos(pos: Pos, rot: number, dis: number = 1): Pos {
+export function movePos(pos: Position, rot: number, dis: number = 1): Position {
   switch (getDir(rot)) {
     case Direction.NORTH:
       return { x: pos.x, y: pos.y - dis }
@@ -41,14 +41,14 @@ export function movePos(pos: Pos, rot: number, dis: number = 1): Pos {
   }
 }
 
-export function samePos(pos1: Pos, pos2: Pos): boolean {
-  return pos1.x === pos2.x && pos1.y === pos2.y
-}
-
-export function getAdjacentPositions(pos: Pos): Pos[] {
+export function getAdjacentPos(pos: Position): Position[] {
   return Directions.map(direction => movePos(pos, direction))
 }
 
-export function isAdjacent(pos1: Pos, pos2: Pos): boolean {
-  return getAdjacentPositions(pos1).some(pos => samePos(pos, pos2))
+export function isSamePos(pos1: Position, pos2: Position): boolean {
+  return pos1.x === pos2.x && pos1.y === pos2.y
+}
+
+export function isAdjacentPos(pos1: Position, pos2: Position): boolean {
+  return getAdjacentPos(pos1).some(pos => isSamePos(pos, pos2))
 }

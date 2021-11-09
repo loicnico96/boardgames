@@ -1,11 +1,14 @@
 import { RoborallyContext } from "../context"
 import { GamePhase } from "../model"
 
+import { checkHoles } from "./checkHoles"
 import { nextPhase } from "./nextPhase"
 import { resolveCheckpoints } from "./resolveCheckpoints"
 import { resolveConveyors } from "./resolveConveyors"
+import { resolveCrushers } from "./resolveCrushers"
 import { resolveGears } from "./resolveGears"
 import { resolveProgramCards } from "./resolveProgramCards"
+import { resolvePushers } from "./resolvePushers"
 import { resolveRepairs } from "./resolveRepairs"
 
 export async function resolveSequence(
@@ -14,8 +17,11 @@ export async function resolveSequence(
 ): Promise<void> {
   context.update({ $merge: { sequence } })
 
+  await nextPhase(context, GamePhase.RESOLVE_TRAP)
+  await checkHoles(context)
+
   await nextPhase(context, GamePhase.RESOLVE_PROGRAM)
-  await resolveProgramCards(context, sequence)
+  await resolveProgramCards(context)
 
   await nextPhase(context, GamePhase.RESOLVE_CONVEYOR_FAST)
   await resolveConveyors(context, true)
@@ -23,11 +29,11 @@ export async function resolveSequence(
   await nextPhase(context, GamePhase.RESOLVE_CONVEYOR)
   await resolveConveyors(context)
 
-  // await nextPhase(context, GamePhase.RESOLVE_PUSHER)
-  // TODO: await resolvePushers(context, sequence)
+  await nextPhase(context, GamePhase.RESOLVE_PUSHER)
+  await resolvePushers(context)
 
-  // await nextPhase(context, GamePhase.RESOLVE_CRUSHER)
-  // TODO: await resolveCrushers(context, sequence)
+  await nextPhase(context, GamePhase.RESOLVE_CRUSHER)
+  await resolveCrushers(context)
 
   await nextPhase(context, GamePhase.RESOLVE_GEAR)
   await resolveGears(context)

@@ -1,4 +1,4 @@
-import { Pos } from "@boardgames/utils"
+import { Position } from "@boardgames/utils"
 
 import { makeUseGamePlayer } from "hooks/store/useGamePlayer"
 import { makeUseGameState } from "hooks/store/useGameState"
@@ -12,16 +12,16 @@ export const useCacaoPlayer = makeUseGamePlayer(GameType.CACAO)
 export type CacaoUiState = {
   forest: {
     index: number | null
-    pos: Pos | null
+    pos: Position | null
   }
   forests: {
     index: number
-    pos: Pos
+    pos: Position
   }[]
   village: {
     confirmed: boolean
     index: number | null
-    pos: Pos | null
+    pos: Position | null
     rot: number
   }
 }

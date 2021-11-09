@@ -1,4 +1,4 @@
-import { getDir, getAdjacentPositions, identity } from "@boardgames/utils"
+import { getDir, getAdjacentPos, identity } from "@boardgames/utils"
 import { useCallback } from "react"
 
 import { AsyncButton } from "components/ui/AsyncButton"
@@ -52,8 +52,8 @@ export function GameBanner({ playerId }: GameBannerProps) {
     if (village.index !== null && village.pos !== null) {
       const forestTiles = state.tiles.filter(tile => tile !== null)
 
-      const fillPositions = getAdjacentPositions(village.pos).filter(
-        forestPos => isFillable(state, forestPos, false)
+      const fillPositions = getAdjacentPos(village.pos).filter(forestPos =>
+        isFillable(state, forestPos, false)
       )
 
       const fillCount = Math.min(fillPositions.length, forestTiles.length)

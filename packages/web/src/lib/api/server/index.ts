@@ -11,10 +11,9 @@ import { ApiHandler } from "./types"
 
 export function handle<
   T extends Partial<Record<HttpMethod, Record<string, unknown>>>
->(handlers: { [K in keyof T]: ApiHandler<T[K]> }): (
-  request: NextApiRequest,
-  response: NextApiResponse
-) => Promise<void> {
+>(handlers: {
+  [K in keyof T]: ApiHandler<T[K]>
+}): (request: NextApiRequest, response: NextApiResponse) => Promise<void> {
   return async (request: NextApiRequest, response: NextApiResponse) => {
     const timeStart = getTime()
 

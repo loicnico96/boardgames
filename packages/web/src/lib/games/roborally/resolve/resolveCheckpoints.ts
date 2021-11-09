@@ -1,10 +1,8 @@
-import { getDir, samePos } from "@boardgames/utils"
+import { getDir, isSamePos, size } from "@boardgames/utils"
 
 import { RoborallyContext } from "../context"
 
-export async function resolveCheckpoints(
-  context: RoborallyContext
-): Promise<void> {
+export async function resolveCheckpoints(context: RoborallyContext) {
   const { checkpoints, playerOrder } = context.state
 
   const players: Record<string, { checkpoint: number }> = {}
@@ -16,7 +14,7 @@ export async function resolveCheckpoints(
       continue
     }
 
-    const checkpoint = checkpoints.findIndex(pos => samePos(pos, player.pos))
+    const checkpoint = checkpoints.findIndex(pos => isSamePos(pos, player.pos))
 
     if (checkpoint === player.checkpoint) {
       context.updatePlayer(playerId, {
@@ -38,7 +36,7 @@ export async function resolveCheckpoints(
     }
   }
 
-  if (Object.keys(players).length > 0) {
+  if (size(players) > 0) {
     await context.post({
       code: "playerCheckpoint",
       players,

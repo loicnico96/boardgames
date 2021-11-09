@@ -534,7 +534,7 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
         },
       ]),
       seed,
-      sequence: null,
+      sequence: 0,
       turn: 0,
     }
   }

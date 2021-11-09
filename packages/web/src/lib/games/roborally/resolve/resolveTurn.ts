@@ -8,7 +8,7 @@ import { nextPhase } from "./nextPhase"
 import { resolveSequence } from "./resolveSequence"
 import { resolveTurnEnd } from "./resolveTurnEnd"
 
-export async function resolveTurn(context: RoborallyContext): Promise<void> {
+export async function resolveTurn(context: RoborallyContext) {
   const { playerOrder } = context.state
 
   for (const playerId of playerOrder) {

@@ -1,10 +1,10 @@
-import { getCell, isHole } from "../board"
+import { getCell, isActiveCrusher } from "../board"
 import { RoborallyContext } from "../context"
 import { isAffectedByBoard } from "../player"
 
 import { destroyPlayers } from "./destroyPlayers"
 
-export async function checkHoles(context: RoborallyContext) {
+export async function resolveCrushers(context: RoborallyContext) {
   const { playerOrder, sequence } = context.state
 
   await destroyPlayers(
@@ -15,7 +15,7 @@ export async function checkHoles(context: RoborallyContext) {
       if (isAffectedByBoard(player)) {
         const cell = getCell(context.state, player.pos)
 
-        return isHole(cell, sequence)
+        return isActiveCrusher(cell, sequence)
       }
 
       return false

@@ -2,42 +2,23 @@ import {
   getDir,
   movePos,
   mutableSortBy,
-  Pos,
+  Position,
   Rotation,
-  samePos,
+  isSamePos,
 } from "@boardgames/utils"
 
 import { getCell } from "../board"
 import { CardAction, getCardAction, getCardPriority } from "../card"
 import { RoborallyContext } from "../context"
 import { CellType, RoborallyPlayer, RoborallyState } from "../model"
+import { isAbleToMove, isAffectedByPlayers } from "../player"
 
-import { isAffectedByPlayers, resolveMoves } from "./resolveMoves"
-
-export function isAlive(player: RoborallyPlayer): boolean {
-  return !player.destroyed
-}
-
-export function isPoweredDown(player: RoborallyPlayer): boolean {
-  return player.powerDown
-}
-
-export function isReady(player: RoborallyPlayer): boolean {
-  return player.ready
-}
-
-export function isVirtual(player: RoborallyPlayer): boolean {
-  return player.virtual
-}
-
-export function isAbleToMove(player: RoborallyPlayer): boolean {
-  return isAlive(player) && !isPoweredDown(player)
-}
+import { resolveMoves } from "./resolveMoves"
 
 export function isAbleToTeleport(
   state: RoborallyState,
   player: RoborallyPlayer,
-  pos: Pos
+  pos: Position
 ): boolean {
   if (!isAffectedByPlayers(player)) {
     return true
@@ -47,7 +28,7 @@ export function isAbleToTeleport(
     const otherPlayer = state.players[otherPlayerId]
 
     if (!isAffectedByPlayers(otherPlayer)) {
-      return samePos(otherPlayer.pos, pos)
+      return isSamePos(otherPlayer.pos, pos)
     }
   })
 }
@@ -55,16 +36,16 @@ export function isAbleToTeleport(
 export async function resolvePlayerMove(
   context: RoborallyContext,
   playerId: string,
-  rotation: number,
+  rot: number,
   distance: number,
   teleportDistance: number
-): Promise<void> {
+) {
   const player = context.player(playerId)
   const cell = getCell(context.state, player.pos)
-  const direction = getDir(player.rot + rotation)
+  const dir = getDir(player.rot + rot)
 
   if (cell.type === CellType.TELEPORT) {
-    const teleportPos = movePos(player.pos, direction, teleportDistance)
+    const teleportPos = movePos(player.pos, dir, teleportDistance)
     if (isAbleToTeleport(context.state, player, teleportPos)) {
       context.updatePlayer(playerId, {
         $merge: {
@@ -88,11 +69,14 @@ export async function resolvePlayerMove(
   const finalDistance = cell.water ? distance - 1 : distance
 
   for (let moved = 0; moved < finalDistance; moved++) {
-    if (context.player(playerId).destroyed) {
-      break
+    if (isAbleToMove(context.player(playerId))) {
+      await resolveMoves(context, {
+        [playerId]: {
+          dir,
+          push: true,
+        },
+      })
     }
-
-    await resolveMoves(context, { [playerId]: { dir: direction, push: true } })
   }
 }
 
@@ -100,7 +84,7 @@ export async function resolvePlayerRotate(
   context: RoborallyContext,
   playerId: string,
   rot: number
-): Promise<void> {
+) {
   await resolveMoves(context, { [playerId]: { rot } })
 }
 
@@ -108,7 +92,7 @@ export async function resolveProgramCard(
   context: RoborallyContext,
   playerId: string,
   card: number
-): Promise<void> {
+) {
   const action = getCardAction(card)
 
   await context.post({
@@ -141,14 +125,12 @@ export async function resolveProgramCard(
   }
 }
 
-export async function resolveProgramCards(
-  context: RoborallyContext,
-  sequence: number
-): Promise<void> {
-  const { playerOrder, players } = context.state
+export async function resolveProgramCards(context: RoborallyContext) {
+  const { playerOrder, sequence } = context.state
 
   const playerActions = playerOrder.reduce((result, playerId) => {
-    const card = players[playerId].program[sequence]
+    const player = context.player(playerId)
+    const card = player.program[sequence]
 
     if (card !== null) {
       result.push({ card, playerId })

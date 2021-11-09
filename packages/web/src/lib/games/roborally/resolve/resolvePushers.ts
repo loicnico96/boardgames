@@ -1,12 +1,11 @@
-import { getCell } from "../board"
+import { getCell, getActivePusher } from "../board"
 import { RoborallyContext } from "../context"
-import { CellType } from "../model"
 import { isAffectedByBoard } from "../player"
 
 import { Move, resolveMoves } from "./resolveMoves"
 
-export async function resolveGears(context: RoborallyContext) {
-  const { playerOrder } = context.state
+export async function resolvePushers(context: RoborallyContext) {
+  const { playerOrder, sequence } = context.state
 
   const moves: Record<string, Move> = {}
 
@@ -15,10 +14,12 @@ export async function resolveGears(context: RoborallyContext) {
 
     if (isAffectedByBoard(player)) {
       const cell = getCell(context.state, player.pos)
+      const pushDir = getActivePusher(cell, sequence)
 
-      if (cell.type === CellType.GEAR) {
+      if (pushDir !== null) {
         moves[playerId] = {
-          rot: cell.rot,
+          dir: pushDir,
+          push: true,
         }
       }
     }

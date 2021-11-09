@@ -877,6 +877,9 @@ describe("resolveProgramCards", () => {
     const context = createTestContext(RoborallyContext, 4)
 
     context.update({
+      $merge: {
+        sequence: 2,
+      },
       players: {
         player1: {
           $merge: {
@@ -921,7 +924,7 @@ describe("resolveProgramCards", () => {
       },
     })
 
-    const events = await run(context, resolveProgramCards, 2)
+    const events = await run(context, resolveProgramCards)
 
     expect(events).toStrictEqual([
       {

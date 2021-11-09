@@ -1,13 +1,13 @@
 import {
   generate,
   mutableSortBy,
-  getAdjacentPositions,
+  getAdjacentPos,
   getDir,
   Direction,
   Directions,
   movePos,
-  Pos,
-  samePos,
+  Position,
+  isSamePos,
   assert,
 } from "@boardgames/utils"
 
@@ -34,7 +34,7 @@ import {
 export async function gainBeans(
   context: CacaoContext,
   playerId: string,
-  pos: Pos,
+  pos: Position,
   dir: Direction,
   amount: number
 ): Promise<number> {
@@ -62,7 +62,7 @@ export async function gainBeans(
 export async function gainCoins(
   context: CacaoContext,
   playerId: string,
-  pos: Pos,
+  pos: Position,
   dir: Direction,
   amount: number
 ): Promise<number> {
@@ -84,7 +84,7 @@ export async function gainCoins(
 export async function gainSun(
   context: CacaoContext,
   playerId: string,
-  pos: Pos,
+  pos: Position,
   dir: Direction,
   amount: number
 ): Promise<number> {
@@ -109,7 +109,7 @@ export async function gainSun(
 export async function gainWater(
   context: CacaoContext,
   playerId: string,
-  pos: Pos,
+  pos: Position,
   dir: Direction,
   amount: number
 ): Promise<number> {
@@ -155,7 +155,7 @@ export async function spendSun(
 export async function makeChocolate(
   context: CacaoContext,
   playerId: string,
-  pos: Pos,
+  pos: Position,
   dir: Direction,
   amount: number
 ): Promise<number> {
@@ -183,7 +183,7 @@ export async function makeChocolate(
 export async function sellBeans(
   context: CacaoContext,
   playerId: string,
-  pos: Pos,
+  pos: Position,
   dir: Direction,
   amount: number,
   price: number
@@ -213,7 +213,7 @@ export async function sellBeans(
 export async function sellChocolate(
   context: CacaoContext,
   playerId: string,
-  pos: Pos,
+  pos: Position,
   dir: Direction,
   amount: number
 ): Promise<number> {
@@ -288,9 +288,9 @@ export function getTileWorkers(village: VillageTile, dir: Direction): number {
 export type WorkerResolution = {
   direction: Direction
   forest: ForestTile
-  forestPos: Pos
+  forestPos: Position
   village: VillageTile
-  villagePos: Pos
+  villagePos: Position
 }
 
 export function sortResolutions(
@@ -515,8 +515,8 @@ export async function resolveResolution(
 
 export async function resolveWorkers(
   context: CacaoContext,
-  villagePos: Pos,
-  forestPositions: Pos[]
+  villagePos: Position,
+  forestPositions: Position[]
 ): Promise<void> {
   const { currentPlayerId, playerOrder } = context.state
   assert(currentPlayerId !== null, "Invalid state")
@@ -554,7 +554,7 @@ export async function resolveWorkers(
 
     for (const direction of Directions) {
       const adjacentVillagePos = movePos(forestPos, direction, 1)
-      if (samePos(villagePos, adjacentVillagePos)) {
+      if (isSamePos(villagePos, adjacentVillagePos)) {
         continue
       }
 
@@ -592,7 +592,7 @@ export async function resolveWorkers(
 
 export async function fillForest(
   context: CacaoContext,
-  forestPos: Pos,
+  forestPos: Position,
   tileIndex: number
 ): Promise<void> {
   assert(
@@ -622,7 +622,7 @@ export async function fillForest(
 
 export async function fillForestFromDeck(
   context: CacaoContext,
-  forestPos: Pos
+  forestPos: Position
 ): Promise<void> {
   assert(
     isFillable(context.state, forestPos),
@@ -651,7 +651,7 @@ export async function placeVillageTile(
   context: CacaoContext,
   playerId: string,
   tileIndex: number,
-  villagePos: Pos,
+  villagePos: Position,
   rotation: number
 ): Promise<void> {
   const player = context.player(playerId)
@@ -702,15 +702,15 @@ export async function resolvePlayerAction(
     action.village.rot
   )
 
-  const filledPositions: Pos[] = []
+  const filledPositions: Position[] = []
 
   for (const forest of action.forests) {
     await fillForest(context, forest.pos, forest.index)
     filledPositions.push(forest.pos)
   }
 
-  const fillPositions = getAdjacentPositions(action.village.pos).filter(
-    forestPos => isFillable(context.state, forestPos)
+  const fillPositions = getAdjacentPos(action.village.pos).filter(forestPos =>
+    isFillable(context.state, forestPos)
   )
 
   if (fillPositions.length > 0) {

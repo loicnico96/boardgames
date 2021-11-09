@@ -1,4 +1,4 @@
-import { Directions, movePos, Pos } from "@boardgames/utils"
+import { Directions, movePos, Position } from "@boardgames/utils"
 
 import { BOARD_SIZE } from "./constants"
 import { BoardTile, CacaoState, EmptyTile, ForestType } from "./model"
@@ -28,28 +28,28 @@ export function getInitialBoard(): CacaoState["board"] {
 /**
  * Returns the current tile at the given coordinates.
  */
-export function getTile(state: CacaoState, pos: Pos): BoardTile {
+export function getTile(state: CacaoState, pos: Position): BoardTile {
   return state.board[pos.x]?.[pos.y] ?? EMPTY_TILE
 }
 
 /**
  * Returns true if there is no tile at the given coordinates, false otherwise.
  */
-export function isEmpty(state: CacaoState, pos: Pos): boolean {
+export function isEmpty(state: CacaoState, pos: Position): boolean {
   return getTile(state, pos).type === null
 }
 
 /**
  * Returns true if the given coordinates is a Forest space, false otherwise.
  */
-export function isForestSpace(pos: Pos): boolean {
+export function isForestSpace(pos: Position): boolean {
   return pos.x % 2 === pos.y % 2
 }
 
 /**
  * Returns true if the given coordinates is a Village space, false otherwise.
  */
-export function isVillageSpace(pos: Pos): boolean {
+export function isVillageSpace(pos: Position): boolean {
   return pos.x % 2 !== pos.y % 2
 }
 
@@ -58,7 +58,7 @@ export function isVillageSpace(pos: Pos): boolean {
  */
 export function isFillable(
   state: CacaoState,
-  forestPos: Pos,
+  forestPos: Position,
   villageExists: boolean = true
 ): boolean {
   if (isForestSpace(forestPos) && isEmpty(state, forestPos)) {

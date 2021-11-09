@@ -4,7 +4,13 @@ import {
   BaseOptions,
   UserInfo,
 } from "@boardgames/common"
-import { boolean, generate, object, optional, Pos } from "@boardgames/utils"
+import {
+  boolean,
+  generate,
+  object,
+  optional,
+  Position,
+} from "@boardgames/utils"
 import update from "immutability-helper"
 
 import { validateAction } from "./action"
@@ -69,7 +75,7 @@ export class CacaoContext extends BaseContext<CacaoModel> {
     }
   }
 
-  setTile(pos: Pos, tile: BoardTile): void {
+  setTile(pos: Position, tile: BoardTile): void {
     this.update({
       board: {
         [pos.x]: row =>

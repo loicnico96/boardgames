@@ -3,13 +3,14 @@ import {
   getDir,
   movePos,
   reduce,
-  samePos,
+  isSamePos,
   size,
 } from "@boardgames/utils"
 
 import { isPassable } from "../board"
 import { RoborallyContext } from "../context"
 import { RoborallyPlayer, RoborallyState } from "../model"
+import { isAffectedByPlayers } from "../player"
 
 import { checkHoles } from "./checkHoles"
 import { checkPortals } from "./checkPortals"
@@ -18,10 +19,6 @@ export type Move = {
   dir?: Direction
   push?: boolean
   rot?: number
-}
-
-export function isAffectedByPlayers(player: RoborallyPlayer): boolean {
-  return !player.virtual && !player.destroyed
 }
 
 export function isColliding(
@@ -35,7 +32,7 @@ export function isColliding(
       moveA?.dir !== undefined ? movePos(playerA.pos, moveA.dir) : playerA.pos
     const posB =
       moveB?.dir !== undefined ? movePos(playerB.pos, moveB.dir) : playerB.pos
-    return samePos(posA, posB)
+    return isSamePos(posA, posB)
   }
 
   return false

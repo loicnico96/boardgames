@@ -60,6 +60,10 @@ describe("resolveSequence", () => {
     expect(events).toStrictEqual([
       {
         code: "nextPhase",
+        phase: GamePhase.RESOLVE_TRAP,
+      },
+      {
+        code: "nextPhase",
         phase: GamePhase.RESOLVE_PROGRAM,
       },
       {
@@ -98,6 +102,14 @@ describe("resolveSequence", () => {
             dir: Direction.EAST,
           },
         },
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_PUSHER,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_CRUSHER,
       },
       {
         code: "nextPhase",

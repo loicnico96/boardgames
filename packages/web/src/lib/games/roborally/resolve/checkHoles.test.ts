@@ -7,9 +7,12 @@ import { checkHoles } from "./checkHoles"
 
 describe("checkHoles", () => {
   it("destroys players on holes or outside of board", async () => {
-    const context = createTestContext(RoborallyContext, 4)
+    const context = createTestContext(RoborallyContext, 6)
 
     context.update({
+      $merge: {
+        sequence: 3,
+      },
       board: {
         cells: {
           $set: {
@@ -18,21 +21,47 @@ describe("checkHoles", () => {
                 type: CellType.HOLE,
               },
             },
+            4: {
+              4: {
+                type: CellType.HOLE,
+              },
+            },
+            5: {
+              5: {
+                type: CellType.HOLE,
+                seq: [1, 3],
+              },
+            },
+            6: {
+              6: {
+                type: CellType.HOLE,
+                seq: [2, 4],
+              },
+            },
           },
         },
       },
       players: {
-        // On normal cell, will not be destroyed
+        // Outside of board (will be destroyed)
         player1: {
           $merge: {
             pos: {
-              x: 2,
-              y: 3,
+              x: -1,
+              y: -1,
             },
           },
         },
-        // On hole, will be destroyed
+        // On normal cell (will not be destroyed)
         player2: {
+          $merge: {
+            pos: {
+              x: 2,
+              y: 2,
+            },
+          },
+        },
+        // On hole (will be destroyed)
+        player3: {
           $merge: {
             pos: {
               x: 3,
@@ -40,22 +69,31 @@ describe("checkHoles", () => {
             },
           },
         },
-        // Outside of board, will be destroyed
-        player3: {
-          $merge: {
-            pos: {
-              x: -3,
-              y: 3,
-            },
-          },
-        },
-        // Already destroyed, will not be destroyed again
+        // On hole, already destroyed (will not be destroyed)
         player4: {
           $merge: {
             destroyed: true,
             pos: {
-              x: 3,
-              y: 3,
+              x: 4,
+              y: 4,
+            },
+          },
+        },
+        // On active trap (will be destroyed)
+        player5: {
+          $merge: {
+            pos: {
+              x: 5,
+              y: 5,
+            },
+          },
+        },
+        // On inactive trap (will not be destroyed)
+        player6: {
+          $merge: {
+            pos: {
+              x: 6,
+              y: 6,
             },
           },
         },
@@ -64,27 +102,41 @@ describe("checkHoles", () => {
 
     const events = await run(context, checkHoles)
 
-    for (const playerId of context.state.playerOrder) {
-      const player = context.player(playerId)
+    expect(context.player("player1")).toMatchObject({
+      destroyed: true,
+    })
 
-      expect(player.destroyed).toBe(
-        {
-          player1: false,
-          player2: true,
-          player3: true,
-          player4: true,
-        }[playerId]
-      )
-    }
+    expect(context.player("player2")).toMatchObject({
+      destroyed: false,
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      destroyed: true,
+    })
+
+    expect(context.player("player4")).toMatchObject({
+      destroyed: true,
+    })
+
+    expect(context.player("player5")).toMatchObject({
+      destroyed: true,
+    })
+
+    expect(context.player("player6")).toMatchObject({
+      destroyed: false,
+    })
 
     expect(events).toStrictEqual([
       {
         code: "playerDestroy",
         players: {
-          player2: {
+          player1: {
             destroyed: true,
           },
           player3: {
+            destroyed: true,
+          },
+          player5: {
             destroyed: true,
           },
         },

@@ -1,11 +1,11 @@
 import { BaseAction } from "@boardgames/common"
 import {
   array,
-  getAdjacentPositions,
+  getAdjacentPos,
   integer,
   object,
   objectUnion,
-  samePos,
+  isSamePos,
 } from "@boardgames/utils"
 
 import { getTile, isEmpty, isFillable, isVillageSpace } from "./board"
@@ -53,7 +53,7 @@ export function validateAction(
                   throw Error("You cannot use the same Forest tile twice.")
                 }
 
-                if (samePos(forests[0].pos, forests[1].pos)) {
+                if (isSamePos(forests[0].pos, forests[1].pos)) {
                   throw Error("You cannot fill the same Forest space twice.")
                 }
               }
@@ -115,7 +115,7 @@ export function validateAction(
         }
 
         // Check that there exists at least one adjacent tile
-        const adjacentPositions = getAdjacentPositions(pos).filter(
+        const adjacentPositions = getAdjacentPos(pos).filter(
           adjacentPos => !isEmpty(state, adjacentPos)
         )
 
@@ -124,7 +124,7 @@ export function validateAction(
         }
 
         // Check that the correct number of extra Forest tiles are provided
-        const fillPositions = getAdjacentPositions(pos).filter(adjacentPos =>
+        const fillPositions = getAdjacentPos(pos).filter(adjacentPos =>
           isFillable(state, adjacentPos, false)
         )
 
@@ -136,7 +136,7 @@ export function validateAction(
 
         // Check that the Forest tiles are placed in appropriate spaces
         for (const forest of forests) {
-          if (!fillPositions.some(fillPos => samePos(forest.pos, fillPos))) {
+          if (!fillPositions.some(fillPos => isSamePos(forest.pos, fillPos))) {
             throw Error("You cannot place a Forest tile here.")
           }
         }

@@ -100,6 +100,10 @@ describe("resolveTurn", () => {
     expect(events).toStrictEqual([
       {
         code: "nextPhase",
+        phase: GamePhase.RESOLVE_TRAP,
+      },
+      {
+        code: "nextPhase",
         phase: GamePhase.RESOLVE_PROGRAM,
       },
       {
@@ -125,6 +129,14 @@ describe("resolveTurn", () => {
       },
       {
         code: "nextPhase",
+        phase: GamePhase.RESOLVE_PUSHER,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_CRUSHER,
+      },
+      {
+        code: "nextPhase",
         phase: GamePhase.RESOLVE_GEAR,
       },
       {
@@ -134,6 +146,10 @@ describe("resolveTurn", () => {
       {
         code: "nextPhase",
         phase: GamePhase.RESOLVE_CHECKPOINT,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_TRAP,
       },
       {
         code: "nextPhase",
@@ -162,6 +178,14 @@ describe("resolveTurn", () => {
       },
       {
         code: "nextPhase",
+        phase: GamePhase.RESOLVE_PUSHER,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_CRUSHER,
+      },
+      {
+        code: "nextPhase",
         phase: GamePhase.RESOLVE_GEAR,
       },
       {
@@ -179,6 +203,10 @@ describe("resolveTurn", () => {
       {
         code: "nextPhase",
         phase: GamePhase.RESOLVE_CHECKPOINT,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_TRAP,
       },
       {
         code: "nextPhase",
@@ -207,6 +235,14 @@ describe("resolveTurn", () => {
       },
       {
         code: "nextPhase",
+        phase: GamePhase.RESOLVE_PUSHER,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_CRUSHER,
+      },
+      {
+        code: "nextPhase",
         phase: GamePhase.RESOLVE_GEAR,
       },
       {
@@ -224,6 +260,10 @@ describe("resolveTurn", () => {
       {
         code: "nextPhase",
         phase: GamePhase.RESOLVE_CHECKPOINT,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_TRAP,
       },
       {
         code: "nextPhase",
@@ -252,6 +292,14 @@ describe("resolveTurn", () => {
       },
       {
         code: "nextPhase",
+        phase: GamePhase.RESOLVE_PUSHER,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_CRUSHER,
+      },
+      {
+        code: "nextPhase",
         phase: GamePhase.RESOLVE_GEAR,
       },
       {
@@ -269,6 +317,10 @@ describe("resolveTurn", () => {
       {
         code: "nextPhase",
         phase: GamePhase.RESOLVE_CHECKPOINT,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_TRAP,
       },
       {
         code: "nextPhase",
@@ -310,6 +362,14 @@ describe("resolveTurn", () => {
       {
         code: "nextPhase",
         phase: GamePhase.RESOLVE_CONVEYOR,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_PUSHER,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_CRUSHER,
       },
       {
         code: "nextPhase",

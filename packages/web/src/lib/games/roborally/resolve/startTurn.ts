@@ -5,7 +5,7 @@ import { getHandSize } from "../player"
 
 import { nextPhase } from "./nextPhase"
 
-export async function startTurn(context: RoborallyContext): Promise<void> {
+export async function startTurn(context: RoborallyContext) {
   const { playerOrder } = context.state
 
   const deck = getDeck()
