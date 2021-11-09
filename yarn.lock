@@ -1706,7 +1706,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@boardgames/web@workspace:packages/web"
   dependencies:
-    "@babel/core": 7.15.5
     "@boardgames/common": "workspace:*"
     "@boardgames/components": "workspace:*"
     "@boardgames/utils": "workspace:*"

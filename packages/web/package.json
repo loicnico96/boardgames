@@ -40,7 +40,6 @@
     "zustand": "3.5.10"
   },
   "devDependencies": {
-    "@babel/core": "7.15.5",
     "@next/bundle-analyzer": "11.1.2",
     "@testing-library/dom": "8.5.0",
     "@testing-library/jest-dom": "5.14.1",
@@ -84,6 +83,16 @@
     "setupFiles": [
       "<rootDir>/test/setupTest.js"
     ],
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": [
+        "babel-jest",
+        {
+          "presets": [
+            "next/babel"
+          ]
+        }
+      ]
+    }
   }
 }
