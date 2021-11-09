@@ -23,8 +23,17 @@ export async function resolveSequence(
   await nextPhase(context, GamePhase.RESOLVE_CONVEYOR)
   await resolveConveyors(context)
 
+  // await nextPhase(context, GamePhase.RESOLVE_PUSHER)
+  // TODO: await resolvePushers(context, sequence)
+
+  // await nextPhase(context, GamePhase.RESOLVE_CRUSHER)
+  // TODO: await resolveCrushers(context, sequence)
+
   await nextPhase(context, GamePhase.RESOLVE_GEAR)
   await resolveGears(context)
+
+  // await nextPhase(context, GamePhase.RESOLVE_LASER)
+  // TODO: await resolveLasers(context, sequence)
 
   await nextPhase(context, GamePhase.RESOLVE_REPAIR)
   await resolveRepairs(context)

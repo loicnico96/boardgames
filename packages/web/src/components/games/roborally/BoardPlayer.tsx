@@ -1,9 +1,10 @@
 import styled from "@emotion/styled"
 
 import { CELL_SIZE } from "./BoardCell"
-import { useRoborallyPlayer } from "./store"
+import { useRoborallyPlayer, useRoborallyState } from "./store"
 
 export const PLAYER_SIZE = 40
+export const PLAYER_VIRTUAL_OPACITY = 0.6
 export const TRANSITION_DURATION = 600
 
 export type BoardPlayerProps = {
@@ -11,19 +12,23 @@ export type BoardPlayerProps = {
 }
 
 type StyledPlayerProps = {
+  color: string
+  destroyed: boolean
   rot: number
+  virtual: boolean
   x: number
   y: number
 }
 
 const StyledPlayer = styled.div<StyledPlayerProps>`
   align-items: center;
-  background-color: red;
+  background-color: ${props => props.color};
   border: 1px solid black;
   cursor: ${props => (props.title ? "help" : "default")};
-  display: flex;
+  display: ${props => (props.destroyed ? "hidden" : "flex")};
   height: ${PLAYER_SIZE}px;
   justify-content: center;
+  opacity: ${props => (props.virtual ? PLAYER_VIRTUAL_OPACITY : 1)};
   position: absolute;
   text-align: center;
   transform: translate(
@@ -40,9 +45,31 @@ export function BoardPlayer({ playerId }: BoardPlayerProps) {
   const y = useRoborallyPlayer(playerId, player => player.pos.y)
   const rot = useRoborallyPlayer(playerId, player => player.rot)
   const name = useRoborallyPlayer(playerId, player => player.name)
+  const destroyed = useRoborallyPlayer(playerId, player => player.destroyed)
+  const virtual = useRoborallyPlayer(playerId, player => player.virtual)
+  const index = useRoborallyState(state => state.playerOrder.indexOf(playerId))
+
+  const color = [
+    "red",
+    "blueviolet",
+    "darkorange",
+    "limegreen",
+    "brown",
+    "dodgerblue",
+    "magenta",
+    "yellowgreen",
+  ][index]
 
   return (
-    <StyledPlayer x={x} y={y} rot={rot} title={name}>
+    <StyledPlayer
+      color={color}
+      x={x}
+      y={y}
+      rot={rot}
+      title={name}
+      virtual={virtual}
+      destroyed={destroyed}
+    >
       {name}
     </StyledPlayer>
   )

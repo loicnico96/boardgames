@@ -12,6 +12,7 @@ import { RoborallyContext } from "../context"
 import { RoborallyPlayer, RoborallyState } from "../model"
 
 import { checkHoles } from "./checkHoles"
+import { checkPortals } from "./checkPortals"
 
 export type Move = {
   dir?: Direction
@@ -238,11 +239,13 @@ export async function resolveMoves(
     }
   }
 
-  if (Object.keys(players).length > 0) {
+  if (size(players) > 0) {
     await context.post({
       code: "playerMove",
       players,
     })
+
+    await checkPortals(context, validMoves)
 
     await checkHoles(context)
   }

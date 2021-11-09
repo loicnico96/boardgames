@@ -4,7 +4,7 @@ import { createTestContext, run } from "lib/games/test/utils"
 
 import { CardAction, getCardAction } from "../card"
 import { RoborallyContext } from "../context"
-import { CellType } from "../model"
+import { CellType, WallType } from "../model"
 
 import { resolveProgramCard, resolveProgramCards } from "./resolveProgramCards"
 
@@ -234,7 +234,7 @@ describe("playerCard", () => {
     ])
   })
 
-  it("moves 1 less space if starting from water", async () => {
+  it("moves 1 less space if moving from water", async () => {
     expect(getCardAction(81)).toBe(CardAction.MOVE_3)
 
     const context = createTestContext(RoborallyContext, 1)
@@ -300,7 +300,7 @@ describe("playerCard", () => {
     ])
   })
 
-  it("normally moves through water", async () => {
+  it("moves through water normally", async () => {
     expect(getCardAction(81)).toBe(CardAction.MOVE_3)
 
     const context = createTestContext(RoborallyContext, 1)
@@ -352,6 +352,319 @@ describe("playerCard", () => {
         players: {
           player1: {
             dir: Direction.SOUTH,
+          },
+        },
+      },
+      {
+        code: "playerMove",
+        players: {
+          player1: {
+            dir: Direction.SOUTH,
+          },
+        },
+      },
+      {
+        code: "playerMove",
+        players: {
+          player1: {
+            dir: Direction.SOUTH,
+          },
+        },
+      },
+    ])
+  })
+
+  it("teleports if moving from a teleporter", async () => {
+    expect(getCardAction(81)).toBe(CardAction.MOVE_3)
+
+    const context = createTestContext(RoborallyContext, 1)
+
+    context.update({
+      board: {
+        cells: {
+          $set: {
+            1: {
+              1: {
+                type: CellType.TELEPORT,
+                walls: {
+                  [Direction.SOUTH]: WallType.NORMAL,
+                },
+              },
+              2: {
+                type: CellType.HOLE,
+              },
+            },
+          },
+        },
+      },
+      players: {
+        player1: {
+          $merge: {
+            pos: {
+              x: 1,
+              y: 1,
+            },
+            rot: Direction.SOUTH,
+          },
+        },
+      },
+    })
+
+    const events = await run(context, resolveProgramCard, "player1", 81)
+
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 6,
+      },
+      rot: Direction.SOUTH,
+    })
+
+    expect(events).toStrictEqual([
+      {
+        code: "playerCard",
+        playerId: "player1",
+        card: 81,
+      },
+      {
+        code: "playerTeleport",
+        players: {
+          player1: {
+            pos: {
+              x: 1,
+              y: 6,
+            },
+          },
+        },
+      },
+    ])
+  })
+
+  it("teleports backwards with Move Back", async () => {
+    expect(getCardAction(45)).toBe(CardAction.MOVE_BACK)
+
+    const context = createTestContext(RoborallyContext, 1)
+
+    context.update({
+      board: {
+        cells: {
+          $set: {
+            1: {
+              1: {
+                type: CellType.TELEPORT,
+                walls: {
+                  [Direction.SOUTH]: WallType.NORMAL,
+                },
+              },
+              2: {
+                type: CellType.HOLE,
+              },
+            },
+          },
+        },
+      },
+      players: {
+        player1: {
+          $merge: {
+            pos: {
+              x: 1,
+              y: 1,
+            },
+            rot: Direction.NORTH,
+          },
+        },
+      },
+    })
+
+    const events = await run(context, resolveProgramCard, "player1", 45)
+
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 3,
+      },
+      rot: Direction.NORTH,
+    })
+
+    expect(events).toStrictEqual([
+      {
+        code: "playerCard",
+        playerId: "player1",
+        card: 45,
+      },
+      {
+        code: "playerTeleport",
+        players: {
+          player1: {
+            pos: {
+              x: 1,
+              y: 3,
+            },
+          },
+        },
+      },
+    ])
+  })
+
+  it("does not teleport if the destination is occupied", async () => {
+    expect(getCardAction(81)).toBe(CardAction.MOVE_3)
+
+    const context = createTestContext(RoborallyContext, 2)
+
+    context.update({
+      board: {
+        cells: {
+          $set: {
+            1: {
+              1: {
+                type: CellType.TELEPORT,
+              },
+            },
+          },
+        },
+      },
+      players: {
+        player1: {
+          $merge: {
+            pos: {
+              x: 1,
+              y: 1,
+            },
+            rot: Direction.SOUTH,
+            virtual: false,
+          },
+        },
+        player2: {
+          $merge: {
+            pos: {
+              x: 1,
+              y: 6,
+            },
+            rot: Direction.SOUTH,
+            virtual: false,
+          },
+        },
+      },
+    })
+
+    const events = await run(context, resolveProgramCard, "player1", 81)
+
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 4,
+      },
+      rot: Direction.SOUTH,
+    })
+
+    expect(events).toStrictEqual([
+      {
+        code: "playerCard",
+        playerId: "player1",
+        card: 81,
+      },
+      {
+        code: "playerMove",
+        players: {
+          player1: {
+            dir: Direction.SOUTH,
+          },
+        },
+      },
+      {
+        code: "playerMove",
+        players: {
+          player1: {
+            dir: Direction.SOUTH,
+          },
+        },
+      },
+      {
+        code: "playerMove",
+        players: {
+          player1: {
+            dir: Direction.SOUTH,
+          },
+        },
+      },
+    ])
+  })
+
+  it("moves through portal during Move 3", async () => {
+    expect(getCardAction(81)).toBe(CardAction.MOVE_3)
+
+    const context = createTestContext(RoborallyContext, 1)
+
+    context.update({
+      board: {
+        cells: {
+          $set: {
+            1: {
+              2: {
+                type: CellType.PORTAL,
+                pos: {
+                  x: 6,
+                  y: 7,
+                },
+              },
+            },
+            6: {
+              7: {
+                type: CellType.PORTAL,
+                pos: {
+                  x: 1,
+                  y: 2,
+                },
+              },
+            },
+          },
+        },
+      },
+      players: {
+        player1: {
+          $merge: {
+            pos: {
+              x: 1,
+              y: 1,
+            },
+            rot: Direction.SOUTH,
+          },
+        },
+      },
+    })
+
+    const events = await run(context, resolveProgramCard, "player1", 81)
+
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 6,
+        y: 9,
+      },
+      rot: Direction.SOUTH,
+    })
+
+    expect(events).toStrictEqual([
+      {
+        code: "playerCard",
+        playerId: "player1",
+        card: 81,
+      },
+      {
+        code: "playerMove",
+        players: {
+          player1: {
+            dir: Direction.SOUTH,
+          },
+        },
+      },
+      {
+        code: "playerTeleport",
+        players: {
+          player1: {
+            pos: {
+              x: 6,
+              y: 7,
+            },
           },
         },
       },

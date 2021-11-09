@@ -12,6 +12,8 @@ export enum CellType {
   CONVEYOR = 3,
   CONVEYOR_FAST = 4,
   REPAIR = 5,
+  TELEPORT = 6,
+  PORTAL = 7,
 }
 
 export enum WallType {
@@ -34,6 +36,10 @@ export type Cell = ObjectUnion<
       dir: Direction
     }
     [CellType.REPAIR]: {}
+    [CellType.TELEPORT]: {}
+    [CellType.PORTAL]: {
+      pos: Pos
+    }
   }
 > & {
   walls?: Partial<Record<Direction, WallType>>
@@ -47,8 +53,11 @@ export enum GamePhase {
   RESOLVE_CONVEYOR_FAST = 3,
   RESOLVE_CONVEYOR = 4,
   RESOLVE_GEAR = 5,
-  RESOLVE_REPAIR = 6,
-  RESOLVE_CHECKPOINT = 7,
+  RESOLVE_PUSHER = 6,
+  RESOLVE_CRUSHER = 7,
+  RESOLVE_LASER = 8,
+  RESOLVE_REPAIR = 9,
+  RESOLVE_CHECKPOINT = 10,
 }
 
 export type RoborallyAction = ObjectUnion<
@@ -112,6 +121,13 @@ export type RoborallyEvent = ObjectUnion<
       players: {
         [playerId in string]: {
           dir: Direction
+          pos: Pos
+        }
+      }
+    }
+    playerTeleport: {
+      players: {
+        [playerId in string]: {
           pos: Pos
         }
       }

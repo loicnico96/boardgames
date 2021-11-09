@@ -101,6 +101,10 @@ export function getCellSymbol(state: RoborallyState, pos: Pos): string | null {
       return ["\u21C8", "\u21C9", "\u21CA", "\u21C7"][cell.dir]
     case CellType.REPAIR:
       return "\u2692"
+    case CellType.TELEPORT:
+      return "T"
+    case CellType.PORTAL:
+      return "P"
     default:
       return null
   }
@@ -118,21 +122,29 @@ export function getCellTooltip(
 
   if (checkpoint >= 0) {
     return checkpoint === 0
-      ? "Starting Position"
+      ? "Starting position"
       : `Checkpoint ${checkpoint} / ${state.checkpoints.length - 1}`
   }
 
   switch (cell.type) {
     case CellType.HOLE:
-      return "Hole"
+      return cell.water ? "Water drain" : "Hole"
     case CellType.GEAR:
       return `Gear (${cell.rot > 0 ? "clockwise" : "counter-clockwise"})`
     case CellType.CONVEYOR:
-      return `Conveyor (${["North", "East", "South", "West"][cell.dir]})`
+      return `${cell.water ? "Conveyor" : "Water current"} (${
+        ["North", "East", "South", "West"][cell.dir]
+      })`
     case CellType.CONVEYOR_FAST:
-      return `Fast Conveyor (${["North", "East", "South", "West"][cell.dir]})`
+      return `${cell.water ? "Express conveyor" : "Water current"} (${
+        ["North", "East", "South", "West"][cell.dir]
+      })`
     case CellType.REPAIR:
-      return "Repair Site"
+      return "Repair site"
+    case CellType.TELEPORT:
+      return "Teleporter"
+    case CellType.PORTAL:
+      return `Portal (${cell.pos.x} - ${cell.pos.y})`
     default:
       return cell.water ? "Water" : undefined
   }
