@@ -27,7 +27,7 @@ export async function resolveTurn(context: RoborallyContext) {
     await resolveSequence(context, sequence)
 
     const winnerId = context.state.playerOrder.find(playerId => {
-      const checkpointCount = context.state.checkpoints.length - 1
+      const checkpointCount = context.state.board.checkpoints.length - 1
       const player = context.player(playerId)
       return player.checkpoint === checkpointCount
     })

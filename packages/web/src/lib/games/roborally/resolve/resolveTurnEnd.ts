@@ -5,7 +5,7 @@ import { RoborallyContext } from "../context"
 import { getLockedProgram } from "../player"
 
 export async function resolveTurnEnd(context: RoborallyContext) {
-  const { checkpoints, playerOrder } = context.state
+  const { playerOrder } = context.state
 
   const players: Record<string, { pos: Position; dir: Direction }> = {}
 
@@ -13,7 +13,7 @@ export async function resolveTurnEnd(context: RoborallyContext) {
     const player = context.player(playerId)
 
     if (player.destroyed) {
-      const pos = checkpoints[player.checkpoint]
+      const pos = context.state.board.checkpoints[player.checkpoint]
       const dir = player.checkpointDir
 
       players[playerId] = { pos, dir }

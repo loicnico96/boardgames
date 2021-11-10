@@ -16,7 +16,11 @@ export async function checkHoles(context: RoborallyContext) {
         const cell = getCell(context.state, player.pos)
 
         if (cell.hole) {
-          return cell.hole === true || cell.hole.active.includes(sequence)
+          return true
+        }
+
+        if (cell.trap) {
+          return cell.trap.active.includes(sequence)
         }
       }
 

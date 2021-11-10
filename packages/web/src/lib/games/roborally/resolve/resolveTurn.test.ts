@@ -13,24 +13,6 @@ describe("resolveTurn", () => {
 
     context.update({
       $merge: {
-        checkpoints: [
-          {
-            x: 0,
-            y: 0,
-          },
-          {
-            x: 3,
-            y: 3,
-          },
-          {
-            x: 6,
-            y: 6,
-          },
-          {
-            x: 9,
-            y: 9,
-          },
-        ],
         phase: GamePhase.PROGRAM,
       },
       board: {
@@ -47,6 +29,24 @@ describe("resolveTurn", () => {
               },
             },
           },
+          checkpoints: [
+            {
+              x: 0,
+              y: 0,
+            },
+            {
+              x: 3,
+              y: 3,
+            },
+            {
+              x: 6,
+              y: 6,
+            },
+            {
+              x: 9,
+              y: 9,
+            },
+          ],
           features: [BoardFeature.GEAR, BoardFeature.REPAIR],
         },
       },

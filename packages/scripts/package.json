@@ -1,0 +1,39 @@
+{
+  "name": "@boardgames/scripts",
+  "version": "0.1.0",
+  "author": "Loïc Nicolas <loicnico96@gmail.com>",
+  "license": "UNLICENSED",
+  "private": true,
+  "bugs": "https://github.com/loicnico96/boardgames",
+  "homepage": "https://github.com/loicnico96/boardgames/tree/main/packages/scripts#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loicnico96/boardgames",
+    "directory": "packages/scripts"
+  },
+  "scripts": {
+    "db:setup": "ts-node src/db/setup.ts",
+    "format": "prettier --write '**/*.{ts,tsx}'",
+    "format:check": "prettier --check '**/*.{ts,tsx}'",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint:fix": "eslint --fix src/**/*.{ts,tsx}",
+    "precommit": "lint-staged",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@babel/core": "7.15.5",
+    "@boardgames/utils": "workspace:*",
+    "@boardgames/web": "workspace:*",
+    "@typescript-eslint/eslint-plugin": "4.31.1",
+    "@typescript-eslint/parser": "4.31.1",
+    "dotenv": "10.0.0",
+    "eslint": "7.32.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-jest": "24.4.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "immutability-helper": "3.1.1",
+    "lint-staged": "11.1.2",
+    "prettier": "2.4.0",
+    "typescript": "4.4.3"
+  }
+}

@@ -31,11 +31,7 @@ export type Cell = {
   gear?: {
     rot: Rotation
   }
-  hole?:
-    | boolean
-    | {
-        active: number[]
-      }
+  hole?: boolean
   portal?: {
     pos: Position
   }
@@ -45,6 +41,9 @@ export type Cell = {
   }
   repair?: boolean
   teleport?: boolean
+  trap?: {
+    active: number[]
+  }
   walls?: Direction[]
   water?: boolean
 }
@@ -161,17 +160,23 @@ export type RoborallyPlayer = BasePlayer<RoborallyAction> & {
   virtual: boolean
 }
 
-export type RoborallyState = BaseState<RoborallyPlayer> & {
-  board: {
-    cells: Partial<Record<number, Partial<Record<number, Cell>>>>
-    dimensions: {
-      x: number
-      y: number
+export type RoborallyBoard = {
+  cells: {
+    [x in number]?: {
+      [y in number]?: Cell
     }
-    features: BoardFeature[]
   }
-  boardId: BoardId
   checkpoints: Position[]
+  dimensions: {
+    x: number
+    y: number
+  }
+  features: BoardFeature[]
+}
+
+export type RoborallyState = BaseState<RoborallyPlayer> & {
+  board: RoborallyBoard
+  boardId: BoardId
   currentPlayerId: string | null
   phase: GamePhase
   sequence: number

@@ -1682,6 +1682,27 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@boardgames/scripts@workspace:packages/scripts":
+  version: 0.0.0-use.local
+  resolution: "@boardgames/scripts@workspace:packages/scripts"
+  dependencies:
+    "@babel/core": 7.15.5
+    "@boardgames/utils": "workspace:*"
+    "@boardgames/web": "workspace:*"
+    "@typescript-eslint/eslint-plugin": 4.31.1
+    "@typescript-eslint/parser": 4.31.1
+    dotenv: 10.0.0
+    eslint: 7.32.0
+    eslint-config-prettier: 8.3.0
+    eslint-plugin-jest: 24.4.0
+    eslint-plugin-prettier: 4.0.0
+    immutability-helper: 3.1.1
+    lint-staged: 11.1.2
+    prettier: 2.4.0
+    typescript: 4.4.3
+  languageName: unknown
+  linkType: soft
+
 "@boardgames/utils@workspace:*, @boardgames/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@boardgames/utils@workspace:packages/utils"
@@ -1702,7 +1723,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@boardgames/web@workspace:packages/web":
+"@boardgames/web@workspace:*, @boardgames/web@workspace:packages/web":
   version: 0.0.0-use.local
   resolution: "@boardgames/web@workspace:packages/web"
   dependencies:
@@ -8487,6 +8508,13 @@ __metadata:
   peerDependencies:
     webpack: ^1 || ^2 || ^3 || ^4
   checksum: 21bfe5dd6a669ad9a64669ed7ada53e0036f7c97f55c43c07dd846bf6ddb963224139a25c667346f1a168b0e59e560ae87eac642edb30947bb2fa4ec0017ecb7
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:10.0.0":
+  version: 10.0.0
+  resolution: "dotenv@npm:10.0.0"
+  checksum: f412c5fe8c24fbe313d302d2500e247ba8a1946492db405a4de4d30dd0eb186a88a43f13c958c5a7de303938949c4231c56994f97d05c4bc1f22478d631b4005
   languageName: node
   linkType: hard
 

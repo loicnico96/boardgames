@@ -3,7 +3,7 @@ import { getDir, isSamePos, size } from "@boardgames/utils"
 import { RoborallyContext } from "../context"
 
 export async function resolveCheckpoints(context: RoborallyContext) {
-  const { checkpoints, playerOrder } = context.state
+  const { playerOrder } = context.state
 
   const players: Record<string, { checkpoint: number }> = {}
 
@@ -14,7 +14,9 @@ export async function resolveCheckpoints(context: RoborallyContext) {
       continue
     }
 
-    const checkpoint = checkpoints.findIndex(pos => isSamePos(pos, player.pos))
+    const checkpoint = context.state.board.checkpoints.findIndex(pos =>
+      isSamePos(pos, player.pos)
+    )
 
     if (checkpoint === player.checkpoint) {
       context.updatePlayer(playerId, {

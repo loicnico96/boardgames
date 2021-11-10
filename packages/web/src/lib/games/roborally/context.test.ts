@@ -22,7 +22,7 @@ describe("RoborallyContext", () => {
       expect(player.damage).toBe(0)
       expect(player.destroyed).toBe(false)
       expect(player.hand).toHaveLength(0)
-      expect(player.pos).toStrictEqual(context.state.checkpoints[0])
+      expect(player.pos).toStrictEqual(context.state.board.checkpoints[0])
       expect(player.powerDown).toBe(false)
       expect(player.program).toStrictEqual(fill(SEQUENCE_COUNT, null))
       expect(player.ready).toBe(false)

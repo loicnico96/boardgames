@@ -11,25 +11,27 @@ describe("resolveCheckpoints", () => {
     const context = createTestContext(RoborallyContext, 6)
 
     context.update({
-      $merge: {
-        checkpoints: [
-          {
-            x: 0,
-            y: 0,
-          },
-          {
-            x: 3,
-            y: 3,
-          },
-          {
-            x: 6,
-            y: 6,
-          },
-          {
-            x: 9,
-            y: 9,
-          },
-        ],
+      board: {
+        $merge: {
+          checkpoints: [
+            {
+              x: 0,
+              y: 0,
+            },
+            {
+              x: 3,
+              y: 3,
+            },
+            {
+              x: 6,
+              y: 6,
+            },
+            {
+              x: 9,
+              y: 9,
+            },
+          ],
+        },
       },
       players: {
         // Not on checkpoint

@@ -9,7 +9,7 @@ import { useRoborallyPlayer, useRoborallyState } from "./store"
 export function PlayerCard({ playerId }: PlayerCardProps) {
   const checkpoint = useRoborallyPlayer(playerId, player => player.checkpoint)
   const checkpointCount = useRoborallyState(
-    state => state.checkpoints.length - 1
+    state => state.board.checkpoints.length - 1
   )
   const damage = useRoborallyPlayer(playerId, player => player.damage)
   const name = useRoborallyPlayer(playerId, player => player.name)

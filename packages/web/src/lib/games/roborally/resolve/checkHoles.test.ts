@@ -5,7 +5,7 @@ import { RoborallyContext } from "../context"
 import { checkHoles } from "./checkHoles"
 
 describe("checkHoles", () => {
-  it("destroys players on holes or outside of board", async () => {
+  it("destroys players on holes, active traps, or out of board", async () => {
     const context = createTestContext(RoborallyContext, 6)
 
     context.update({
@@ -27,14 +27,14 @@ describe("checkHoles", () => {
             },
             5: {
               5: {
-                hole: {
+                trap: {
                   active: [1, 3],
                 },
               },
             },
             6: {
               6: {
-                hole: {
+                trap: {
                   active: [2, 4],
                 },
               },

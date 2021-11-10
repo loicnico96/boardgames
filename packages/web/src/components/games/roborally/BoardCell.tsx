@@ -52,9 +52,7 @@ export function getCellColor(state: RoborallyState, pos: Position): string {
   const cell = getCell(state, pos)
 
   if (cell.hole) {
-    if (cell.hole === true || cell.hole.active.includes(state.sequence)) {
-      return cell.water ? "darkblue" : "black"
-    }
+    return cell.water ? "darkblue" : "black"
   }
 
   return cell.water ? "royalblue" : "lightgray"
@@ -66,7 +64,7 @@ export function getCellSymbol(
 ): string | null {
   const cell = getCell(state, pos)
 
-  const checkpoint = state.checkpoints.findIndex(checkpointPos =>
+  const checkpoint = state.board.checkpoints.findIndex(checkpointPos =>
     isSamePos(pos, checkpointPos)
   )
 
@@ -134,7 +132,7 @@ export function getCellTooltip(state: RoborallyState, pos: Position): string {
   const cell = getCell(state, pos)
   const tooltips: string[] = []
 
-  const checkpoint = state.checkpoints.findIndex(checkpointPos =>
+  const checkpoint = state.board.checkpoints.findIndex(checkpointPos =>
     isSamePos(pos, checkpointPos)
   )
 
@@ -142,7 +140,7 @@ export function getCellTooltip(state: RoborallyState, pos: Position): string {
     if (checkpoint === 0) {
       tooltips.push("Starting position")
     } else {
-      const checkpointCount = state.checkpoints.length - 1
+      const checkpointCount = state.board.checkpoints.length - 1
       tooltips.push(`Checkpoint ${checkpoint} / ${checkpointCount}`)
     }
   }
@@ -156,12 +154,12 @@ export function getCellTooltip(state: RoborallyState, pos: Position): string {
   }
 
   if (cell.hole) {
-    if (cell.hole === true) {
-      tooltips.push(cell.water ? "Water drain" : "Hole")
-    } else {
-      const active = cell.hole.active.map(i => i + 1).join("-")
-      tooltips.push(`${cell.water ? "Water drain" : "Trap"} (${active})`)
-    }
+    tooltips.push(cell.water ? "Water drain" : "Hole")
+  }
+
+  if (cell.trap) {
+    const active = cell.trap.active.map(i => i + 1).join("-")
+    tooltips.push(`Trap (${active})`)
   }
 
   if (cell.conveyor) {

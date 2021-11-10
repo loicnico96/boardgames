@@ -66,6 +66,7 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
       // TODO: Initialize board
       board: {
         cells: {},
+        checkpoints,
         dimensions: {
           x: 12,
           y: 12,
@@ -73,7 +74,6 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
         features: [],
       },
       boardId: options.boardId,
-      checkpoints,
       currentPlayerId: null,
       over: false,
       phase: GamePhase.READY,
