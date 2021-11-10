@@ -14,12 +14,12 @@ import {
 } from "./model"
 
 export class MetropolysContext extends BaseContext<MetropolysModel> {
-  getInitialGameState(
+  async getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,
     options: MetropolysOptions,
     seed: number
-  ): MetropolysState {
+  ): Promise<MetropolysState> {
     return {
       over: false,
       playerOrder,

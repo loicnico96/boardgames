@@ -1,36 +1,32 @@
 import { Direction, Rotation } from "@boardgames/utils"
 
-import { createTestContext, run } from "lib/games/test/utils"
-
-import { RoborallyContext } from "../context"
+import { run } from "lib/games/test/utils"
 
 import { resolveGears } from "./resolveGears"
+import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveGears", () => {
   it("rotates players on gears", async () => {
-    const context = createTestContext(RoborallyContext, 4)
-
-    context.update({
-      board: {
-        $merge: {
-          cells: {
-            2: {
-              2: {
-                gear: {
-                  rot: Rotation.LEFT,
-                },
-              },
+    const context = await createRoborallyTestContext(4, {
+      cells: {
+        2: {
+          2: {
+            gear: {
+              rot: Rotation.LEFT,
             },
-            3: {
-              3: {
-                gear: {
-                  rot: Rotation.RIGHT,
-                },
-              },
+          },
+        },
+        3: {
+          3: {
+            gear: {
+              rot: Rotation.RIGHT,
             },
           },
         },
       },
+    })
+
+    context.update({
       players: {
         // On normal cell, will not rotate
         player1: {
@@ -78,18 +74,21 @@ describe("resolveGears", () => {
 
     const events = await run(context, resolveGears)
 
-    for (const playerId of context.state.playerOrder) {
-      const player = context.player(playerId)
+    expect(context.player("player1")).toMatchObject({
+      rot: Direction.NORTH,
+    })
 
-      expect(player.rot).toBe(
-        {
-          player1: Direction.NORTH,
-          player2: Direction.EAST,
-          player3: Direction.SOUTH,
-          player4: Direction.WEST,
-        }[playerId]
-      )
-    }
+    expect(context.player("player2")).toMatchObject({
+      rot: Direction.EAST,
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      rot: Direction.SOUTH,
+    })
+
+    expect(context.player("player4")).toMatchObject({
+      rot: Direction.WEST,
+    })
 
     expect(events).toStrictEqual([
       {

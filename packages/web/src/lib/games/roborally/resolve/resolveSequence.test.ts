@@ -1,15 +1,15 @@
 import { Direction, Rotation } from "@boardgames/utils"
 
-import { createTestContext, run } from "lib/games/test/utils"
+import { run } from "lib/games/test/utils"
 
-import { RoborallyContext } from "../context"
 import { BoardFeature, GamePhase } from "../model"
 
 import { resolveSequence } from "./resolveSequence"
+import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveSequence", () => {
   it("resolves programs and board elements in order", async () => {
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       board: {
@@ -58,10 +58,13 @@ describe("resolveSequence", () => {
 
     expect(context.state.sequence).toBe(1)
 
-    const player = context.player("player1")
-
-    expect(player.pos).toStrictEqual({ x: 3, y: 2 })
-    expect(player.rot).toBe(Direction.SOUTH)
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 3,
+        y: 2,
+      },
+      rot: Direction.SOUTH,
+    })
 
     expect(events).toStrictEqual([
       {

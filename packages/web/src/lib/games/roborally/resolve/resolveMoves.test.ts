@@ -1,14 +1,13 @@
 import { Direction, Rotation } from "@boardgames/utils"
 
-import { createTestContext, run } from "lib/games/test/utils"
-
-import { RoborallyContext } from "../context"
+import { run } from "lib/games/test/utils"
 
 import { resolveMoves } from "./resolveMoves"
+import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveMoves", () => {
   it("moves players", async () => {
-    const context = createTestContext(RoborallyContext, 4)
+    const context = await createRoborallyTestContext(4)
 
     context.update({
       players: {
@@ -64,39 +63,37 @@ describe("resolveMoves", () => {
       },
     })
 
-    for (const playerId of context.state.playerOrder) {
-      const player = context.player(playerId)
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 1,
+      },
+      rot: Direction.NORTH,
+    })
 
-      expect(player.pos).toStrictEqual(
-        {
-          player1: {
-            x: 1,
-            y: 1,
-          },
-          player2: {
-            x: 2,
-            y: 1,
-          },
-          player3: {
-            x: 3,
-            y: 3,
-          },
-          player4: {
-            x: 5,
-            y: 4,
-          },
-        }[playerId]
-      )
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 2,
+        y: 1,
+      },
+      rot: Direction.EAST,
+    })
 
-      expect(player.rot).toStrictEqual(
-        {
-          player1: Direction.NORTH,
-          player2: Direction.EAST,
-          player3: Direction.WEST,
-          player4: Direction.SOUTH,
-        }[playerId]
-      )
-    }
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 3,
+        y: 3,
+      },
+      rot: Direction.WEST,
+    })
+
+    expect(context.player("player4")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 4,
+      },
+      rot: Direction.SOUTH,
+    })
 
     expect(events).toStrictEqual([
       {
@@ -118,25 +115,22 @@ describe("resolveMoves", () => {
   })
 
   it("cannot move through walls", async () => {
-    const context = createTestContext(RoborallyContext, 2)
-
-    context.update({
-      board: {
-        $merge: {
-          cells: {
-            4: {
-              4: {
-                walls: [Direction.NORTH],
-              },
-            },
-            6: {
-              5: {
-                walls: [Direction.SOUTH],
-              },
-            },
+    const context = await createRoborallyTestContext(2, {
+      cells: {
+        4: {
+          4: {
+            walls: [Direction.NORTH],
+          },
+        },
+        6: {
+          5: {
+            walls: [Direction.SOUTH],
           },
         },
       },
+    })
+
+    context.update({
       players: {
         player1: {
           $merge: {
@@ -177,7 +171,7 @@ describe("resolveMoves", () => {
   })
 
   it("can push other players if move is marked as such", async () => {
-    const context = createTestContext(RoborallyContext, 3)
+    const context = await createRoborallyTestContext(3)
 
     context.update({
       players: {
@@ -221,9 +215,26 @@ describe("resolveMoves", () => {
       },
     })
 
-    expect(context.player("player1").pos).toStrictEqual({ x: 5, y: 4 })
-    expect(context.player("player2").pos).toStrictEqual({ x: 6, y: 4 })
-    expect(context.player("player3").pos).toStrictEqual({ x: 7, y: 4 })
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 6,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 7,
+        y: 4,
+      },
+    })
 
     expect(events).toStrictEqual([
       {
@@ -244,7 +255,7 @@ describe("resolveMoves", () => {
   })
 
   it("cannot push other players if move is not marked as such", async () => {
-    const context = createTestContext(RoborallyContext, 2)
+    const context = await createRoborallyTestContext(2)
 
     context.update({
       players: {
@@ -277,27 +288,35 @@ describe("resolveMoves", () => {
       },
     })
 
-    expect(context.player("player1").pos).toStrictEqual({ x: 4, y: 4 })
-    expect(context.player("player2").pos).toStrictEqual({ x: 5, y: 4 })
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 4,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 4,
+      },
+    })
 
     expect(events).toStrictEqual([])
   })
 
   it("cannot push other players through walls", async () => {
-    const context = createTestContext(RoborallyContext, 3)
-
-    context.update({
-      board: {
-        $merge: {
-          cells: {
-            6: {
-              4: {
-                walls: [Direction.EAST],
-              },
-            },
+    const context = await createRoborallyTestContext(3, {
+      cells: {
+        6: {
+          4: {
+            walls: [Direction.EAST],
           },
         },
       },
+    })
+
+    context.update({
       players: {
         player1: {
           $merge: {
@@ -339,15 +358,32 @@ describe("resolveMoves", () => {
       },
     })
 
-    expect(context.player("player1").pos).toStrictEqual({ x: 4, y: 4 })
-    expect(context.player("player2").pos).toStrictEqual({ x: 5, y: 4 })
-    expect(context.player("player3").pos).toStrictEqual({ x: 6, y: 4 })
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 4,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 6,
+        y: 4,
+      },
+    })
 
     expect(events).toStrictEqual([])
   })
 
   it("ignores collisions if virtual", async () => {
-    const context = createTestContext(RoborallyContext, 3)
+    const context = await createRoborallyTestContext(3)
 
     context.update({
       players: {
@@ -391,9 +427,26 @@ describe("resolveMoves", () => {
       },
     })
 
-    expect(context.player("player1").pos).toStrictEqual({ x: 5, y: 4 })
-    expect(context.player("player2").pos).toStrictEqual({ x: 5, y: 4 })
-    expect(context.player("player3").pos).toStrictEqual({ x: 6, y: 4 })
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 6,
+        y: 4,
+      },
+    })
 
     expect(events).toStrictEqual([
       {
@@ -408,7 +461,7 @@ describe("resolveMoves", () => {
   })
 
   it("ignores collisions with virtual players", async () => {
-    const context = createTestContext(RoborallyContext, 3)
+    const context = await createRoborallyTestContext(3)
 
     context.update({
       players: {
@@ -452,9 +505,26 @@ describe("resolveMoves", () => {
       },
     })
 
-    expect(context.player("player1").pos).toStrictEqual({ x: 5, y: 4 })
-    expect(context.player("player2").pos).toStrictEqual({ x: 6, y: 4 })
-    expect(context.player("player3").pos).toStrictEqual({ x: 6, y: 4 })
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 6,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 6,
+        y: 4,
+      },
+    })
 
     expect(events).toStrictEqual([
       {
@@ -472,7 +542,7 @@ describe("resolveMoves", () => {
   })
 
   it("ignores collisions with destroyed players", async () => {
-    const context = createTestContext(RoborallyContext, 3)
+    const context = await createRoborallyTestContext(3)
 
     context.update({
       players: {
@@ -516,9 +586,26 @@ describe("resolveMoves", () => {
       },
     })
 
-    expect(context.player("player1").pos).toStrictEqual({ x: 5, y: 4 })
-    expect(context.player("player2").pos).toStrictEqual({ x: 5, y: 4 })
-    expect(context.player("player3").pos).toStrictEqual({ x: 6, y: 4 })
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 6,
+        y: 4,
+      },
+    })
 
     expect(events).toStrictEqual([
       {
@@ -533,7 +620,7 @@ describe("resolveMoves", () => {
   })
 
   it("cannot move several players to the same location", async () => {
-    const context = createTestContext(RoborallyContext, 3)
+    const context = await createRoborallyTestContext(3)
 
     context.update({
       players: {
@@ -580,15 +667,32 @@ describe("resolveMoves", () => {
       },
     })
 
-    expect(context.player("player1").pos).toStrictEqual({ x: 4, y: 4 })
-    expect(context.player("player2").pos).toStrictEqual({ x: 5, y: 5 })
-    expect(context.player("player3").pos).toStrictEqual({ x: 5, y: 6 })
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 4,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 5,
+      },
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 6,
+      },
+    })
 
     expect(events).toStrictEqual([])
   })
 
   it("cannot push a player in several directions", async () => {
-    const context = createTestContext(RoborallyContext, 3)
+    const context = await createRoborallyTestContext(3)
 
     context.update({
       players: {
@@ -636,15 +740,32 @@ describe("resolveMoves", () => {
       },
     })
 
-    expect(context.player("player1").pos).toStrictEqual({ x: 4, y: 4 })
-    expect(context.player("player2").pos).toStrictEqual({ x: 5, y: 5 })
-    expect(context.player("player3").pos).toStrictEqual({ x: 5, y: 4 })
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 4,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 5,
+      },
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 4,
+      },
+    })
 
     expect(events).toStrictEqual([])
   })
 
   it("can move to the location of another moving player", async () => {
-    const context = createTestContext(RoborallyContext, 3)
+    const context = await createRoborallyTestContext(3)
 
     context.update({
       players: {
@@ -693,9 +814,26 @@ describe("resolveMoves", () => {
       },
     })
 
-    expect(context.player("player1").pos).toStrictEqual({ x: 4, y: 5 })
-    expect(context.player("player2").pos).toStrictEqual({ x: 4, y: 6 })
-    expect(context.player("player3").pos).toStrictEqual({ x: 5, y: 6 })
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 4,
+        y: 5,
+      },
+    })
+
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 4,
+        y: 6,
+      },
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 6,
+      },
+    })
 
     expect(events).toStrictEqual([
       {
@@ -716,7 +854,7 @@ describe("resolveMoves", () => {
   })
 
   it("cannot swap location with another player", async () => {
-    const context = createTestContext(RoborallyContext, 2)
+    const context = await createRoborallyTestContext(2)
 
     context.update({
       players: {
@@ -752,27 +890,35 @@ describe("resolveMoves", () => {
       },
     })
 
-    expect(context.player("player1").pos).toStrictEqual({ x: 4, y: 4 })
-    expect(context.player("player2").pos).toStrictEqual({ x: 4, y: 5 })
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 4,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 4,
+        y: 5,
+      },
+    })
 
     expect(events).toStrictEqual([])
   })
 
   it("resolves walls before player collisions", async () => {
-    const context = createTestContext(RoborallyContext, 3)
-
-    context.update({
-      board: {
-        $merge: {
-          cells: {
-            5: {
-              4: {
-                walls: [Direction.EAST],
-              },
-            },
+    const context = await createRoborallyTestContext(3, {
+      cells: {
+        5: {
+          4: {
+            walls: [Direction.EAST],
           },
         },
       },
+    })
+
+    context.update({
       players: {
         player1: {
           $merge: {
@@ -818,9 +964,26 @@ describe("resolveMoves", () => {
       },
     })
 
-    expect(context.player("player1").pos).toStrictEqual({ x: 4, y: 4 })
-    expect(context.player("player2").pos).toStrictEqual({ x: 5, y: 4 })
-    expect(context.player("player3").pos).toStrictEqual({ x: 5, y: 3 })
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 4,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 3,
+      },
+    })
 
     expect(events).toStrictEqual([
       {
@@ -838,7 +1001,7 @@ describe("resolveMoves", () => {
   })
 
   it("gives priority to pushing moves", async () => {
-    const context = createTestContext(RoborallyContext, 3)
+    const context = await createRoborallyTestContext(3)
 
     context.update({
       players: {
@@ -885,9 +1048,26 @@ describe("resolveMoves", () => {
       },
     })
 
-    expect(context.player("player1").pos).toStrictEqual({ x: 4, y: 4 })
-    expect(context.player("player2").pos).toStrictEqual({ x: 5, y: 4 })
-    expect(context.player("player3").pos).toStrictEqual({ x: 5, y: 3 })
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 4,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 5,
+        y: 3,
+      },
+    })
 
     expect(events).toStrictEqual([
       {

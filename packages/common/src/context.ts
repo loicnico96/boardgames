@@ -13,14 +13,21 @@ export abstract class BaseContext<M extends GameModel> {
   private __onStateChange: StateChangeHandler<M> | undefined
   private __state: M["state"] | undefined
 
-  public initState(
+  public async initState(
     playerOrder: string[],
     players: Record<string, UserInfo>,
     options: M["options"],
-    seed: number = Date.now()
+    seed: number,
+    fetcher: <T>(ref: string) => Promise<T>
   ) {
     this.__generator = new Random(seed)
-    this.__state = this.getInitialGameState(playerOrder, players, options, seed)
+    this.__state = await this.getInitialGameState(
+      playerOrder,
+      players,
+      options,
+      seed,
+      fetcher
+    )
   }
 
   public abstract getDefaultOptions(): M["options"]
@@ -29,8 +36,9 @@ export abstract class BaseContext<M extends GameModel> {
     playerOrder: string[],
     players: Record<string, UserInfo>,
     options: M["options"],
-    seed: number
-  ): M["state"]
+    seed: number,
+    fetcher: <T>(ref: string) => Promise<T>
+  ): Promise<M["state"]>
 
   protected abstract resolveState(): Promise<void>
 

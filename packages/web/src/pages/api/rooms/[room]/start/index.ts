@@ -49,7 +49,24 @@ export async function startGame(
 
     const context = getGameContext(roomData.game)
 
-    context.initState(roomData.playerOrder, roomData.players, roomData.options)
+    const fetcher = async <T>(ref: string): Promise<T> => {
+      const doc = await firestore.doc(ref).get()
+      const data = doc.data()
+
+      if (!data) {
+        throw Error(`Not found: ${ref}`)
+      }
+
+      return data as T
+    }
+
+    await context.initState(
+      roomData.playerOrder,
+      roomData.players,
+      roomData.options,
+      Date.now(),
+      fetcher
+    )
 
     const clientRef = firestore.doc(getClientRef(roomData.game, roomId))
     transaction.create(clientRef, context.state)

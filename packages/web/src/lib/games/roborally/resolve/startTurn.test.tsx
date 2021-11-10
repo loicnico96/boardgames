@@ -1,14 +1,14 @@
-import { createTestContext, run } from "lib/games/test/utils"
+import { run } from "lib/games/test/utils"
 
 import { MAX_HAND_SIZE } from "../constants"
-import { RoborallyContext } from "../context"
 import { GamePhase } from "../model"
 
 import { startTurn } from "./startTurn"
+import { createRoborallyTestContext } from "./test/utils"
 
 describe("startTurn", () => {
   it("deals cards and starts Program phase", async () => {
-    const context = createTestContext(RoborallyContext, 3)
+    const context = await createRoborallyTestContext(3)
 
     context.update({
       players: {

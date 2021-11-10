@@ -6,7 +6,7 @@ import { CacaoContext } from "../context"
 
 describe("CacaoContext", () => {
   it("initializes game state for 2 players", async () => {
-    const context = createTestContext(CacaoContext, 2)
+    const context = await createTestContext(CacaoContext, 2)
 
     expect(context.state.board).toStrictEqual(getInitialBoard())
     expect(context.state.currentPlayerId).toBe(null)
@@ -27,7 +27,7 @@ describe("CacaoContext", () => {
   })
 
   it("initializes game state for 3 players", async () => {
-    const context = createTestContext(CacaoContext, 3)
+    const context = await createTestContext(CacaoContext, 3)
 
     expect(context.state.board).toStrictEqual(getInitialBoard())
     expect(context.state.currentPlayerId).toBe(null)
@@ -48,7 +48,7 @@ describe("CacaoContext", () => {
   })
 
   it("initializes game state for 4 players", async () => {
-    const context = createTestContext(CacaoContext, 4)
+    const context = await createTestContext(CacaoContext, 4)
 
     expect(context.state.board).toStrictEqual(getInitialBoard())
     expect(context.state.currentPlayerId).toBe(null)
@@ -69,7 +69,7 @@ describe("CacaoContext", () => {
   })
 
   it("fills the Forest display and assigns the starting player", async () => {
-    const context = createTestContext(CacaoContext, 3)
+    const context = await createTestContext(CacaoContext, 3)
 
     const forestDeck = context.state.deck
 

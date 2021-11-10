@@ -1,43 +1,39 @@
-import { createTestContext, run } from "lib/games/test/utils"
-
-import { RoborallyContext } from "../context"
+import { run } from "lib/games/test/utils"
 
 import { resolveCrushers } from "./resolveCrushers"
+import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveCrushers", () => {
   it("destroys players on active crushers", async () => {
-    const context = createTestContext(RoborallyContext, 4)
+    const context = await createRoborallyTestContext(4, {
+      cells: {
+        5: {
+          5: {
+            crush: {
+              active: [1, 3],
+            },
+          },
+        },
+        6: {
+          6: {
+            crush: {
+              active: [1, 3],
+            },
+          },
+        },
+        7: {
+          7: {
+            crush: {
+              active: [2, 4],
+            },
+          },
+        },
+      },
+    })
 
     context.update({
       $merge: {
         sequence: 1,
-      },
-      board: {
-        $merge: {
-          cells: {
-            5: {
-              5: {
-                crush: {
-                  active: [1, 3],
-                },
-              },
-            },
-            6: {
-              6: {
-                crush: {
-                  active: [1, 3],
-                },
-              },
-            },
-            7: {
-              7: {
-                crush: {
-                  active: [2, 4],
-                },
-              },
-            },
-          },
-        },
       },
       players: {
         // On normal cell (will not be destroyed)

@@ -27,12 +27,12 @@ import {
 import { resolveState } from "./state/resolveState"
 
 export class CacaoContext extends BaseContext<CacaoModel> {
-  getInitialGameState(
+  async getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,
     options: CacaoOptions,
     seed: number
-  ): CacaoState {
+  ): Promise<CacaoState> {
     const playerCount = playerOrder.length
 
     const startingPlayerId = this.generator.pick(playerOrder)

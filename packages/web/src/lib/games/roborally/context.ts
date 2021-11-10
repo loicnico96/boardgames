@@ -18,12 +18,17 @@ import {
   objectUnion,
 } from "@boardgames/utils"
 
+import { getGameRef, getRef } from "lib/db/collections"
+
+import { GameType } from "../types"
+
 import { isValidCard } from "./card"
 import { SEQUENCE_COUNT } from "./constants"
 import {
   BoardId,
   GamePhase,
   RoborallyAction,
+  RoborallyBoard,
   RoborallyModel,
   RoborallyOptions,
   RoborallyState,
@@ -32,47 +37,23 @@ import { resolveTurn } from "./resolve/resolveTurn"
 import { startTurn } from "./resolve/startTurn"
 
 export class RoborallyContext extends BaseContext<RoborallyModel> {
-  getInitialGameState(
+  async getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,
     options: RoborallyOptions,
-    seed: number
-  ): RoborallyState {
-    // TODO: Initialize checkpoints
-    const checkpoints = [
-      {
-        x: 2,
-        y: 9,
-      },
-      {
-        x: 9,
-        y: 6,
-      },
-      {
-        x: 5,
-        y: 4,
-      },
-      {
-        x: 9,
-        y: 2,
-      },
-      {
-        x: 1,
-        y: 5,
-      },
-    ]
+    seed: number,
+    fetcher: <T>(ref: string) => Promise<T>
+  ): Promise<RoborallyState> {
+    const gameRef = getGameRef(GameType.ROBORALLY)
+    const boardRef = getRef(gameRef, "boards", options.boardId)
+    const board = await fetcher<RoborallyBoard>(boardRef)
+
+    this.generator.shuffle(board.checkpoints)
+
+    board.checkpoints = board.checkpoints.slice(0, options.checkpoints + 1)
 
     return {
-      // TODO: Initialize board
-      board: {
-        cells: {},
-        checkpoints,
-        dimensions: {
-          x: 12,
-          y: 12,
-        },
-        features: [],
-      },
+      board,
       boardId: options.boardId,
       currentPlayerId: null,
       over: false,
@@ -88,7 +69,7 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
           damage: 0,
           destroyed: false,
           hand: [],
-          pos: checkpoints[0],
+          pos: board.checkpoints[0],
           powerDown: false,
           powerDownNext: false,
           program: fill(SEQUENCE_COUNT, null),
@@ -116,8 +97,8 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
 
   getDefaultOptions(): RoborallyOptions {
     return {
-      boardId: BoardId.DEFAULT,
-      checkpoints: 1,
+      boardId: BoardId.TEST,
+      checkpoints: 4,
     }
   }
 

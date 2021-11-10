@@ -1,12 +1,11 @@
-import { createTestContext, run } from "lib/games/test/utils"
-
-import { RoborallyContext } from "../context"
+import { run } from "lib/games/test/utils"
 
 import { resolveRepairs } from "./resolveRepairs"
+import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveRepairs", () => {
   it("repairs damaged players", async () => {
-    const context = createTestContext(RoborallyContext, 4)
+    const context = await createRoborallyTestContext(4)
 
     context.update({
       board: {
@@ -67,20 +66,21 @@ describe("resolveRepairs", () => {
 
     const events = await run(context, resolveRepairs)
 
-    for (const playerId of context.state.playerOrder) {
-      const player = context.player(playerId)
+    expect(context.player("player1")).toMatchObject({
+      damage: 2,
+    })
 
-      expect(player.damage).toBe(
-        {
-          player1: 2,
-          player2: 1,
-          player3: 0,
-          player4: 2,
-        }[playerId]
-      )
-    }
+    expect(context.player("player2")).toMatchObject({
+      damage: 1,
+    })
 
-    expect(context.state.over).toBe(false)
+    expect(context.player("player3")).toMatchObject({
+      damage: 0,
+    })
+
+    expect(context.player("player4")).toMatchObject({
+      damage: 2,
+    })
 
     expect(events).toStrictEqual([
       {

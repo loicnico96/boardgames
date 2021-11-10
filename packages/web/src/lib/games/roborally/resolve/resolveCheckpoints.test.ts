@@ -1,38 +1,34 @@
 import { Direction } from "@boardgames/utils"
 
-import { createTestContext, run } from "lib/games/test/utils"
-
-import { RoborallyContext } from "../context"
+import { run } from "lib/games/test/utils"
 
 import { resolveCheckpoints } from "./resolveCheckpoints"
+import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveCheckpoints", () => {
   it("registers reached checkpoints", async () => {
-    const context = createTestContext(RoborallyContext, 6)
+    const context = await createRoborallyTestContext(6, {
+      checkpoints: [
+        {
+          x: 0,
+          y: 0,
+        },
+        {
+          x: 3,
+          y: 3,
+        },
+        {
+          x: 6,
+          y: 6,
+        },
+        {
+          x: 9,
+          y: 9,
+        },
+      ],
+    })
 
     context.update({
-      board: {
-        $merge: {
-          checkpoints: [
-            {
-              x: 0,
-              y: 0,
-            },
-            {
-              x: 3,
-              y: 3,
-            },
-            {
-              x: 6,
-              y: 6,
-            },
-            {
-              x: 9,
-              y: 9,
-            },
-          ],
-        },
-      },
       players: {
         // Not on checkpoint
         player1: {
@@ -51,10 +47,7 @@ describe("resolveCheckpoints", () => {
           $merge: {
             checkpoint: 1,
             checkpointDir: Direction.SOUTH,
-            pos: {
-              x: 0,
-              y: 0,
-            },
+            pos: context.state.board.checkpoints[0],
             rot: Direction.EAST,
           },
         },
@@ -63,10 +56,7 @@ describe("resolveCheckpoints", () => {
           $merge: {
             checkpoint: 1,
             checkpointDir: Direction.NORTH,
-            pos: {
-              x: 3,
-              y: 3,
-            },
+            pos: context.state.board.checkpoints[1],
             rot: Direction.SOUTH,
           },
         },
@@ -75,10 +65,7 @@ describe("resolveCheckpoints", () => {
           $merge: {
             checkpoint: 1,
             checkpointDir: Direction.SOUTH,
-            pos: {
-              x: 6,
-              y: 6,
-            },
+            pos: context.state.board.checkpoints[2],
             rot: Direction.WEST,
           },
         },
@@ -87,10 +74,7 @@ describe("resolveCheckpoints", () => {
           $merge: {
             checkpoint: 1,
             checkpointDir: Direction.WEST,
-            pos: {
-              x: 9,
-              y: 9,
-            },
+            pos: context.state.board.checkpoints[3],
             rot: Direction.EAST,
           },
         },
@@ -100,10 +84,7 @@ describe("resolveCheckpoints", () => {
             checkpoint: 2,
             checkpointDir: Direction.EAST,
             destroyed: true,
-            pos: {
-              x: 9,
-              y: 9,
-            },
+            pos: context.state.board.checkpoints[3],
             rot: Direction.SOUTH,
           },
         },
@@ -112,33 +93,35 @@ describe("resolveCheckpoints", () => {
 
     const events = await run(context, resolveCheckpoints)
 
-    for (const playerId of context.state.playerOrder) {
-      const player = context.player(playerId)
+    expect(context.player("player1")).toMatchObject({
+      checkpoint: 0,
+      checkpointDir: Direction.NORTH,
+    })
 
-      expect(player.checkpoint).toBe(
-        {
-          player1: 0,
-          player2: 1,
-          player3: 1,
-          player4: 2,
-          player5: 1,
-          player6: 2,
-        }[playerId]
-      )
+    expect(context.player("player2")).toMatchObject({
+      checkpoint: 1,
+      checkpointDir: Direction.SOUTH,
+    })
 
-      expect(player.checkpointDir).toBe(
-        {
-          player1: Direction.NORTH,
-          player2: Direction.SOUTH,
-          player3: Direction.SOUTH,
-          player4: Direction.WEST,
-          player5: Direction.WEST,
-          player6: Direction.EAST,
-        }[playerId]
-      )
-    }
+    expect(context.player("player3")).toMatchObject({
+      checkpoint: 1,
+      checkpointDir: Direction.SOUTH,
+    })
 
-    expect(context.state.over).toBe(false)
+    expect(context.player("player4")).toMatchObject({
+      checkpoint: 2,
+      checkpointDir: Direction.WEST,
+    })
+
+    expect(context.player("player5")).toMatchObject({
+      checkpoint: 1,
+      checkpointDir: Direction.WEST,
+    })
+
+    expect(context.player("player6")).toMatchObject({
+      checkpoint: 2,
+      checkpointDir: Direction.EAST,
+    })
 
     expect(events).toStrictEqual([
       {

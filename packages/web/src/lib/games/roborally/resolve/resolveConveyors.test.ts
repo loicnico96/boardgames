@@ -1,37 +1,33 @@
 import { Direction } from "@boardgames/utils"
 
-import { createTestContext, run } from "lib/games/test/utils"
-
-import { RoborallyContext } from "../context"
+import { run } from "lib/games/test/utils"
 
 import { resolveConveyors } from "./resolveConveyors"
+import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveConveyors", () => {
   it("moves players on conveyors", async () => {
-    const context = createTestContext(RoborallyContext, 4)
-
-    context.update({
-      board: {
-        $merge: {
-          cells: {
-            2: {
-              2: {
-                conveyor: {
-                  dir: Direction.EAST,
-                },
-              },
+    const context = await createRoborallyTestContext(4, {
+      cells: {
+        2: {
+          2: {
+            conveyor: {
+              dir: Direction.EAST,
             },
-            3: {
-              3: {
-                conveyor: {
-                  dir: Direction.SOUTH,
-                  fast: true,
-                },
-              },
+          },
+        },
+        3: {
+          3: {
+            conveyor: {
+              dir: Direction.SOUTH,
+              fast: true,
             },
           },
         },
       },
+    })
+
+    context.update({
       players: {
         // On normal cell, will not rotate
         player1: {
@@ -75,30 +71,33 @@ describe("resolveConveyors", () => {
 
     const events = await run(context, resolveConveyors)
 
-    for (const playerId of context.state.playerOrder) {
-      const player = context.player(playerId)
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 1,
+      },
+    })
 
-      expect(player.pos).toStrictEqual(
-        {
-          player1: {
-            x: 1,
-            y: 1,
-          },
-          player2: {
-            x: 3,
-            y: 2,
-          },
-          player3: {
-            x: 3,
-            y: 4,
-          },
-          player4: {
-            x: 3,
-            y: 3,
-          },
-        }[playerId]
-      )
-    }
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 3,
+        y: 2,
+      },
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 3,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player4")).toMatchObject({
+      pos: {
+        x: 3,
+        y: 3,
+      },
+    })
 
     expect(events).toStrictEqual([
       {
@@ -116,30 +115,27 @@ describe("resolveConveyors", () => {
   })
 
   it("moves players on fast conveyors only", async () => {
-    const context = createTestContext(RoborallyContext, 4)
-
-    context.update({
-      board: {
-        $merge: {
-          cells: {
-            2: {
-              2: {
-                conveyor: {
-                  dir: Direction.EAST,
-                },
-              },
+    const context = await createRoborallyTestContext(4, {
+      cells: {
+        2: {
+          2: {
+            conveyor: {
+              dir: Direction.EAST,
             },
-            3: {
-              3: {
-                conveyor: {
-                  dir: Direction.SOUTH,
-                  fast: true,
-                },
-              },
+          },
+        },
+        3: {
+          3: {
+            conveyor: {
+              dir: Direction.SOUTH,
+              fast: true,
             },
           },
         },
       },
+    })
+
+    context.update({
       players: {
         // On normal cell, will not rotate
         player1: {
@@ -183,30 +179,33 @@ describe("resolveConveyors", () => {
 
     const events = await run(context, resolveConveyors, true)
 
-    for (const playerId of context.state.playerOrder) {
-      const player = context.player(playerId)
+    expect(context.player("player1")).toMatchObject({
+      pos: {
+        x: 1,
+        y: 1,
+      },
+    })
 
-      expect(player.pos).toStrictEqual(
-        {
-          player1: {
-            x: 1,
-            y: 1,
-          },
-          player2: {
-            x: 2,
-            y: 2,
-          },
-          player3: {
-            x: 3,
-            y: 4,
-          },
-          player4: {
-            x: 3,
-            y: 3,
-          },
-        }[playerId]
-      )
-    }
+    expect(context.player("player2")).toMatchObject({
+      pos: {
+        x: 2,
+        y: 2,
+      },
+    })
+
+    expect(context.player("player3")).toMatchObject({
+      pos: {
+        x: 3,
+        y: 4,
+      },
+    })
+
+    expect(context.player("player4")).toMatchObject({
+      pos: {
+        x: 3,
+        y: 3,
+      },
+    })
 
     expect(events).toStrictEqual([
       {

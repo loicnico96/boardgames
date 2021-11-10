@@ -1,46 +1,42 @@
-import { createTestContext, run } from "lib/games/test/utils"
-
-import { RoborallyContext } from "../context"
+import { run } from "lib/games/test/utils"
 
 import { checkHoles } from "./checkHoles"
+import { createRoborallyTestContext } from "./test/utils"
 
 describe("checkHoles", () => {
   it("destroys players on holes, active traps, or out of board", async () => {
-    const context = createTestContext(RoborallyContext, 6)
+    const context = await createRoborallyTestContext(6, {
+      cells: {
+        3: {
+          3: {
+            hole: true,
+          },
+        },
+        4: {
+          4: {
+            hole: true,
+          },
+        },
+        5: {
+          5: {
+            trap: {
+              active: [1, 3],
+            },
+          },
+        },
+        6: {
+          6: {
+            trap: {
+              active: [2, 4],
+            },
+          },
+        },
+      },
+    })
 
     context.update({
       $merge: {
         sequence: 3,
-      },
-      board: {
-        $merge: {
-          cells: {
-            3: {
-              3: {
-                hole: true,
-              },
-            },
-            4: {
-              4: {
-                hole: true,
-              },
-            },
-            5: {
-              5: {
-                trap: {
-                  active: [1, 3],
-                },
-              },
-            },
-            6: {
-              6: {
-                trap: {
-                  active: [2, 4],
-                },
-              },
-            },
-          },
-        },
       },
       players: {
         // Outside of board (will be destroyed)

@@ -1,17 +1,17 @@
 import { Direction, Rotation } from "@boardgames/utils"
 
-import { createTestContext, run } from "lib/games/test/utils"
+import { run } from "lib/games/test/utils"
 
 import { CardAction, getCardAction } from "../card"
-import { RoborallyContext } from "../context"
 
 import { resolveProgramCard, resolveProgramCards } from "./resolveProgramCards"
+import { createRoborallyTestContext } from "./test/utils"
 
 describe("playerCard", () => {
   it("resolves Move 1", async () => {
     expect(getCardAction(63)).toBe(CardAction.MOVE_1)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       players: {
@@ -57,7 +57,7 @@ describe("playerCard", () => {
   it("resolves Move 2", async () => {
     expect(getCardAction(72)).toBe(CardAction.MOVE_2)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       players: {
@@ -111,7 +111,7 @@ describe("playerCard", () => {
   it("resolves Move 3", async () => {
     expect(getCardAction(81)).toBe(CardAction.MOVE_3)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       players: {
@@ -173,7 +173,7 @@ describe("playerCard", () => {
   it("destroys the player immediately upon moving into a hole", async () => {
     expect(getCardAction(81)).toBe(CardAction.MOVE_3)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       players: {
@@ -236,7 +236,7 @@ describe("playerCard", () => {
   it("moves 1 less space if moving from water", async () => {
     expect(getCardAction(81)).toBe(CardAction.MOVE_3)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       board: {
@@ -301,7 +301,7 @@ describe("playerCard", () => {
   it("moves through water normally", async () => {
     expect(getCardAction(81)).toBe(CardAction.MOVE_3)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       board: {
@@ -374,7 +374,7 @@ describe("playerCard", () => {
   it("teleports if moving from a teleporter", async () => {
     expect(getCardAction(81)).toBe(CardAction.MOVE_3)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       board: {
@@ -438,7 +438,7 @@ describe("playerCard", () => {
   it("teleports backwards with Move Back", async () => {
     expect(getCardAction(45)).toBe(CardAction.MOVE_BACK)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       board: {
@@ -502,7 +502,7 @@ describe("playerCard", () => {
   it("does not teleport if the destination is occupied", async () => {
     expect(getCardAction(81)).toBe(CardAction.MOVE_3)
 
-    const context = createTestContext(RoborallyContext, 2)
+    const context = await createRoborallyTestContext(2)
 
     context.update({
       board: {
@@ -586,7 +586,7 @@ describe("playerCard", () => {
   it("moves through portal during Move 3", async () => {
     expect(getCardAction(81)).toBe(CardAction.MOVE_3)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       board: {
@@ -685,7 +685,7 @@ describe("playerCard", () => {
   it("resolves Move Back", async () => {
     expect(getCardAction(45)).toBe(CardAction.MOVE_BACK)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       players: {
@@ -731,7 +731,7 @@ describe("playerCard", () => {
   it("resolves Rotate Left", async () => {
     expect(getCardAction(18)).toBe(CardAction.ROTATE_LEFT)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       players: {
@@ -777,7 +777,7 @@ describe("playerCard", () => {
   it("resolves Rotate Right", async () => {
     expect(getCardAction(15)).toBe(CardAction.ROTATE_RIGHT)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       players: {
@@ -823,7 +823,7 @@ describe("playerCard", () => {
   it("resolves U-Turn", async () => {
     expect(getCardAction(3)).toBe(CardAction.ROTATE_BACK)
 
-    const context = createTestContext(RoborallyContext, 1)
+    const context = await createRoborallyTestContext(1)
 
     context.update({
       players: {
@@ -869,7 +869,7 @@ describe("playerCard", () => {
 
 describe("resolveProgramCards", () => {
   it("resolves all program cards in priority order", async () => {
-    const context = createTestContext(RoborallyContext, 4)
+    const context = await createRoborallyTestContext(4)
 
     context.update({
       $merge: {

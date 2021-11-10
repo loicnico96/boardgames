@@ -1,62 +1,58 @@
 import { Direction, Rotation } from "@boardgames/utils"
 
-import { createTestContext, run } from "lib/games/test/utils"
-
-import { RoborallyContext } from "../context"
+import { run } from "lib/games/test/utils"
 
 import { checkPortals } from "./checkPortals"
+import { createRoborallyTestContext } from "./test/utils"
 
 describe("checkPortals", () => {
   it("teleports if moving into a portal", async () => {
-    const context = createTestContext(RoborallyContext, 2)
-
-    context.update({
-      board: {
-        $merge: {
-          cells: {
-            2: {
-              2: {
-                portal: {
-                  pos: {
-                    x: 6,
-                    y: 6,
-                  },
-                },
+    const context = await createRoborallyTestContext(2, {
+      cells: {
+        2: {
+          2: {
+            portal: {
+              pos: {
+                x: 6,
+                y: 6,
               },
             },
-            4: {
-              4: {
-                portal: {
-                  pos: {
-                    x: 8,
-                    y: 8,
-                  },
-                },
+          },
+        },
+        4: {
+          4: {
+            portal: {
+              pos: {
+                x: 8,
+                y: 8,
               },
             },
-            6: {
-              6: {
-                portal: {
-                  pos: {
-                    x: 2,
-                    y: 2,
-                  },
-                },
+          },
+        },
+        6: {
+          6: {
+            portal: {
+              pos: {
+                x: 2,
+                y: 2,
               },
             },
-            8: {
-              8: {
-                portal: {
-                  pos: {
-                    x: 4,
-                    y: 4,
-                  },
-                },
+          },
+        },
+        8: {
+          8: {
+            portal: {
+              pos: {
+                x: 4,
+                y: 4,
               },
             },
           },
         },
       },
+    })
+
+    context.update({
       players: {
         player1: {
           $merge: {
@@ -126,55 +122,52 @@ describe("checkPortals", () => {
   })
 
   it("does not teleport if staying on a portal", async () => {
-    const context = createTestContext(RoborallyContext, 2)
-
-    context.update({
-      board: {
-        $merge: {
-          cells: {
-            2: {
-              2: {
-                portal: {
-                  pos: {
-                    x: 6,
-                    y: 6,
-                  },
-                },
+    const context = await createRoborallyTestContext(2, {
+      cells: {
+        2: {
+          2: {
+            portal: {
+              pos: {
+                x: 6,
+                y: 6,
               },
             },
-            4: {
-              4: {
-                portal: {
-                  pos: {
-                    x: 8,
-                    y: 8,
-                  },
-                },
+          },
+        },
+        4: {
+          4: {
+            portal: {
+              pos: {
+                x: 8,
+                y: 8,
               },
             },
-            6: {
-              6: {
-                portal: {
-                  pos: {
-                    x: 2,
-                    y: 2,
-                  },
-                },
+          },
+        },
+        6: {
+          6: {
+            portal: {
+              pos: {
+                x: 2,
+                y: 2,
               },
             },
-            8: {
-              8: {
-                portal: {
-                  pos: {
-                    x: 4,
-                    y: 4,
-                  },
-                },
+          },
+        },
+        8: {
+          8: {
+            portal: {
+              pos: {
+                x: 4,
+                y: 4,
               },
             },
           },
         },
       },
+    })
+
+    context.update({
       players: {
         player1: {
           $merge: {
@@ -223,55 +216,52 @@ describe("checkPortals", () => {
   })
 
   it("does not teleport if the destination is occupied", async () => {
-    const context = createTestContext(RoborallyContext, 2)
-
-    context.update({
-      board: {
-        $merge: {
-          cells: {
-            2: {
-              2: {
-                portal: {
-                  pos: {
-                    x: 6,
-                    y: 6,
-                  },
-                },
+    const context = await createRoborallyTestContext(6, {
+      cells: {
+        2: {
+          2: {
+            portal: {
+              pos: {
+                x: 6,
+                y: 6,
               },
             },
-            4: {
-              4: {
-                portal: {
-                  pos: {
-                    x: 8,
-                    y: 8,
-                  },
-                },
+          },
+        },
+        4: {
+          4: {
+            portal: {
+              pos: {
+                x: 8,
+                y: 8,
               },
             },
-            6: {
-              6: {
-                portal: {
-                  pos: {
-                    x: 2,
-                    y: 2,
-                  },
-                },
+          },
+        },
+        6: {
+          6: {
+            portal: {
+              pos: {
+                x: 2,
+                y: 2,
               },
             },
-            8: {
-              8: {
-                portal: {
-                  pos: {
-                    x: 4,
-                    y: 4,
-                  },
-                },
+          },
+        },
+        8: {
+          8: {
+            portal: {
+              pos: {
+                x: 4,
+                y: 4,
               },
             },
           },
         },
       },
+    })
+
+    context.update({
       players: {
         player1: {
           $merge: {

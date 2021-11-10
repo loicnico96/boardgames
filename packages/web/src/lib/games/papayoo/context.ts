@@ -16,12 +16,12 @@ import { resolveState } from "./resolveState"
 import { validateAction } from "./validateAction"
 
 export class PapayooContext extends BaseContext<PapayooModel> {
-  getInitialGameState(
+  async getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,
     options: PapayooOptions,
     seed: number
-  ): PapayooState {
+  ): Promise<PapayooState> {
     const startingPlayerId = this.generator.pick(playerOrder)
 
     return {

@@ -2,21 +2,34 @@ import { fill, generate } from "@boardgames/utils"
 
 import { Constructor, GameContext } from "../context"
 
-export function createTestContext<C extends GameContext<any>>(
+export const TEST_SEED = 0
+
+export async function createTestContext<C extends GameContext<any>>(
   constructor: Constructor<C>,
   playerCount: number,
   options?: ReturnType<C["validateOptions"]>,
-  seed?: number
-): C {
+  fetchResults?: Record<string, any>
+): Promise<C> {
   const context = new constructor()
 
   const playerOrder = fill(playerCount, index => `player${index + 1}`)
 
-  context.initState(
+  const fetcher = async <T>(ref: string) => {
+    const fetchResult = fetchResults?.[ref] ?? null
+
+    if (!fetchResult) {
+      throw Error(`Not found: ${ref}`)
+    }
+
+    return fetchResult as T
+  }
+
+  await context.initState(
     playerOrder,
     generate(playerOrder, playerId => [playerId, { name: playerId }]),
     options ? context.validateOptions(options) : context.getDefaultOptions(),
-    seed ?? 0
+    TEST_SEED,
+    fetcher
   )
 
   return context

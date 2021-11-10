@@ -2,8 +2,7 @@ import { BasePlayer, BaseState, GameModel } from "@boardgames/common"
 import { Direction, ObjectUnion, Position, Rotation } from "@boardgames/utils"
 
 export enum BoardId {
-  // TODO
-  DEFAULT = "default",
+  TEST = "test",
 }
 
 export enum BoardFeature {
