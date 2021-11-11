@@ -1714,8 +1714,8 @@ __metadata:
   resolution: "@boardgames/scripts@workspace:packages/scripts"
   dependencies:
     "@babel/core": 7.15.5
+    "@boardgames/roborally": "workspace:*"
     "@boardgames/utils": "workspace:*"
-    "@boardgames/web": "workspace:*"
     "@types/jest": 27.0.2
     "@typescript-eslint/eslint-plugin": 4.31.1
     "@typescript-eslint/parser": 4.31.1
@@ -1754,7 +1754,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@boardgames/web@workspace:*, @boardgames/web@workspace:packages/web":
+"@boardgames/web@workspace:packages/web":
   version: 0.0.0-use.local
   resolution: "@boardgames/web@workspace:packages/web"
   dependencies:
