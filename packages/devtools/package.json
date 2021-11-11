@@ -25,6 +25,8 @@
     "lint": "eslint src/**/*.{ts,tsx}",
     "lint:fix": "eslint --fix src/**/*.{ts,tsx}",
     "precommit": "lint-staged",
+    "test": "jest --watch",
+    "test:coverage": "jest --coverage",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -37,12 +39,14 @@
   },
   "devDependencies": {
     "@babel/core": "7.15.5",
+    "@types/jest": "27.0.2",
     "@typescript-eslint/eslint-plugin": "4.31.1",
     "@typescript-eslint/parser": "4.31.1",
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-jest": "24.4.0",
     "eslint-plugin-prettier": "4.0.0",
+    "jest": "27.3.1",
     "lint-staged": "11.1.2",
     "prettier": "2.4.0",
     "rollup": "2.56.3",

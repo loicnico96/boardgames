@@ -39,4 +39,4 @@ jobs:
       - name: Build application
         run: yarn build
       - name: Run tests
-        run: yarn web test:coverage
+        run: yarn all test:coverage --passWithNoTests
