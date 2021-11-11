@@ -1,6 +1,7 @@
 import { mod, Random } from "@boardgames/utils"
 import update, { Spec } from "immutability-helper"
 
+import { getGameRef, getRef } from "./collections"
 import { BaseAction, BaseOptions, GameModel, UserInfo } from "./model"
 
 export type StateChangeHandler<M extends GameModel> = (
@@ -16,6 +17,10 @@ export abstract class BaseContext<M extends GameModel> {
 
   public constructor(game: M["game"]) {
     this.game = game
+  }
+
+  public ref(...segments: string[]): string {
+    return getRef(getGameRef(this.game), ...segments)
   }
 
   public async initState(

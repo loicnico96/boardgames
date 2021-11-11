@@ -2,8 +2,6 @@ import {
   BaseAction,
   BaseContext,
   BaseOptions,
-  getGameRef,
-  getRef,
   UserInfo,
 } from "@boardgames/common"
 import {
@@ -46,8 +44,7 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
     seed: number,
     fetcher: <T>(ref: string) => Promise<T>
   ): Promise<RoborallyState> {
-    const gameRef = getGameRef(this.game)
-    const boardRef = getRef(gameRef, "boards", options.boardId)
+    const boardRef = this.ref("boards", options.boardId)
     const board = await fetcher<RoborallyBoard>(boardRef)
 
     this.generator.shuffle(board.checkpoints)

@@ -47,26 +47,28 @@ export const TEST_SEED = 0
 
 export async function createTestContext(
   playerCount: number,
-  board?: Partial<RoborallyBoard>
+  boardOverrides: Partial<RoborallyBoard> = {}
 ): Promise<RoborallyContext> {
   const context = new RoborallyContext()
 
   const playerOrder = fill(playerCount, index => `player${index + 1}`)
 
+  const board: RoborallyBoard = {
+    ...TEST_BOARD,
+    ...boardOverrides,
+  }
+
   await context.initState(
     playerOrder,
     generate(playerOrder, playerId => [playerId, { name: playerId }]),
     {
-      boardId: "test" as BoardId,
-      checkpoints: (board?.checkpoints ?? TEST_BOARD.checkpoints).length - 1,
+      boardId: BoardId.TEST,
+      checkpoints: board.checkpoints.length - 1,
     },
     TEST_SEED,
     async (ref: string): Promise<any> => {
-      if (ref === "games/roborally/boards/test") {
-        return {
-          ...TEST_BOARD,
-          ...board,
-        }
+      if (ref === context.ref("boards", BoardId.TEST)) {
+        return board
       }
 
       throw Error("Not found")
