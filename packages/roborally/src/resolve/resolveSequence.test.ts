@@ -132,6 +132,10 @@ describe("resolveSequence", () => {
       },
       {
         code: "nextPhase",
+        phase: GamePhase.RESOLVE_LASER,
+      },
+      {
+        code: "nextPhase",
         phase: GamePhase.RESOLVE_REPAIR,
       },
       {

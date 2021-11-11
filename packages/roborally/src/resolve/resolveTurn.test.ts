@@ -119,6 +119,10 @@ describe("resolveTurn", () => {
       },
       {
         code: "nextPhase",
+        phase: GamePhase.RESOLVE_LASER,
+      },
+      {
+        code: "nextPhase",
         phase: GamePhase.RESOLVE_REPAIR,
       },
       {
@@ -145,6 +149,10 @@ describe("resolveTurn", () => {
       {
         code: "nextPhase",
         phase: GamePhase.RESOLVE_GEAR,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_LASER,
       },
       {
         code: "nextPhase",
@@ -182,6 +190,10 @@ describe("resolveTurn", () => {
       {
         code: "nextPhase",
         phase: GamePhase.RESOLVE_GEAR,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_LASER,
       },
       {
         code: "nextPhase",
@@ -230,6 +242,10 @@ describe("resolveTurn", () => {
       },
       {
         code: "nextPhase",
+        phase: GamePhase.RESOLVE_LASER,
+      },
+      {
+        code: "nextPhase",
         phase: GamePhase.RESOLVE_REPAIR,
       },
       {
@@ -272,6 +288,10 @@ describe("resolveTurn", () => {
       {
         code: "nextPhase",
         phase: GamePhase.RESOLVE_GEAR,
+      },
+      {
+        code: "nextPhase",
+        phase: GamePhase.RESOLVE_LASER,
       },
       {
         code: "nextPhase",

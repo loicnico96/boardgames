@@ -1,11 +1,5 @@
 import { BoardFeature, Cell, RoborallyBoard } from "@boardgames/roborally"
-import {
-  Direction,
-  getDir,
-  Position,
-  Rotation,
-  unique,
-} from "@boardgames/utils"
+import { Direction, Position, Rotation, unique } from "@boardgames/utils"
 import update, { Spec } from "immutability-helper"
 
 export class CellBuilder {
@@ -99,8 +93,24 @@ export class CellBuilder {
     return this
   }
 
+  public laser(dir: Direction, damage: number = 1): this {
+    this.builder.features(BoardFeature.LASER)
+    this.builder.update({
+      lasers: {
+        $push: [
+          {
+            damage,
+            pos: this.pos,
+            dir,
+          },
+        ],
+      },
+    })
+
+    return this
+  }
+
   public pusher(dir: Direction, active: number[]): this {
-    this.wall(getDir(dir + 2))
     this.builder.features(BoardFeature.PUSHER)
     this.builder.updateCell(this.pos, {
       $merge: {
@@ -181,6 +191,7 @@ export class BoardBuilder {
         y: height,
       },
       features: [],
+      lasers: [],
     }
   }
 

@@ -1,10 +1,6 @@
 import { BasePlayer, BaseState, GameModel } from "@boardgames/common"
 import { Direction, ObjectUnion, Position, Rotation } from "@boardgames/utils"
 
-export enum BoardId {
-  TEST = "test",
-}
-
 export enum BoardFeature {
   CONVEYOR = "conveyor",
   CONVEYOR_FAST = "conveyorFast",
@@ -17,6 +13,18 @@ export enum BoardFeature {
   TELEPORT = "teleport",
   TRAP = "trap",
   WATER = "water",
+}
+
+export enum BoardId {
+  TEST = "test",
+}
+
+export type BoardLaser = {
+  damage: number
+  dir: Direction
+  pierce?: boolean
+  pos: Position
+  range?: number
 }
 
 export type Cell = {
@@ -171,6 +179,7 @@ export type RoborallyBoard = {
     y: number
   }
   features: BoardFeature[]
+  lasers: BoardLaser[]
 }
 
 export type RoborallyState = BaseState<RoborallyPlayer> & {

@@ -41,6 +41,7 @@ const TEST_BOARD: RoborallyBoard = {
     y: 12,
   },
   features: [],
+  lasers: [],
 }
 
 export const TEST_SEED = 0

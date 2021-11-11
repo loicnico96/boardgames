@@ -1,12 +1,14 @@
 import { RoborallyContext } from "../context"
 import { BoardFeature, GamePhase } from "../model"
 
+import { checkDamage } from "./checkDamage"
 import { checkHoles } from "./checkHoles"
 import { nextPhase } from "./nextPhase"
 import { resolveCheckpoints } from "./resolveCheckpoints"
 import { resolveConveyors } from "./resolveConveyors"
 import { resolveCrushers } from "./resolveCrushers"
 import { resolveGears } from "./resolveGears"
+import { resolveBoardLasers, resolvePlayerLasers } from "./resolveLasers"
 import { resolveProgramCards } from "./resolveProgramCards"
 import { resolvePushers } from "./resolvePushers"
 import { resolveRepairs } from "./resolveRepairs"
@@ -52,8 +54,10 @@ export async function resolveSequence(
     await resolveGears(context)
   }
 
-  // await nextPhase(context, GamePhase.RESOLVE_LASER)
-  // TODO: await resolveLasers(context, sequence)
+  await nextPhase(context, GamePhase.RESOLVE_LASER)
+  await resolvePlayerLasers(context)
+  await resolveBoardLasers(context)
+  await checkDamage(context)
 
   if (features.includes(BoardFeature.REPAIR)) {
     await nextPhase(context, GamePhase.RESOLVE_REPAIR)
