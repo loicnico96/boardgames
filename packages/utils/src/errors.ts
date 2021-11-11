@@ -10,7 +10,7 @@ export function assert(condition: boolean, message: string): asserts condition {
   }
 }
 
-export function toError(value: unknown): Error {
+export function toError(value: unknown): Error & { originalError?: unknown } {
   if (isError(value)) {
     return value
   }

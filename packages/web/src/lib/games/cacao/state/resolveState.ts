@@ -1,6 +1,6 @@
 import {
   generate,
-  mutableSortBy,
+  sortBy,
   getAdjacentPos,
   getDir,
   Direction,
@@ -297,7 +297,7 @@ export function sortResolutions(
   context: CacaoContext,
   playerId: string,
   resolutions: WorkerResolution[]
-): void {
+): WorkerResolution[] {
   const player = context.player(playerId)
 
   const willGainsBeans = resolutions.some(resolution =>
@@ -310,7 +310,7 @@ export function sortResolutions(
       [ForestType.KITCHEN].includes(resolution.forest.type)
     )
 
-  mutableSortBy(
+  return sortBy(
     resolutions,
     resolution => {
       switch (resolution.forest.type) {
@@ -578,10 +578,10 @@ export async function resolveWorkers(
 
   for (let index = 0; index < playerOrder.length; index++) {
     const playerId = context.nextPlayerId(currentPlayerId, index)
-    const playerResolutions = resolutions[playerId]
+    let playerResolutions = resolutions[playerId]
 
     while (playerResolutions.length > 0) {
-      sortResolutions(context, playerId, playerResolutions)
+      playerResolutions = sortResolutions(context, playerId, playerResolutions)
       const resolution = playerResolutions.shift()
       if (resolution !== undefined) {
         await resolveResolution(context, playerId, resolution)

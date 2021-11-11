@@ -1,10 +1,10 @@
 import {
   getDir,
   movePos,
-  mutableSortBy,
   Position,
   Rotation,
   isSamePos,
+  sortBy,
 } from "@boardgames/utils"
 
 import { getCell } from "../board"
@@ -139,9 +139,12 @@ export async function resolveProgramCards(context: RoborallyContext) {
     return result
   }, [] as { card: number; playerId: string }[])
 
-  mutableSortBy(playerActions, action => -getCardPriority(action.card))
+  const sortedActions = sortBy(
+    playerActions,
+    action => -getCardPriority(action.card)
+  )
 
-  for (const { card, playerId } of playerActions) {
+  for (const { card, playerId } of sortedActions) {
     context.update({
       $merge: {
         currentPlayerId: playerId,

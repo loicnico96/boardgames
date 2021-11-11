@@ -40,7 +40,7 @@ export function isFunction(value: unknown): value is Function {
 }
 
 export function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null
+  return Object.prototype.toString.call(value) === "[object Object]"
 }
 
 export function isString(value: unknown): value is string {
