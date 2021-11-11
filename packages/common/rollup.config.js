@@ -6,4 +6,7 @@ export default rollup({
     "@boardgames/utils",
     "immutability-helper"
   ],
+  exclude: [
+    "src/**/*.test.ts",
+  ],
 })

@@ -1,10 +1,5 @@
 import { Function, isFunction } from "./types"
 
-export enum SortDirection {
-  ASCENDING = 1,
-  DESCENDING = -1,
-}
-
 export function count<T>(array: ReadonlyArray<T>, value: T): number {
   return array.filter(item => item === value).length
 }
@@ -54,24 +49,24 @@ export function sortBy<T>(
 
 export function sortByAlpha<T extends string>(
   array: ReadonlyArray<T>,
-  sortDir?: SortDirection
+  sortDir?: number
 ): Array<T>
 export function sortByAlpha<T>(
   array: ReadonlyArray<T>,
   sortFn: (value: T) => string,
-  sortDir?: SortDirection
+  sortDir?: number
 ): Array<T>
 export function sortByAlpha<T>(
   array: ReadonlyArray<T>,
-  sortFnOrDir: ((value: T) => string) | SortDirection = SortDirection.ASCENDING,
-  sortDir: SortDirection = SortDirection.ASCENDING
+  sortFnOrDir: ((value: T) => string) | number = 1,
+  sortDir: number = 1
 ) {
   return array.slice().sort((value, other) => {
     if (isFunction(sortFnOrDir)) {
       return sortFnOrDir(value).localeCompare(sortFnOrDir(other)) * sortDir
-    } else {
-      return String(value).localeCompare(String(other)) * sortFnOrDir
     }
+
+    return String(value).localeCompare(String(other)) * sortFnOrDir
   })
 }
 

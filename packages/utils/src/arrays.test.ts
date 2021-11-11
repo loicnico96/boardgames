@@ -5,7 +5,6 @@ import {
   remove,
   sortBy,
   sortByAlpha,
-  SortDirection,
   unique,
 } from "./arrays"
 
@@ -75,7 +74,7 @@ describe("sortBy", () => {
 })
 
 describe("sortByAlpha", () => {
-  it("sorts an array alphabetically", () => {
+  it("sorts an array alphabetically in ascending order", () => {
     const array = ["snake", "cat", "spider", "dog", "horse"]
     const sorted = sortByAlpha(array)
     expect(sorted).toStrictEqual(["cat", "dog", "horse", "snake", "spider"])
@@ -83,7 +82,7 @@ describe("sortByAlpha", () => {
 
   it("sorts an array alphabetically in descending order", () => {
     const array = ["snake", "cat", "spider", "dog", "horse"]
-    const sorted = sortByAlpha(array, SortDirection.DESCENDING)
+    const sorted = sortByAlpha(array, -1)
     expect(sorted).toStrictEqual(["spider", "snake", "horse", "dog", "cat"])
   })
 

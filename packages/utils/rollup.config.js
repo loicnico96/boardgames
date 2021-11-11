@@ -5,4 +5,7 @@ export default rollup({
   dependencies: [
     "seedrandom"
   ],
+  exclude: [
+    "src/**/*.test.ts",
+  ],
 })
