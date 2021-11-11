@@ -1,7 +1,7 @@
 import { mod, Random } from "@boardgames/utils"
 import update, { Spec } from "immutability-helper"
 
-import { BaseAction, BaseOptions, GameModel, UserInfo } from "./types"
+import { BaseAction, BaseOptions, GameModel, UserInfo } from "./model"
 
 export type StateChangeHandler<M extends GameModel> = (
   state: M["state"],
@@ -9,9 +9,14 @@ export type StateChangeHandler<M extends GameModel> = (
 ) => Promise<void>
 
 export abstract class BaseContext<M extends GameModel> {
+  public readonly game: M["game"]
   private __generator: Random | undefined
   private __onStateChange: StateChangeHandler<M> | undefined
   private __state: M["state"] | undefined
+
+  public constructor(game: M["game"]) {
+    this.game = game
+  }
 
   public async initState(
     playerOrder: string[],

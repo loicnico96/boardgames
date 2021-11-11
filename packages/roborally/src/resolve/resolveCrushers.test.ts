@@ -1,11 +1,10 @@
-import { run } from "lib/games/test/utils"
+import { createTestContext, run } from "../../test/utils"
 
 import { resolveCrushers } from "./resolveCrushers"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveCrushers", () => {
   it("destroys players on active crushers", async () => {
-    const context = await createRoborallyTestContext(4, {
+    const context = await createTestContext(4, {
       cells: {
         5: {
           5: {

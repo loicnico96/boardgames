@@ -2,6 +2,8 @@ import {
   BaseAction,
   BaseContext,
   BaseOptions,
+  getGameRef,
+  getRef,
   UserInfo,
 } from "@boardgames/common"
 import {
@@ -18,10 +20,6 @@ import {
   objectUnion,
 } from "@boardgames/utils"
 
-import { getGameRef, getRef } from "lib/db/collections"
-
-import { GameType } from "../types"
-
 import { isValidCard } from "./card"
 import { SEQUENCE_COUNT } from "./constants"
 import {
@@ -37,6 +35,10 @@ import { resolveTurn } from "./resolve/resolveTurn"
 import { startTurn } from "./resolve/startTurn"
 
 export class RoborallyContext extends BaseContext<RoborallyModel> {
+  constructor() {
+    super("roborally")
+  }
+
   async getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,
@@ -44,7 +46,7 @@ export class RoborallyContext extends BaseContext<RoborallyModel> {
     seed: number,
     fetcher: <T>(ref: string) => Promise<T>
   ): Promise<RoborallyState> {
-    const gameRef = getGameRef(GameType.ROBORALLY)
+    const gameRef = getGameRef(this.game)
     const boardRef = getRef(gameRef, "boards", options.boardId)
     const board = await fetcher<RoborallyBoard>(boardRef)
 

@@ -1,7 +1,8 @@
+import { RoborallyModel } from "@boardgames/roborally"
+
 import { CacaoModel } from "./cacao/model"
 import { MetropolysModel } from "./metropolys/model"
 import { PapayooModel } from "./papayoo/model"
-import { RoborallyModel } from "./roborally/model"
 
 export enum GameType {
   CACAO = "cacao",

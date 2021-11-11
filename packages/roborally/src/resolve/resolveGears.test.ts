@@ -1,13 +1,12 @@
 import { Direction, Rotation } from "@boardgames/utils"
 
-import { run } from "lib/games/test/utils"
+import { createTestContext, run } from "../../test/utils"
 
 import { resolveGears } from "./resolveGears"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveGears", () => {
   it("rotates players on gears", async () => {
-    const context = await createRoborallyTestContext(4, {
+    const context = await createTestContext(4, {
       cells: {
         2: {
           2: {

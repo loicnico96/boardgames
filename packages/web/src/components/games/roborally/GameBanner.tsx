@@ -1,9 +1,9 @@
+import { GamePhase } from "@boardgames/roborally"
 import { useCallback } from "react"
 
 import { AsyncButton } from "components/ui/AsyncButton"
 import { Banner } from "components/ui/GameView/Banner"
 import { usePlayerAction } from "hooks/usePlayerAction"
-import { GamePhase } from "lib/games/roborally/model"
 import { GameType } from "lib/games/types"
 
 import {

@@ -1,3 +1,4 @@
+import { BoardFeature, Cell, RoborallyBoard } from "@boardgames/roborally"
 import {
   Direction,
   getDir,
@@ -5,11 +6,6 @@ import {
   Rotation,
   unique,
 } from "@boardgames/utils"
-import {
-  BoardFeature,
-  Cell,
-  RoborallyBoard,
-} from "@boardgames/web/src/lib/games/roborally/model"
 import update, { Spec } from "immutability-helper"
 
 export class CellBuilder {

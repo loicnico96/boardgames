@@ -1,11 +1,10 @@
-import { run } from "lib/games/test/utils"
+import { createTestContext, run } from "../../test/utils"
 
 import { destroyPlayers } from "./destroyPlayers"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("destroyPlayers", () => {
   it("marks players as destroyed", async () => {
-    const context = await createRoborallyTestContext(2)
+    const context = await createTestContext(2)
 
     const events = await run(context, destroyPlayers, ["player1"])
 

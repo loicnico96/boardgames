@@ -1,7 +1,7 @@
+import { GamePhase } from "@boardgames/roborally"
 import styled from "@emotion/styled"
 
 import { useCurrentUserId } from "hooks/useCurrentUserId"
-import { GamePhase } from "lib/games/roborally/model"
 
 import { Card } from "./Card"
 import {

@@ -21,6 +21,7 @@
     "devtools": "yarn workspace @boardgames/devtools",
     "precommit": "yarn workspaces foreach -v --exclude @boardgames/root run precommit",
     "prepare": "husky install",
+    "roborally": "yarn workspace @boardgames/roborally",
     "scripts": "yarn workspace @boardgames/scripts",
     "utils": "yarn workspace @boardgames/utils",
     "web": "yarn workspace @boardgames/web"

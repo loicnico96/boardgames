@@ -183,6 +183,7 @@ export type RoborallyState = BaseState<RoborallyPlayer> & {
 }
 
 export type RoborallyModel = GameModel<
+  "roborally",
   RoborallyAction,
   RoborallyEvent,
   RoborallyOptions,

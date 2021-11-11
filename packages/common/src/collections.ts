@@ -1,5 +1,3 @@
-import { GameType } from "lib/games/types"
-
 export enum Collection {
   GAMES = "games",
   GAMES_CLIENT = "client",
@@ -11,15 +9,15 @@ export function getRef(...segments: string[]): string {
   return segments.join("/")
 }
 
-export function getGameRef(game: GameType): string {
+export function getGameRef(game: string): string {
   return getRef(Collection.GAMES, game)
 }
 
-export function getClientRef(game: GameType, roomId: string): string {
+export function getClientRef(game: string, roomId: string): string {
   return getRef(Collection.GAMES, game, Collection.GAMES_CLIENT, roomId)
 }
 
-export function getServerRef(game: GameType, roomId: string): string {
+export function getServerRef(game: string, roomId: string): string {
   return getRef(Collection.GAMES, game, Collection.GAMES_SERVER, roomId)
 }
 

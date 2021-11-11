@@ -2,7 +2,7 @@
   "name": "@boardgames/devtools",
   "version": "0.1.0",
   "author": "Loïc Nicolas <loicnico96@gmail.com>",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "private": true,
   "bugs": "https://github.com/loicnico96/boardgames",
   "homepage": "https://github.com/loicnico96/boardgames/tree/main/packages/devtools#readme",

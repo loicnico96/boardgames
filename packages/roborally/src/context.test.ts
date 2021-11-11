@@ -1,14 +1,13 @@
 import { fill } from "@boardgames/utils"
 
-import { resolve } from "../test/utils"
+import { createTestContext, resolve } from "../test/utils"
 
 import { SEQUENCE_COUNT } from "./constants"
 import { GamePhase } from "./model"
-import { createRoborallyTestContext } from "./resolve/test/utils"
 
 describe("RoborallyContext", () => {
   it("starts a new game in Ready phase", async () => {
-    const context = await createRoborallyTestContext(4)
+    const context = await createTestContext(4)
 
     await resolve(context, {})
 
@@ -32,7 +31,7 @@ describe("RoborallyContext", () => {
   })
 
   it("validates Ready action", async () => {
-    const context = await createRoborallyTestContext(4)
+    const context = await createTestContext(4)
 
     expect(() =>
       context.validateAction("player1", {
@@ -48,7 +47,7 @@ describe("RoborallyContext", () => {
   })
 
   it("validates Program action when powered up", async () => {
-    const context = await createRoborallyTestContext(4)
+    const context = await createTestContext(4)
 
     context.update({
       $merge: {
@@ -126,7 +125,7 @@ describe("RoborallyContext", () => {
   })
 
   it("validates Program action when powered down", async () => {
-    const context = await createRoborallyTestContext(4)
+    const context = await createTestContext(4)
 
     context.update({
       $merge: {
@@ -159,7 +158,7 @@ describe("RoborallyContext", () => {
   })
 
   it("validates Program action with locked registers", async () => {
-    const context = await createRoborallyTestContext(4)
+    const context = await createTestContext(4)
 
     context.update({
       $merge: {

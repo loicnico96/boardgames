@@ -1,10 +1,10 @@
+import { getRoomRef } from "@boardgames/common"
 import { toError } from "@boardgames/utils"
 
 import { ApiError } from "lib/api/error"
 import { handle, readBody, readParam } from "lib/api/server"
 import { getUserId } from "lib/api/server/auth"
 import { HttpMethod, HttpStatus } from "lib/api/types"
-import { getRoomRef } from "lib/db/collections"
 import { WithId } from "lib/db/types"
 import { DocRef, firestore } from "lib/firebase/admin"
 import { getGameContext } from "lib/games/context"

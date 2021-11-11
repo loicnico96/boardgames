@@ -1,13 +1,12 @@
 import { Direction } from "@boardgames/utils"
 
-import { run } from "lib/games/test/utils"
+import { createTestContext, run } from "../../test/utils"
 
 import { resolveCheckpoints } from "./resolveCheckpoints"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveCheckpoints", () => {
   it("registers reached checkpoints", async () => {
-    const context = await createRoborallyTestContext(6, {
+    const context = await createTestContext(6, {
       checkpoints: [
         {
           x: 0,

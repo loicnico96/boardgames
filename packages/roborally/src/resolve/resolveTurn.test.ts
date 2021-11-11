@@ -1,15 +1,13 @@
 import { Direction, Rotation } from "@boardgames/utils"
 
-import { run } from "lib/games/test/utils"
-
+import { createTestContext, run } from "../../test/utils"
 import { BoardFeature, GamePhase } from "../model"
 
 import { resolveTurn } from "./resolveTurn"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveTurn", () => {
   it("resolves an entire turn", async () => {
-    const context = await createRoborallyTestContext(1)
+    const context = await createTestContext(1)
 
     context.update({
       $merge: {

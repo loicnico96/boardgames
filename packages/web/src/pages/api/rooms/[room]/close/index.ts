@@ -1,8 +1,9 @@
+import { getRoomRef } from "@boardgames/common"
+
 import { ApiError } from "lib/api/error"
 import { handle, readParam } from "lib/api/server"
 import { getUserId } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
-import { getRoomRef } from "lib/db/collections"
 import { DocRef, firestore } from "lib/firebase/admin"
 import { RoomData, RoomStatus } from "lib/model/RoomData"
 import { Param } from "lib/utils/navigation"

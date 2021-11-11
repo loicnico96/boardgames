@@ -1,13 +1,12 @@
 import { Direction, Rotation } from "@boardgames/utils"
 
-import { run } from "lib/games/test/utils"
+import { createTestContext, run } from "../../test/utils"
 
 import { resolveMoves } from "./resolveMoves"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveMoves", () => {
   it("moves players", async () => {
-    const context = await createRoborallyTestContext(4)
+    const context = await createTestContext(4)
 
     context.update({
       players: {
@@ -115,7 +114,7 @@ describe("resolveMoves", () => {
   })
 
   it("cannot move through walls", async () => {
-    const context = await createRoborallyTestContext(2, {
+    const context = await createTestContext(2, {
       cells: {
         4: {
           4: {
@@ -171,7 +170,7 @@ describe("resolveMoves", () => {
   })
 
   it("can push other players if move is marked as such", async () => {
-    const context = await createRoborallyTestContext(3)
+    const context = await createTestContext(3)
 
     context.update({
       players: {
@@ -255,7 +254,7 @@ describe("resolveMoves", () => {
   })
 
   it("cannot push other players if move is not marked as such", async () => {
-    const context = await createRoborallyTestContext(2)
+    const context = await createTestContext(2)
 
     context.update({
       players: {
@@ -306,7 +305,7 @@ describe("resolveMoves", () => {
   })
 
   it("cannot push other players through walls", async () => {
-    const context = await createRoborallyTestContext(3, {
+    const context = await createTestContext(3, {
       cells: {
         6: {
           4: {
@@ -383,7 +382,7 @@ describe("resolveMoves", () => {
   })
 
   it("ignores collisions if virtual", async () => {
-    const context = await createRoborallyTestContext(3)
+    const context = await createTestContext(3)
 
     context.update({
       players: {
@@ -461,7 +460,7 @@ describe("resolveMoves", () => {
   })
 
   it("ignores collisions with virtual players", async () => {
-    const context = await createRoborallyTestContext(3)
+    const context = await createTestContext(3)
 
     context.update({
       players: {
@@ -542,7 +541,7 @@ describe("resolveMoves", () => {
   })
 
   it("ignores collisions with destroyed players", async () => {
-    const context = await createRoborallyTestContext(3)
+    const context = await createTestContext(3)
 
     context.update({
       players: {
@@ -620,7 +619,7 @@ describe("resolveMoves", () => {
   })
 
   it("cannot move several players to the same location", async () => {
-    const context = await createRoborallyTestContext(3)
+    const context = await createTestContext(3)
 
     context.update({
       players: {
@@ -692,7 +691,7 @@ describe("resolveMoves", () => {
   })
 
   it("cannot push a player in several directions", async () => {
-    const context = await createRoborallyTestContext(3)
+    const context = await createTestContext(3)
 
     context.update({
       players: {
@@ -765,7 +764,7 @@ describe("resolveMoves", () => {
   })
 
   it("can move to the location of another moving player", async () => {
-    const context = await createRoborallyTestContext(3)
+    const context = await createTestContext(3)
 
     context.update({
       players: {
@@ -854,7 +853,7 @@ describe("resolveMoves", () => {
   })
 
   it("cannot swap location with another player", async () => {
-    const context = await createRoborallyTestContext(2)
+    const context = await createTestContext(2)
 
     context.update({
       players: {
@@ -908,7 +907,7 @@ describe("resolveMoves", () => {
   })
 
   it("resolves walls before player collisions", async () => {
-    const context = await createRoborallyTestContext(3, {
+    const context = await createTestContext(3, {
       cells: {
         5: {
           4: {
@@ -1001,7 +1000,7 @@ describe("resolveMoves", () => {
   })
 
   it("gives priority to pushing moves", async () => {
-    const context = await createRoborallyTestContext(3)
+    const context = await createTestContext(3)
 
     context.update({
       players: {

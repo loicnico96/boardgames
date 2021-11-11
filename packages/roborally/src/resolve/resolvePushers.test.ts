@@ -1,13 +1,12 @@
 import { Direction } from "@boardgames/utils"
 
-import { run } from "lib/games/test/utils"
+import { createTestContext, run } from "../../test/utils"
 
 import { resolvePushers } from "./resolvePushers"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolvePushers", () => {
   it("moves players on active pushers", async () => {
-    const context = await createRoborallyTestContext(4)
+    const context = await createTestContext(4)
 
     context.update({
       $merge: {

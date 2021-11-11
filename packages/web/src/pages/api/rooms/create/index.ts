@@ -1,8 +1,9 @@
+import { Collection } from "@boardgames/common"
+
 import { ApiError } from "lib/api/error"
 import { handle, readBody } from "lib/api/server"
 import { getUserId, getUserInfo } from "lib/api/server/auth"
 import { HttpMethod, HttpStatus } from "lib/api/types"
-import { Collection } from "lib/db/collections"
 import { WithId } from "lib/db/types"
 import { firestore } from "lib/firebase/admin"
 import { getGameContext } from "lib/games/context"

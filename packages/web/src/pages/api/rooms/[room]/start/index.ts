@@ -1,8 +1,9 @@
+import { getClientRef, getRoomRef, getServerRef } from "@boardgames/common"
+
 import { ApiError } from "lib/api/error"
 import { handle, readParam } from "lib/api/server"
 import { getUserId } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
-import { getClientRef, getRoomRef, getServerRef } from "lib/db/collections"
 import { DocRef, firestore } from "lib/firebase/admin"
 import { getGameContext } from "lib/games/context"
 import { SETTINGS } from "lib/games/settings"

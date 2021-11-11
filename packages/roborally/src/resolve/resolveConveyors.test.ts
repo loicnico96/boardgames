@@ -1,13 +1,12 @@
 import { Direction } from "@boardgames/utils"
 
-import { run } from "lib/games/test/utils"
+import { createTestContext, run } from "../../test/utils"
 
 import { resolveConveyors } from "./resolveConveyors"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveConveyors", () => {
   it("moves players on conveyors", async () => {
-    const context = await createRoborallyTestContext(4, {
+    const context = await createTestContext(4, {
       cells: {
         2: {
           2: {
@@ -115,7 +114,7 @@ describe("resolveConveyors", () => {
   })
 
   it("moves players on fast conveyors only", async () => {
-    const context = await createRoborallyTestContext(4, {
+    const context = await createTestContext(4, {
       cells: {
         2: {
           2: {

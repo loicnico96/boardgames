@@ -70,6 +70,7 @@ export type PapayooState = BaseState<PapayooPlayer> & {
 }
 
 export type PapayooModel = GameModel<
+  "papayoo",
   PapayooAction,
   PapayooEvent,
   PapayooOptions,

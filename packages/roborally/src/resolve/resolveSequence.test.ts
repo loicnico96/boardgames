@@ -1,15 +1,13 @@
 import { Direction, Rotation } from "@boardgames/utils"
 
-import { run } from "lib/games/test/utils"
-
+import { createTestContext, run } from "../../test/utils"
 import { BoardFeature, GamePhase } from "../model"
 
 import { resolveSequence } from "./resolveSequence"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveSequence", () => {
   it("resolves programs and board elements in order", async () => {
-    const context = await createRoborallyTestContext(1)
+    const context = await createTestContext(1)
 
     context.update({
       board: {

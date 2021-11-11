@@ -177,6 +177,7 @@ export type CacaoState = BaseState<CacaoPlayer> & {
 }
 
 export type CacaoModel = GameModel<
+  "cacao",
   CacaoAction,
   CacaoEvent,
   CacaoOptions,

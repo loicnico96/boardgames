@@ -1,13 +1,12 @@
 import { Direction, Rotation } from "@boardgames/utils"
 
-import { run } from "lib/games/test/utils"
+import { createTestContext, run } from "../../test/utils"
 
 import { checkPortals } from "./checkPortals"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("checkPortals", () => {
   it("teleports if moving into a portal", async () => {
-    const context = await createRoborallyTestContext(2, {
+    const context = await createTestContext(2, {
       cells: {
         2: {
           2: {
@@ -122,7 +121,7 @@ describe("checkPortals", () => {
   })
 
   it("does not teleport if staying on a portal", async () => {
-    const context = await createRoborallyTestContext(2, {
+    const context = await createTestContext(2, {
       cells: {
         2: {
           2: {
@@ -216,7 +215,7 @@ describe("checkPortals", () => {
   })
 
   it("does not teleport if the destination is occupied", async () => {
-    const context = await createRoborallyTestContext(6, {
+    const context = await createTestContext(6, {
       cells: {
         2: {
           2: {

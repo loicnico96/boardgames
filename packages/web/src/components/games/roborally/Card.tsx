@@ -1,6 +1,5 @@
+import { getCardAction, getCardPriority } from "@boardgames/roborally"
 import styled from "@emotion/styled"
-
-import { getCardAction, getCardPriority } from "lib/games/roborally/card"
 
 export type CardProps = {
   card: number | null

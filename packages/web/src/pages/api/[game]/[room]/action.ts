@@ -1,11 +1,15 @@
-import { BaseAction } from "@boardgames/common"
+import {
+  BaseAction,
+  getClientRef,
+  getRoomRef,
+  getServerRef,
+} from "@boardgames/common"
 import { toError } from "@boardgames/utils"
 
 import { ApiError } from "lib/api/error"
 import { handle, readBody, readParam } from "lib/api/server"
 import { getUserId } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
-import { getClientRef, getRoomRef, getServerRef } from "lib/db/collections"
 import { firestore } from "lib/firebase/admin"
 import { getGameContext } from "lib/games/context"
 import { GameState, GameType, isGameType } from "lib/games/types"

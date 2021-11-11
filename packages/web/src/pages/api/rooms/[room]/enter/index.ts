@@ -1,10 +1,10 @@
+import { getRoomRef } from "@boardgames/common"
 import update from "immutability-helper"
 
 import { ApiError } from "lib/api/error"
 import { handle, readParam } from "lib/api/server"
 import { getUserId, getUserInfo } from "lib/api/server/auth"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
-import { getRoomRef } from "lib/db/collections"
 import { DocRef, firestore } from "lib/firebase/admin"
 import { SETTINGS } from "lib/games/settings"
 import { RoomData, RoomStatus } from "lib/model/RoomData"

@@ -16,6 +16,10 @@ import { resolveState } from "./resolveState"
 import { validateAction } from "./validateAction"
 
 export class PapayooContext extends BaseContext<PapayooModel> {
+  constructor() {
+    super("papayoo")
+  }
+
   async getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,

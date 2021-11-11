@@ -1,9 +1,9 @@
 import { BaseContext } from "@boardgames/common"
+import { RoborallyContext } from "@boardgames/roborally"
 
 import { CacaoContext } from "./cacao/context"
 import { MetropolysContext } from "./metropolys/context"
 import { PapayooContext } from "./papayoo/context"
-import { RoborallyContext } from "./roborally/context"
 import { GameModels, GameType } from "./types"
 
 export type Constructor<T, P extends any[] = []> = new (...args: P) => T

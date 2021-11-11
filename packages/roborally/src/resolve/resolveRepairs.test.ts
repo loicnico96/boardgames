@@ -1,11 +1,10 @@
-import { run } from "lib/games/test/utils"
+import { createTestContext, run } from "../../test/utils"
 
 import { resolveRepairs } from "./resolveRepairs"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveRepairs", () => {
   it("repairs damaged players", async () => {
-    const context = await createRoborallyTestContext(4)
+    const context = await createTestContext(4)
 
     context.update({
       board: {

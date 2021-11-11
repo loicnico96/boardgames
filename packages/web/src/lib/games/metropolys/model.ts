@@ -18,6 +18,7 @@ export type MetropolysPlayer = BasePlayer<MetropolysAction>
 export type MetropolysState = BaseState<MetropolysPlayer>
 
 export type MetropolysModel = GameModel<
+  "metropolys",
   MetropolysAction,
   MetropolysEvent,
   MetropolysOptions,

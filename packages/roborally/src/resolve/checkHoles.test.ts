@@ -1,11 +1,10 @@
-import { run } from "lib/games/test/utils"
+import { createTestContext, run } from "../../test/utils"
 
 import { checkHoles } from "./checkHoles"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("checkHoles", () => {
   it("destroys players on holes, active traps, or out of board", async () => {
-    const context = await createRoborallyTestContext(6, {
+    const context = await createTestContext(6, {
       cells: {
         3: {
           3: {

@@ -14,6 +14,10 @@ import {
 } from "./model"
 
 export class MetropolysContext extends BaseContext<MetropolysModel> {
+  constructor() {
+    super("metropolys")
+  }
+
   async getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,

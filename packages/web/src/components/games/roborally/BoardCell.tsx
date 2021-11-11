@@ -1,8 +1,6 @@
+import { getCell, RoborallyState } from "@boardgames/roborally"
 import { Direction, Position, isSamePos } from "@boardgames/utils"
 import styled from "@emotion/styled"
-
-import { getCell } from "lib/games/roborally/board"
-import { RoborallyState } from "lib/games/roborally/model"
 
 import { useRoborallyState } from "./store"
 

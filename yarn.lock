@@ -1678,6 +1678,29 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@boardgames/roborally@workspace:*, @boardgames/roborally@workspace:packages/roborally":
+  version: 0.0.0-use.local
+  resolution: "@boardgames/roborally@workspace:packages/roborally"
+  dependencies:
+    "@babel/core": 7.15.5
+    "@boardgames/common": "workspace:*"
+    "@boardgames/devtools": "workspace:*"
+    "@boardgames/utils": "workspace:*"
+    "@types/jest": 27.0.2
+    "@typescript-eslint/eslint-plugin": 4.31.1
+    "@typescript-eslint/parser": 4.31.1
+    eslint: 7.32.0
+    eslint-config-prettier: 8.3.0
+    eslint-plugin-jest: 24.4.0
+    eslint-plugin-prettier: 4.0.0
+    jest: 27.3.1
+    lint-staged: 11.1.2
+    prettier: 2.4.0
+    rollup: 2.56.3
+    typescript: 4.4.3
+  languageName: unknown
+  linkType: soft
+
 "@boardgames/root@workspace:.":
   version: 0.0.0-use.local
   resolution: "@boardgames/root@workspace:."
@@ -1737,6 +1760,7 @@ __metadata:
   dependencies:
     "@boardgames/common": "workspace:*"
     "@boardgames/components": "workspace:*"
+    "@boardgames/roborally": "workspace:*"
     "@boardgames/utils": "workspace:*"
     "@next/bundle-analyzer": 11.1.2
     "@testing-library/dom": 8.5.0

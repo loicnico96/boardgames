@@ -1,5 +1,6 @@
+import { Collection } from "@boardgames/common"
+
 import { useQuery, UseQueryResult } from "hooks/db/useQuery"
-import { Collection } from "lib/db/collections"
 import { SortDirection, WithId } from "lib/db/types"
 import { GameType } from "lib/games/types"
 import { RoomData } from "lib/model/RoomData"

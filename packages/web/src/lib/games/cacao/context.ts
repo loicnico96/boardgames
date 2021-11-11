@@ -27,6 +27,10 @@ import {
 import { resolveState } from "./state/resolveState"
 
 export class CacaoContext extends BaseContext<CacaoModel> {
+  constructor() {
+    super("cacao")
+  }
+
   async getInitialGameState(
     playerOrder: string[],
     players: Record<string, UserInfo>,

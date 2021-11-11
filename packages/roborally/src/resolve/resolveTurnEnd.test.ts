@@ -1,15 +1,13 @@
 import { Direction } from "@boardgames/utils"
 
-import { run } from "lib/games/test/utils"
-
+import { createTestContext, run } from "../../test/utils"
 import { RESPAWN_DAMAGE } from "../constants"
 
 import { resolveTurnEnd } from "./resolveTurnEnd"
-import { createRoborallyTestContext } from "./test/utils"
 
 describe("resolveTurnEnd", () => {
   it("respawns destroyed players and activates power down", async () => {
-    const context = await createRoborallyTestContext(4)
+    const context = await createTestContext(4)
 
     context.update({
       board: {

@@ -29,6 +29,7 @@ export type BaseState<P extends BasePlayer<BaseAction>> = {
 }
 
 export type GameModel<
+  T extends string = string,
   A extends BaseAction = BaseAction,
   E extends BaseEvent = BaseEvent,
   O extends BaseOptions = BaseOptions,
@@ -37,6 +38,7 @@ export type GameModel<
 > = {
   action: A
   event: E
+  game: T
   options: O
   player: P
   state: S
