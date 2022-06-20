@@ -1,0 +1,43 @@
+{
+  "name": "@boardgames/root",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bugs": "https://github.com/loicnico96/boardgames",
+  "homepage": "https://github.com/loicnico96/boardgames#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loicnico96/boardgames"
+  },
+  "author": "loicnico96 <loicnico96@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@types/jest": "27.0.2",
+    "@typescript-eslint/eslint-plugin": "4.31.1",
+    "@typescript-eslint/parser": "4.31.1",
+    "eslint": "7.32.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-import-resolver-typescript": "2.7.1",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-jest": "24.4.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "husky": "8.0.1",
+    "jest": "27.3.1",
+    "lint-staged": "11.1.2",
+    "prettier": "2.4.0",
+    "rollup": "2.56.3",
+    "typescript": "4.4.3"
+  },
+  "scripts": {
+    "all": "yarn workspaces foreach -vpi run",
+    "build": "yarn workspaces foreach -vpi --topological-dev run build",
+    "devtools": "yarn workspace @boardgames/devtools",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "precommit": "lint-staged && yarn workspaces foreach -v run precommit",
+    "prepare": "husky install"
+  }
+}
