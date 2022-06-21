@@ -21,6 +21,14 @@
     "signOut": {
       "label": "Sign out",
       "tooltip": "Sign out"
+    },
+    "userName": {
+      "defaultValue": "...",
+      "label": "Enter your user name",
+      "reason": {
+        "empty": "User name cannot be empty"
+      },
+      "tooltip": "Click to change user name"
     }
   }
 }

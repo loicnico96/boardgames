@@ -1,20 +1,21 @@
-import { Box, Spinner, UserInfo } from "@boardgames/components"
-import { toast } from "react-toastify"
+import { Box, Spinner, UserAvatar, UserInfo } from "@boardgames/components"
 
 import { AsyncButton } from "components/ui/AsyncButton"
 import { useTranslations } from "hooks/useTranslations"
+import { useAuthContext } from "lib/auth/context"
+import { promptUserName } from "lib/auth/promptUserName"
+
+import { Tooltip } from "../Tooltip"
 
 import { LoginLink } from "./LoginLink"
 
 export function UserProfile() {
   const t = useTranslations()
 
-  // TODO
-  const isLoading = false
-  const user = null
+  const { isLoading, signOut, updateUserProfile, user } = useAuthContext()
 
   if (isLoading) {
-    return <Spinner size={28} />
+    return <Spinner size={40} />
   }
 
   if (user === null) {
@@ -23,14 +24,24 @@ export function UserProfile() {
 
   return (
     <Box gap={8}>
-      <UserInfo
-        title="Tooltip" // TOOD: {t.userProfile.userName.tooltip}
-        userName="Username" // TODO: {user.userInfo.userName ?? t.userProfile.userName.defaultValue}
-      />
-      <AsyncButton
-        onClick={() => toast.success("signed out!")}
-        translations={t.userProfile.signOut}
-      />
+      <Tooltip position="bottom" text={t.userProfile.userName.tooltip}>
+        <UserInfo
+          onClick={async () => {
+            const oldName = user.userInfo.userName
+            const newName = promptUserName(t, oldName)
+            if (newName !== null && newName !== oldName) {
+              await updateUserProfile({ userName: newName })
+            }
+          }}
+          userName={
+            user.userInfo.userName ?? t.userProfile.userName.defaultValue
+          }
+        />
+      </Tooltip>
+      {user.userInfo.imageUrl && (
+        <UserAvatar imageUrl={user.userInfo.imageUrl} size={40} />
+      )}
+      <AsyncButton onClick={signOut} translations={t.userProfile.signOut} />
     </Box>
   )
 }
