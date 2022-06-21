@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "src",
+    "lib": ["dom", "dom.iterable"],
+    "jsx": "react-jsx",
+    "paths": {
+      "Components/*": ["Components/*"],
+      "test-utils/*": ["test-utils/*"],
+      "utils/*": ["utils/*"]
+    },
+    "plugins": [
+      {
+        "transform": "@zerollup/ts-transform-paths"
+      }
+    ]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

@@ -9,7 +9,7 @@
     "url": "https://github.com/loicnico96/boardgames"
   },
   "author": "loicnico96 <loicnico96@gmail.com>",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -36,6 +36,7 @@
   "scripts": {
     "all": "yarn workspaces foreach -vpi run",
     "build": "yarn workspaces foreach -vpi --topological-dev run build",
+    "components": "yarn workspace @boardgames/components",
     "devtools": "yarn workspace @boardgames/devtools",
     "format": "prettier --write .",
     "format-check": "prettier --check .",

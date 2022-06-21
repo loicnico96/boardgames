@@ -1,6 +1,6 @@
 {
   "name": "@boardgames/utils",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": "Loïc Nicolas <loicnico96@gmail.com>",
   "license": "UNLICENSED",
   "private": true,
@@ -36,7 +36,6 @@
   "devDependencies": {
     "@boardgames/devtools": "workspace:*",
     "@types/seedrandom": "3.0.2",
-    "jest": "28.1.1",
     "rollup": "2.75.7",
     "typescript": "4.7.4"
   }
