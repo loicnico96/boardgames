@@ -1,30 +1,56 @@
-import {
-  Headline,
-  Text,
-  PageContent,
-  Box,
-  Button,
-} from "@boardgames/components"
+import { PageContent, Box } from "@boardgames/components"
+import { useRouter } from "next/router"
+import { useEffect } from "react"
+import { toast } from "react-toastify"
 
+import { AsyncButton } from "components/ui/AsyncButton"
 import { PageLayout } from "components/ui/PageLayout"
-import { ROUTES } from "lib/utils/navigation"
+import { useRouteParam } from "hooks/useRouteParam"
+import { useTranslations } from "hooks/useTranslations"
+import { Console } from "lib/utils/logger"
+import { RouteParam, ROUTES } from "lib/utils/navigation"
 
 export default function LoginPage() {
+  const redirectUrl = useRouteParam(RouteParam.REDIRECT) ?? ROUTES.home()
+  const router = useRouter()
+  const t = useTranslations()
+
+  // TODO
+  const isAuthenticated = false
+
+  // TODO
+  const signInAsGuest = () => toast.success("signed in!")
+
+  // TODO
+  const signInWithGoogle = () => toast.success("signed in!")
+
   const parents = [
     {
       path: ROUTES.home(),
-      title: "Homepage",
+      title: t.home.pageTitle,
     },
   ]
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(redirectUrl).catch(Console.error)
+    }
+  }, [isAuthenticated, redirectUrl, router])
+
   return (
-    <PageLayout parents={parents} title="Login">
+    <PageLayout parents={parents} title={t.login.pageTitle}>
       <PageContent>
-        <Headline>Title</Headline>
-        <Text>Paragraph 1</Text>
-        <Text>Paragraph 2</Text>
         <Box gap={8}>
-          <Button>Sign in as guest</Button>
+          <AsyncButton
+            disabled={isAuthenticated}
+            onClick={signInAsGuest}
+            translations={t.login.signInAnonymously}
+          />
+          <AsyncButton
+            disabled={isAuthenticated}
+            onClick={signInWithGoogle}
+            translations={t.login.signInWithGoogle}
+          />
         </Box>
       </PageContent>
     </PageLayout>

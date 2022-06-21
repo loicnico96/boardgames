@@ -30,7 +30,9 @@
     "@boardgames/utils": "workspace:*",
     "next": "12.1.6",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-toastify": "9.0.5",
+    "react-tooltip": "4.2.21"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "12.1.6",

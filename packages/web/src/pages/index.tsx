@@ -2,6 +2,7 @@ import { PageContent } from "@boardgames/components"
 import styled from "@emotion/styled"
 
 import { PageLayout } from "components/ui/PageLayout"
+import { useTranslations } from "hooks/useTranslations"
 
 const StyledPageContent = styled(PageContent)`
   display: flex;
@@ -9,9 +10,11 @@ const StyledPageContent = styled(PageContent)`
 `
 
 export default function HomePage() {
+  const t = useTranslations()
+
   return (
-    <PageLayout title="Homepage">
-      <StyledPageContent>Hello World!</StyledPageContent>
+    <PageLayout title={t.home.pageTitle}>
+      <StyledPageContent>{t.home.pageTitle}</StyledPageContent>
     </PageLayout>
   )
 }

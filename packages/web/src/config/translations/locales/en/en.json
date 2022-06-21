@@ -1,0 +1,26 @@
+{
+  "home": {
+    "pageTitle": "Home"
+  },
+  "login": {
+    "pageTitle": "Login",
+    "signInAnonymously": {
+      "label": "Sign in as guest",
+      "labelLoading": "Signing in..."
+    },
+    "signInWithGoogle": {
+      "label": "Sign in with Google",
+      "labelLoading": "Signing in..."
+    }
+  },
+  "notFound": {
+    "message": "The page you're looking for doesn't exist.",
+    "pageTitle": "Are you lost?"
+  },
+  "userProfile": {
+    "signOut": {
+      "label": "Sign out",
+      "tooltip": "Sign out"
+    }
+  }
+}

@@ -7,5 +7,6 @@ module.exports = withBundleAnalyzer({
     ignoreDuringBuilds: true,
   },
   poweredByHeader: false,
-  reactStrictMode: true,
+  // https://github.com/wwayne/react-tooltip/issues/769#issuecomment-1144762754
+  // reactStrictMode: true,
 })
