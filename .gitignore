@@ -9,11 +9,12 @@ node_modules
 .yarn/unplugged
 .pnp.*
 
-# debug
-yarn-debug.log*
-yarn-error.log*
+# temporary files
+*.tsbuildinfo
+*.log*
 
 # artifacts
 /packages/*/build
 /packages/*/coverage
 /packages/*/dist
+/packages/*/docs

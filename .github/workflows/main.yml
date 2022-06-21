@@ -33,10 +33,10 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
       - name: Run Prettier
-        run: yarn all format:check
+        run: yarn all format-check
       - name: Run ESLint
         run: yarn all lint
       - name: Build application
         run: yarn build
       - name: Run tests
-        run: yarn all test:coverage --passWithNoTests
+        run: yarn all test-coverage --passWithNoTests

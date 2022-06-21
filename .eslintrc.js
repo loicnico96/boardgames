@@ -77,7 +77,7 @@ module.exports = {
     "@typescript-eslint/no-shadow": ["error"],
     "@typescript-eslint/no-unused-expressions": ["error"],
     "@typescript-eslint/no-unused-vars": ["error", { args: "none" }],
-    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-use-before-define": ["error", { functions: false }],
     "@typescript-eslint/no-useless-constructor": ["error"],
     "@typescript-eslint/return-await": ["error", "in-try-catch"],
 
