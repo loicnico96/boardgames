@@ -1,6 +1,10 @@
-import { TranslationConfig } from "config/translations"
-import CONFIG from "config/translations/locales/en/en.json"
+import { assert } from "@boardgames/utils"
+import { TranslationsContext } from "lib/translations/context"
+import { Translations } from "lib/translations/types"
+import { useContext } from "react"
 
-export function useTranslations(): TranslationConfig {
-  return CONFIG
+export function useTranslations(): Translations {
+  const value = useContext(TranslationsContext)
+  assert(value !== null, "Invalid TranslationsContext")
+  return value
 }

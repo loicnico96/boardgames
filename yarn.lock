@@ -1617,13 +1617,11 @@ __metadata:
     "@testing-library/user-event": 14.2.1
     "@types/react": 18.0.14
     "@zerollup/ts-transform-paths": 1.7.18
-    eslint: 8.18.0
     eslint-plugin-react: 7.30.0
     eslint-plugin-react-hooks: 4.6.0
     jest-environment-jsdom: 28.1.1
     react: 18.2.0
     react-dom: 18.2.0
-    require-from-string: 2.0.2
     rollup: 2.75.7
     tsconfig-paths-webpack-plugin: 3.5.2
     typescript: 4.7.4
@@ -1690,6 +1688,8 @@ __metadata:
   dependencies:
     "@boardgames/components": "workspace:*"
     "@boardgames/utils": "workspace:*"
+    "@emotion/react": 11.9.3
+    "@emotion/styled": 11.9.3
     "@next/bundle-analyzer": 12.1.6
     "@testing-library/dom": 8.14.0
     "@testing-library/jest-dom": 5.16.4
@@ -1699,7 +1699,6 @@ __metadata:
     "@types/react": 18.0.14
     "@types/react-dom": 18.0.5
     cross-env: 7.0.3
-    eslint: 8.18.0
     eslint-config-next: 12.1.6
     firebase: 9.8.3
     immutability-helper: 3.1.1
@@ -14969,13 +14968,6 @@ __metadata:
   version: 2.1.1
   resolution: "require-directory@npm:2.1.1"
   checksum: fb47e70bf0001fdeabdc0429d431863e9475e7e43ea5f94ad86503d918423c1543361cc5166d713eaa7029dd7a3d34775af04764bebff99ef413111a5af18c80
-  languageName: node
-  linkType: hard
-
-"require-from-string@npm:2.0.2":
-  version: 2.0.2
-  resolution: "require-from-string@npm:2.0.2"
-  checksum: a03ef6895445f33a4015300c426699bc66b2b044ba7b670aa238610381b56d3f07c686251740d575e22f4c87531ba662d06937508f0f3c0f1ddc04db3130560b
   languageName: node
   linkType: hard
 

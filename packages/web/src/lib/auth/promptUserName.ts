@@ -1,9 +1,9 @@
 import { toast } from "react-toastify"
 
-import { TranslationConfig } from "config/translations"
+import { Translations } from "lib/translations/types"
 
 export function promptUserName(
-  t: TranslationConfig,
+  t: Translations,
   oldName?: string | null
 ): string | null {
   // eslint-disable-next-line no-alert

@@ -26,6 +26,10 @@ export const ROUTES = {
   roomList: () => route(RoutePath.ROOMS),
 }
 
+export function getAsset(path: string): string {
+  return route("assets", path)
+}
+
 export function getParam(
   query: ParsedUrlQuery,
   param: RouteParam

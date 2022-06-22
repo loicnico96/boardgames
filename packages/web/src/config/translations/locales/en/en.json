@@ -1,5 +1,19 @@
 {
+  "games": {
+    "cacao": {
+      "name": "Cacao"
+    },
+    "metropolys": {
+      "name": "Metropolys"
+    },
+    "roborally": {
+      "name": "Roborally"
+    }
+  },
   "home": {
+    "gameTile": {
+      "tooltip": "Show {{game}} rooms"
+    },
     "pageTitle": "Home"
   },
   "login": {
