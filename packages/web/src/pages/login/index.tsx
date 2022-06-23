@@ -1,20 +1,20 @@
 import { PageContent, Box } from "@boardgames/components"
 import { useRouter } from "next/router"
-import { useCallback, useEffect } from "react"
+import { useEffect } from "react"
 
 import { AsyncButton } from "components/ui/AsyncButton"
 import { PageLayout } from "components/ui/PageLayout"
-import { useRouteParam } from "hooks/useRouteParam"
 import { useTranslations } from "hooks/useTranslations"
 import { useAuthContext } from "lib/auth/context"
 import { promptUserName } from "lib/auth/promptUserName"
 import { Console } from "lib/utils/logger"
-import { RouteParam, ROUTES } from "lib/utils/navigation"
+import { getParam, RouteParam, ROUTES } from "lib/utils/navigation"
 
 export default function LoginPage() {
   const t = useTranslations()
-  const redirectUrl = useRouteParam(RouteParam.REDIRECT) ?? ROUTES.home()
+
   const router = useRouter()
+  const redirectUrl = getParam(router.query, RouteParam.REDIRECT)
 
   const { isAuthenticated, isLoading, signInAnonymously, signInWithGoogle } =
     useAuthContext()
@@ -26,15 +26,11 @@ export default function LoginPage() {
     },
   ]
 
-  const redirectOnLogin = useCallback(() => {
-    router.replace(redirectUrl).catch(Console.error)
-  }, [redirectUrl, router])
-
   useEffect(() => {
     if (isAuthenticated) {
-      redirectOnLogin()
+      router.replace(redirectUrl ?? ROUTES.home()).catch(Console.error)
     }
-  }, [isAuthenticated, redirectOnLogin])
+  }, [isAuthenticated, redirectUrl, router])
 
   return (
     <PageLayout parents={parents} title={t.login.pageTitle}>
@@ -46,17 +42,13 @@ export default function LoginPage() {
               const userName = promptUserName(t)
               if (userName) {
                 await signInAnonymously(userName)
-                redirectOnLogin()
               }
             }}
             translations={t.login.signInAnonymously}
           />
           <AsyncButton
             disabled={isAuthenticated || isLoading}
-            onClick={async () => {
-              await signInWithGoogle()
-              redirectOnLogin()
-            }}
+            onClick={signInWithGoogle}
             translations={t.login.signInWithGoogle}
           />
         </Box>

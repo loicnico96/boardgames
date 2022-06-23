@@ -4,9 +4,9 @@ import { ParsedUrlQuery } from "querystring"
 export const SEPARATOR = "/"
 
 export enum RouteParam {
-  GAME_TYPE = "game",
+  GAME = "game",
   REDIRECT = "redirect",
-  ROOM_ID = "room",
+  ROOM = "room",
 }
 
 export enum RoutePath {
@@ -17,17 +17,14 @@ export enum RoutePath {
 export type RouteParams = Partial<Record<RouteParam, string>>
 
 export function route(...paths: string[]): string {
-  return `${SEPARATOR}${paths.join(SEPARATOR)}`
+  const splitPaths = paths.flatMap(p => p.split(SEPARATOR)).filter(p => p)
+  return `${SEPARATOR}${splitPaths.join(SEPARATOR)}`
 }
 
 export const ROUTES = {
   home: () => route(),
   login: () => route(RoutePath.LOGIN),
   roomList: () => route(RoutePath.ROOMS),
-}
-
-export function getAsset(path: string): string {
-  return route("assets", path)
 }
 
 export function getParam(

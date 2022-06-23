@@ -31,6 +31,23 @@
     "message": "The page you're looking for doesn't exist.",
     "pageTitle": "Are you lost?"
   },
+  "roomList": {
+    "allGames": "All games",
+    "createRoom": {
+      "label": "Create room",
+      "reason": {
+        "noGameSelected": "You must select a game",
+        "notAuthenticated": "You must be signed in to create or join rooms",
+        "notEnabled": "This game is not enabled",
+        "noUserName": "You must set an username to create or join rooms"
+      },
+      "success": "Room created",
+      "tooltip": "Create a new room"
+    },
+    "noRooms": "No rooms are available.",
+    "pageLoading": "Loading rooms...",
+    "pageTitle": "Rooms"
+  },
   "userProfile": {
     "signOut": {
       "label": "Sign out",

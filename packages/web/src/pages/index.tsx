@@ -7,8 +7,8 @@ import { useTranslations } from "hooks/useTranslations"
 import { GameType } from "lib/games/types"
 
 const GameTileList = styled.div`
+  column-gap: 48px;
   display: flex;
-  gap: 0px 48px;
 `
 
 export default function HomePage() {

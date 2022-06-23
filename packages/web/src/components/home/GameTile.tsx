@@ -5,12 +5,8 @@ import Image from "next/image"
 import { RouterLink } from "components/ui/RouterLink"
 import { useTranslations } from "hooks/useTranslations"
 import { GameType } from "lib/games/types"
-import {
-  getAsset,
-  RouteParam,
-  ROUTES,
-  withSearchParams,
-} from "lib/utils/navigation"
+import { getGameAsset } from "lib/utils/assets"
+import { RouteParam, ROUTES, withSearchParams } from "lib/utils/navigation"
 
 export type GameTileProps = {
   game: GameType
@@ -37,13 +33,11 @@ const GameTileImage = styled.div`
 export function GameTile({ game }: GameTileProps) {
   const t = useTranslations()
 
-  const url = withSearchParams(ROUTES.roomList(), {
-    [RouteParam.GAME_TYPE]: game,
-  })
+  const url = withSearchParams(ROUTES.roomList(), { [RouteParam.GAME]: game })
 
   const label = t.games[game].name
   const tooltip = t.replace(t.home.gameTile.tooltip, { game: label })
-  const src = getAsset(`games/${game}/home.jpg`)
+  const src = getGameAsset(game, "home.jpg")
 
   return (
     <RouterLink href={url} title={tooltip}>

@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react"
 
 import CONFIG from "config/translations/locales/en/en.json"
-import { TranslationsContext } from "lib/translations/context"
+import { TranslationContext } from "lib/translations/context"
 import { replace } from "lib/translations/utils"
 
 export type TranslationProviderProps = {
@@ -12,8 +12,8 @@ export function TranslationProvider({ children }: TranslationProviderProps) {
   const [translations] = useState({ ...CONFIG, replace })
 
   return (
-    <TranslationsContext.Provider value={translations}>
+    <TranslationContext.Provider value={translations}>
       {children}
-    </TranslationsContext.Provider>
+    </TranslationContext.Provider>
   )
 }
