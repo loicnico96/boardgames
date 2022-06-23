@@ -31,6 +31,12 @@
     "message": "The page you're looking for doesn't exist.",
     "pageTitle": "Are you lost?"
   },
+  "room": {
+    "notFound": "This room does not exist or has been closed.",
+    "pageError": "An error occurred.",
+    "pageLoading": "Loading room...",
+    "pageTitle": "Room"
+  },
   "roomList": {
     "allGames": "All games",
     "createRoom": {

@@ -1,6 +1,10 @@
 import { toError } from "@boardgames/utils"
-import { DocumentData } from "firebase/firestore"
-import { Firestore, QueryOptions, WithId } from "lib/firebase/firestore"
+import {
+  DocumentData,
+  Firestore,
+  QueryOptions,
+  WithId,
+} from "lib/firebase/firestore"
 import { Logger } from "lib/utils/logger"
 import {
   getErrorResource,
@@ -8,7 +12,7 @@ import {
   LOADING,
   Resource,
 } from "lib/utils/resource"
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
 import useSWR from "swr"
 
 export interface UseQueryResult<T extends DocumentData> {
@@ -23,7 +27,7 @@ export function useQuery<T extends DocumentData>(
   onSuccess?: (data: WithId<T>[]) => void,
   onError?: (error: Error) => void
 ): UseQueryResult<T> {
-  const key = getQueryKey(colRef, options)
+  const key = useMemo(() => getQueryKey(colRef, options), [colRef, options])
 
   const { isValidating, data, mutate } = useSWR<Resource<WithId<T>[]>>(
     key,

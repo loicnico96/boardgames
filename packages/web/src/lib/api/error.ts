@@ -11,3 +11,9 @@ export class ApiError extends Error {
     this.statusName = HttpStatus[statusCode]
   }
 }
+
+export class NotFoundError extends ApiError {
+  public constructor() {
+    super(HttpStatus.NOT_FOUND, "Not found")
+  }
+}

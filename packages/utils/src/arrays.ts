@@ -15,6 +15,17 @@ export enum SortDir {
 }
 
 /**
+ * Removes all occurrences of null and undefined from an array
+ * @param array - Array (will not be mutated)
+ * @returns A copy of the array, without null and undefined items
+ */
+export function compact<T>(
+  array: ReadonlyArray<T | null | undefined>
+): Array<T> {
+  return array.filter(item => item !== null && item !== undefined) as Array<T>
+}
+
+/**
  * Counts the number of items matching given predicate inside an array
  * @param array - Array
  * @param filterFn - Predicate (invoked for each array item, with the value as parameter)
@@ -22,7 +33,7 @@ export enum SortDir {
  */
 export function count<T>(
   array: ReadonlyArray<T>,
-  filterFn: (value: T) => boolean
+  filterFn: (item: T) => boolean
 ): number
 /**
  * Counts the number of occurrences of given value inside an array
@@ -33,7 +44,7 @@ export function count<T>(
 export function count<T>(array: ReadonlyArray<T>, value: T): number
 export function count<T>(
   array: ReadonlyArray<T>,
-  valueOrFilterFn: T | ((value: T) => boolean)
+  valueOrFilterFn: T | ((item: T) => boolean)
 ): number {
   return array.filter(item =>
     isFunction(valueOrFilterFn)
@@ -75,11 +86,11 @@ export function fill<T>(
  */
 export function generate<T, K extends string, R>(
   array: ReadonlyArray<T>,
-  mapFn: (value: T) => [K, R]
+  mapFn: (item: T) => [K, R]
 ): Record<K, R> {
-  return array.reduce((result, value) => {
-    const [k, v] = mapFn(value)
-    result[k] = v
+  return array.reduce((result, item) => {
+    const [key, value] = mapFn(item)
+    result[key] = value
     return result
   }, {} as Record<K, R>)
 }
@@ -92,7 +103,7 @@ export function generate<T, K extends string, R>(
  */
 export function remove<T>(
   array: ReadonlyArray<T>,
-  filterFn: (value: T) => boolean
+  filterFn: (item: T) => boolean
 ): Array<T>
 /**
  * Removes all occurrences of given value from an array
@@ -103,7 +114,7 @@ export function remove<T>(
 export function remove<T>(array: ReadonlyArray<T>, value: T): Array<T>
 export function remove<T>(
   array: ReadonlyArray<T>,
-  valueOrFilterFn: T | ((value: T) => boolean)
+  valueOrFilterFn: T | ((item: T) => boolean)
 ): Array<T> {
   return array.filter(item =>
     isFunction(valueOrFilterFn)
@@ -120,11 +131,11 @@ export function remove<T>(
  */
 export function sortBy<T>(
   array: ReadonlyArray<T>,
-  ...sortFns: ((value: T) => number)[]
+  ...sortFns: ((item: T) => number)[]
 ): Array<T> {
-  return array.slice().sort((value, other) => {
+  return array.slice().sort((itemA, itemB) => {
     for (const fn of sortFns) {
-      const diff = fn(value) - fn(other)
+      const diff = fn(itemA) - fn(itemB)
       if (diff) {
         return diff
       }
@@ -143,7 +154,7 @@ export function sortBy<T>(
  */
 export function sortByAlpha<T>(
   array: ReadonlyArray<T>,
-  sortFn: (value: T) => string,
+  sortFn: (item: T) => string,
   sortDir?: SortDir
 ): Array<T>
 /**
@@ -158,15 +169,15 @@ export function sortByAlpha<T extends string>(
 ): Array<T>
 export function sortByAlpha<T>(
   array: ReadonlyArray<T>,
-  sortFnOrDir: ((value: T) => string) | SortDir = 1,
+  sortFnOrDir: ((item: T) => string) | SortDir = 1,
   sortDir: SortDir = 1
 ) {
   return array
     .slice()
-    .sort((value, other) =>
+    .sort((itemA, itemB) =>
       isFunction(sortFnOrDir)
-        ? sortFnOrDir(value).localeCompare(sortFnOrDir(other)) * sortDir
-        : String(value).localeCompare(String(other)) * sortFnOrDir
+        ? sortFnOrDir(itemA).localeCompare(sortFnOrDir(itemB)) * sortDir
+        : String(itemA).localeCompare(String(itemB)) * sortFnOrDir
     )
 }
 

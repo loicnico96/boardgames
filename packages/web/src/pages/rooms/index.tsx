@@ -1,6 +1,5 @@
 import { Box, PageContent } from "@boardgames/components"
 import styled from "@emotion/styled"
-import { GetServerSideProps } from "next"
 import { useEffect } from "react"
 
 import { RoomList } from "components/rooms/RoomList"
@@ -10,6 +9,7 @@ import { useParamState } from "hooks/useParamState"
 import { useTranslations } from "hooks/useTranslations"
 import { isGameType } from "lib/games/types"
 import { RouteParam, ROUTES } from "lib/utils/navigation"
+import { SSR } from "lib/utils/ssr"
 
 const StyledToolbar = styled(Box)`
   column-gap: 16px;
@@ -52,6 +52,4 @@ export default function RoomListPage() {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => ({
-  props: {},
-})
+export const getServerSideProps = SSR()

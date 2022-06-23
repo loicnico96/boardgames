@@ -25,9 +25,15 @@ export function route(...paths: string[]): string {
 
 export const ROUTES = {
   home: () => route(),
-  login: () => route(RoutePath.LOGIN),
+  login: (redirectUrl?: string) =>
+    withSearchParams(route(RoutePath.LOGIN), {
+      [RouteParam.REDIRECT]: redirectUrl,
+    }),
   room: (game: GameType, roomId: string) => route(game, roomId),
-  roomList: () => route(RoutePath.ROOMS),
+  roomList: (game?: GameType) =>
+    withSearchParams(route(RoutePath.ROOMS), {
+      [RouteParam.GAME]: game,
+    }),
 }
 
 export function getParam(
