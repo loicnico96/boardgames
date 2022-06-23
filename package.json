@@ -45,5 +45,8 @@
     "prepare": "husky install",
     "utils": "yarn workspace @boardgames/utils",
     "web": "yarn workspace @boardgames/web"
+  },
+  "dependencies": {
+    "zustand": "4.0.0-rc.1"
   }
 }
