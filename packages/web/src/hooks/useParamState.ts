@@ -6,13 +6,13 @@ import { useCallback } from "react"
 
 export function useParamState(
   param: RouteParam
-): [state: string | null, setState: (state: string | null) => Promise<void>] {
+): [state: string | null, setState: (state: string | null) => void] {
   const router = useRouter()
 
   const state = getParam(router.query, param)
 
   const setState = useCallback(
-    async (newState: string | null) => {
+    (newState: string | null) => {
       const oldState = getParam(router.query, param)
       if (router.isReady && oldState !== newState) {
         const query = update(
@@ -26,11 +26,9 @@ export function useParamState(
               }
         )
 
-        try {
-          await router.replace({ query }, undefined, { shallow: true })
-        } catch (error) {
-          Console.error(error)
-        }
+        router
+          .replace({ query }, undefined, { shallow: true })
+          .catch(Console.error)
       }
     },
     [param, router]

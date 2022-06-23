@@ -1,6 +1,8 @@
 import { isArray } from "@boardgames/utils"
 import { ParsedUrlQuery } from "querystring"
 
+import { GameType } from "lib/games/types"
+
 export const SEPARATOR = "/"
 
 export enum RouteParam {
@@ -24,6 +26,7 @@ export function route(...paths: string[]): string {
 export const ROUTES = {
   home: () => route(),
   login: () => route(RoutePath.LOGIN),
+  room: (game: GameType, roomId: string) => route(game, roomId),
   roomList: () => route(RoutePath.ROOMS),
 }
 
