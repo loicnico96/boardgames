@@ -47,6 +47,7 @@
     "web": "yarn workspace @boardgames/web"
   },
   "dependencies": {
+    "firebase-admin": "11.0.0",
     "zustand": "4.0.0-rc.1"
   }
 }

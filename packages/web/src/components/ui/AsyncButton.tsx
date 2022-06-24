@@ -1,6 +1,4 @@
 import { Button, ButtonClickEvent, ButtonProps } from "@boardgames/components"
-import { useCallback } from "react"
-import { toast } from "react-toastify"
 
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 
@@ -10,8 +8,6 @@ export type ButtonTranslations = {
   label: string
   labelDisabled?: string
   labelLoading?: string
-  reason?: Record<string, string>
-  success?: string
   tooltip?: string
 }
 
@@ -33,18 +29,7 @@ export function AsyncButton({
   translations,
   ...props
 }: AsyncButtonProps) {
-  const [onClickAsync, loading] = useAsyncHandler(
-    useCallback(
-      async (event: ButtonClickEvent) => {
-        await onClick(event)
-        if (translations.success) {
-          toast.success(translations.success)
-        }
-      },
-      [onClick, translations.success]
-    ),
-    onError
-  )
+  const [onClickAsync, loading] = useAsyncHandler(onClick, onError)
 
   const label = loading
     ? translations.labelLoading ?? translations.label
@@ -52,11 +37,7 @@ export function AsyncButton({
     ? translations.labelDisabled ?? translations.label
     : translations.label
 
-  const tooltip = loading
-    ? undefined
-    : reason && translations.reason
-    ? translations.reason[reason] ?? translations.tooltip
-    : translations.tooltip
+  const tooltip = loading ? undefined : reason ?? translations.tooltip
 
   return (
     <Tooltip text={tooltip} position="top">

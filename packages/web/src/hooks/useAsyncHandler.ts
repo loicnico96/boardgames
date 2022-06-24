@@ -6,7 +6,7 @@ import { handleGenericError } from "lib/utils/error"
 import { useMountedRef } from "./useMountedRef"
 
 export function useAsyncHandler<P extends unknown[]>(
-  handler: (...args: P) => Promise<unknown>,
+  handler: (...args: P) => unknown,
   onError: (error: Error) => unknown = handleGenericError
 ): [(...args: P) => Promise<void>, boolean] {
   const [isRunning, setIsRunning] = useState(false)

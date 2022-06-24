@@ -30,9 +30,9 @@ function formatUser(user: User, userName?: string): AuthUser {
 }
 
 export const FirebaseAuth = {
-  getCurrentUser(): AuthUser | null {
+  async getCurrentUserIdToken(): Promise<string | null> {
     const { currentUser } = firebaseAuth
-    return currentUser && formatUser(currentUser)
+    return currentUser?.getIdToken() ?? null
   },
   onAuthStateChanged(
     onChange: (user: AuthUser | null) => void,

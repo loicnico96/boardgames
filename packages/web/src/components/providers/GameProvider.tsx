@@ -40,7 +40,7 @@ export function GameProvider<T extends GameType>({
   }
 
   if (gameResource.error instanceof NotFoundError) {
-    return <PageError error={t.room.notFound} />
+    return <PageError error={t.reason.notFoundRoom} />
   }
 
   if (gameResource.error) {

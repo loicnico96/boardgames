@@ -1,3 +1,9 @@
+export const AUTH_TOKEN_PREFIX = "Bearer "
+
+export enum ContentType {
+  JSON = "application/json",
+}
+
 export type GenericHttpResponse = {
   success: boolean
 }

@@ -16,7 +16,7 @@ export type RoomData<T extends GameType = GameType> = {
   status: RoomStatus
 }
 
-export type RoomOptions = Record<string, unknown> // TODO
+export type RoomOptions = Record<string, any> // TODO
 
 export type PlayerInfo = {
   name: string

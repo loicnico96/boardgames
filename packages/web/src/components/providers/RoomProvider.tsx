@@ -1,11 +1,14 @@
 import { PageError, PageLoader } from "@boardgames/components"
 import { useRouter } from "next/router"
 import { ReactNode, useCallback } from "react"
+import { toast } from "react-toastify"
 
 import { useDocumentListener } from "hooks/db/useDocumentListener"
 import { useRoomResource } from "hooks/rooms/useRoomResource"
+import { usePreviousRef } from "hooks/usePreviousRef"
 import { useTranslations } from "hooks/useTranslations"
 import { NotFoundError } from "lib/api/error"
+import { useAuthContext } from "lib/auth/context"
 import { GameType } from "lib/games/types"
 import { getRoomRef } from "lib/model/collections"
 import { RoomData } from "lib/model/RoomData"
@@ -26,6 +29,10 @@ export function RoomProvider({ children, game, roomId }: RoomProviderProps) {
   const router = useRouter()
   const t = useTranslations()
 
+  const { user } = useAuthContext()
+
+  const previousRef = usePreviousRef(roomResource)
+
   useDocumentListener<RoomData>(
     getRoomRef(roomId),
     useCallback(
@@ -35,8 +42,19 @@ export function RoomProvider({ children, game, roomId }: RoomProviderProps) {
           const roomUrl = ROUTES.room(resource.data.game, roomId)
           router.replace(roomUrl).catch(Console.error)
         }
+
+        if (resource.error instanceof NotFoundError) {
+          if (previousRef.current?.data) {
+            if (user?.userId !== previousRef.current.data.createdBy) {
+              toast.info(t.room.closedByOwner)
+            }
+
+            const roomListUrl = ROUTES.roomList(previousRef.current.data.game)
+            router.replace(roomListUrl).catch(Console.error)
+          }
+        }
       },
-      [game, roomId, router, setRoomResources]
+      [game, previousRef, roomId, router, setRoomResources, t, user]
     )
   )
 
@@ -45,7 +63,7 @@ export function RoomProvider({ children, game, roomId }: RoomProviderProps) {
   }
 
   if (roomResource.error instanceof NotFoundError) {
-    return <PageError error={t.room.notFound} />
+    return <PageError error={t.reason.notFoundRoom} />
   }
 
   if (roomResource.error) {

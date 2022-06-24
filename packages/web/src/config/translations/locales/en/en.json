@@ -31,22 +31,49 @@
     "message": "The page you're looking for doesn't exist.",
     "pageTitle": "Are you lost?"
   },
+  "reason": {
+    "alreadyFull": "This room is already full.",
+    "alreadyInRoom": "You have already joined this room.",
+    "alreadyStarted": "This game has already started.",
+    "isOwner": "You are the owner of this room.",
+    "noGameSelected": "You must select a game.",
+    "noUserName": "You must set an username to create or join rooms.",
+    "notAuthenticated": "You must be signed in to create or join rooms.",
+    "notEnabled": "This game is not enabled.",
+    "notEnoughPlayers": "This room does not have enough players",
+    "notFoundRoom": "This room does not exist or has been closed.",
+    "notInRoom": "You are not a player in this room.",
+    "onlyOwnerCanClose": "Only the owner of the room can close it.",
+    "onlyOwnerCanStart": "Only the owner of the room can start the game.",
+    "tooManyPlayers": "This room has too many players"
+  },
   "room": {
-    "notFound": "This room does not exist or has been closed.",
+    "closedByOwner": "The room has been closed by its owner.",
+    "closeRoom": {
+      "label": "Close",
+      "success": "Room closed",
+      "tooltip": "Close this room"
+    },
+    "enterRoom": {
+      "label": "Join",
+      "tooltip": "Join this room as a player"
+    },
+    "leaveRoom": {
+      "label": "Leave",
+      "tooltip": "Leave this room"
+    },
     "pageError": "An error occurred.",
     "pageLoading": "Loading room...",
-    "pageTitle": "Room"
+    "pageTitle": "Room",
+    "startGame": {
+      "label": "Start",
+      "tooltip": "Start the game"
+    }
   },
   "roomList": {
     "allGames": "All games",
     "createRoom": {
       "label": "Create room",
-      "reason": {
-        "noGameSelected": "You must select a game",
-        "notAuthenticated": "You must be signed in to create or join rooms",
-        "notEnabled": "This game is not enabled",
-        "noUserName": "You must set an username to create or join rooms"
-      },
       "success": "Room created",
       "tooltip": "Create a new room"
     },
