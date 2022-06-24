@@ -2,6 +2,7 @@ import { PageContent } from "@boardgames/components"
 import { assert } from "@boardgames/utils"
 
 import { RoomProvider } from "components/providers/RoomProvider"
+import { Room } from "components/rooms/Room"
 import { PageLayout } from "components/ui/PageLayout"
 import { useTranslations } from "hooks/useTranslations"
 import { getParam, RouteParam, ROUTES } from "lib/utils/navigation"
@@ -28,7 +29,9 @@ export default function RoomPage({ roomId }: RoomPageProps) {
   return (
     <PageLayout parents={parents} title="...">
       <PageContent>
-        <RoomProvider roomId={roomId}>{roomId}</RoomProvider>
+        <RoomProvider roomId={roomId}>
+          <Room />
+        </RoomProvider>
       </PageContent>
     </PageLayout>
   )

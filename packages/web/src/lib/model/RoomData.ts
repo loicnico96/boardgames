@@ -8,10 +8,16 @@ export enum RoomStatus {
 
 export type RoomData<T extends GameType = GameType> = {
   createdAt: number
+  createdBy: string
   game: T
-  options: Record<string, unknown> // TODO
-  ownerId: string
+  options: RoomOptions
   playerOrder: string[]
-  players: Record<string, unknown> // TODO
+  players: Record<string, PlayerInfo>
   status: RoomStatus
+}
+
+export type RoomOptions = Record<string, unknown> // TODO
+
+export type PlayerInfo = {
+  name: string
 }

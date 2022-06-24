@@ -3,15 +3,15 @@ import { useRouter } from "next/router"
 import { ReactNode, useCallback } from "react"
 
 import { useDocumentListener } from "hooks/db/useDocumentListener"
+import { useRoomResource } from "hooks/rooms/useRoomResource"
 import { useTranslations } from "hooks/useTranslations"
 import { NotFoundError } from "lib/api/error"
 import { GameType } from "lib/games/types"
 import { getRoomRef } from "lib/model/collections"
 import { RoomData } from "lib/model/RoomData"
-import { useGlobalActions, useGlobalStore } from "lib/store/global"
+import { useGlobalActions } from "lib/store/global"
 import { Console } from "lib/utils/logger"
 import { ROUTES } from "lib/utils/navigation"
-import { LOADING } from "lib/utils/resource"
 
 export type RoomProviderProps = {
   children: ReactNode
@@ -22,7 +22,7 @@ export type RoomProviderProps = {
 export function RoomProvider({ children, game, roomId }: RoomProviderProps) {
   const { setRoomResources } = useGlobalActions()
 
-  const roomResource = useGlobalStore(store => store.rooms[roomId] ?? LOADING)
+  const roomResource = useRoomResource(roomId)
   const router = useRouter()
   const t = useTranslations()
 

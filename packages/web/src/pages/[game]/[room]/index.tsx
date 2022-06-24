@@ -2,6 +2,7 @@ import { PageContent } from "@boardgames/components"
 import { assert } from "@boardgames/utils"
 
 import { RoomProvider } from "components/providers/RoomProvider"
+import { Room } from "components/rooms/Room"
 import { PageLayout } from "components/ui/PageLayout"
 import { useTranslations } from "hooks/useTranslations"
 import { GameType, isGameType } from "lib/games/types"
@@ -31,7 +32,7 @@ export default function RoomPage({ game, roomId }: RoomPageProps) {
     <PageLayout parents={parents} title={t.games[game].name}>
       <PageContent>
         <RoomProvider game={game} roomId={roomId}>
-          {t.games[game].name} - {roomId}
+          <Room />
         </RoomProvider>
       </PageContent>
     </PageLayout>
