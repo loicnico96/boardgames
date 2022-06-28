@@ -1,13 +1,11 @@
-import { useRef } from "react"
-
+import { GameProvider } from "components/providers/GameProvider"
 import { RoborallyContext } from "lib/games/roborally/context"
+import { GameType } from "lib/games/types"
 
 export default function Roborally() {
-  const context = useRef(new RoborallyContext())
-
   return (
-    <div>
-      {JSON.stringify(context.current.getDefaultOptions(), undefined, 2)}
-    </div>
+    <GameProvider context={RoborallyContext} game={GameType.METROPOLYS}>
+      {null}
+    </GameProvider>
   )
 }

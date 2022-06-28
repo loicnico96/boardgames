@@ -1,7 +1,6 @@
 import { RoomStatus } from "@boardgames/common"
 
 import { GameComponents } from "components/games/GameComponent"
-import { GameProvider } from "components/providers/GameProvider"
 import { RoomLobby } from "components/rooms/RoomLobby"
 import { useRoomData } from "hooks/rooms/useRoomData"
 import { useRoomId } from "hooks/rooms/useRoomId"
@@ -18,9 +17,5 @@ export function Room() {
 
   const GameComponent = GameComponents[game]
 
-  return (
-    <GameProvider game={game}>
-      <GameComponent />
-    </GameProvider>
-  )
+  return <GameComponent />
 }

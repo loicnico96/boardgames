@@ -1,13 +1,11 @@
-import { useRef } from "react"
-
+import { GameProvider } from "components/providers/GameProvider"
 import { MetropolysContext } from "lib/games/metropolys/context"
+import { GameType } from "lib/games/types"
 
 export default function Metropolys() {
-  const context = useRef(new MetropolysContext())
-
   return (
-    <div>
-      {JSON.stringify(context.current.getDefaultOptions(), undefined, 2)}
-    </div>
+    <GameProvider context={MetropolysContext} game={GameType.METROPOLYS}>
+      {null}
+    </GameProvider>
   )
 }
