@@ -1,8 +1,9 @@
+import { RoomData } from "@boardgames/common"
 import styled from "@emotion/styled"
 
 import { RouterLink } from "components/ui/RouterLink"
 import { WithId } from "lib/firebase/firestore"
-import { RoomData } from "lib/model/RoomData"
+import { isGameType } from "lib/games/types"
 import { ROUTES } from "lib/utils/navigation"
 
 export type RoomListItemProps = {
@@ -18,6 +19,10 @@ const Container = styled.div`
 `
 
 export function RoomListItem({ room }: RoomListItemProps) {
+  if (!isGameType(room.game)) {
+    return null
+  }
+
   return (
     <RouterLink href={ROUTES.room(room.game, room.id)}>
       <Container>

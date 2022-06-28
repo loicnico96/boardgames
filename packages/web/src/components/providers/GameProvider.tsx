@@ -1,3 +1,4 @@
+import { getClientRef } from "@boardgames/common"
 import { PageError, PageLoader } from "@boardgames/components"
 import { ReactNode, useCallback } from "react"
 
@@ -6,9 +7,7 @@ import { useGameResource } from "hooks/rooms/useGameResource"
 import { useRoomId } from "hooks/rooms/useRoomId"
 import { useTranslations } from "hooks/useTranslations"
 import { NotFoundError } from "lib/api/error"
-import { GameType } from "lib/games/types"
-import { getClientRef } from "lib/model/collections"
-import { GameData } from "lib/model/GameData"
+import { GameState, GameType } from "lib/games/types"
 import { useGlobalActions } from "lib/store/global"
 
 export type GameProviderProps<T extends GameType> = {
@@ -27,7 +26,7 @@ export function GameProvider<T extends GameType>({
 
   const t = useTranslations()
 
-  useDocumentListener<GameData<T>>(
+  useDocumentListener<GameState<T>>(
     getClientRef(game, roomId),
     useCallback(
       resource => setGameResource(game, roomId, resource),

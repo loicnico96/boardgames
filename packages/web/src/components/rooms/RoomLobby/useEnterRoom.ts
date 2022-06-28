@@ -1,9 +1,10 @@
+import { RoomStatus } from "@boardgames/common"
 import { useCallback } from "react"
 
 import { useTranslations } from "hooks/useTranslations"
 import { enterRoom } from "lib/api/client/enterRoom"
 import { useAuthContext } from "lib/auth/context"
-import { RoomStatus } from "lib/model/RoomData"
+import { getGameSettings } from "lib/games/settings"
 import {
   getRoomResource,
   useGlobalActions,
@@ -38,7 +39,7 @@ export function useEnterRoom(roomId: string) {
           return t.reason.alreadyInRoom
         }
 
-        const maxPlayers = 4 // TODO
+        const { maxPlayers } = getGameSettings(room.game)
 
         if (room.playerOrder.length >= maxPlayers) {
           return t.reason.alreadyFull

@@ -1,3 +1,4 @@
+import { getRoomRef, RoomStatus } from "@boardgames/common"
 import update from "immutability-helper"
 import { ApiError } from "next/dist/server/api-utils"
 
@@ -6,8 +7,8 @@ import { handle, readParam } from "lib/api/server/handle"
 import { HttpMethod, HttpStatus } from "lib/api/types"
 import { DocRef, firestore } from "lib/firebase/admin"
 import { WithId } from "lib/firebase/firestore"
-import { getRoomRef } from "lib/model/collections"
-import { RoomData, RoomStatus } from "lib/model/RoomData"
+import { getGameSettings } from "lib/games/settings"
+import { RoomData } from "lib/games/types"
 import { RouteParam } from "lib/utils/navigation"
 
 export async function enterRoom(
@@ -49,7 +50,7 @@ export async function enterRoom(
       )
     }
 
-    const maxPlayers = 4 // TODO
+    const { maxPlayers } = getGameSettings(roomData.game)
 
     if (roomData.playerOrder.length >= maxPlayers) {
       throw new ApiError(
@@ -59,9 +60,7 @@ export async function enterRoom(
     }
 
     const updatedData = update(roomData, {
-      playerOrder: {
-        $push: [userId],
-      },
+      playerOrder: { $push: [userId] },
       players: {
         $merge: {
           [userId]: {

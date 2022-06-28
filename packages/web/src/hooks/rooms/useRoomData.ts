@@ -1,5 +1,5 @@
 import { assert } from "@boardgames/utils"
-import { RoomData } from "lib/model/RoomData"
+import { RoomData } from "lib/games/types"
 import { getRoomResource, useGlobalStore } from "lib/store/global"
 import { Selector } from "lib/store/utils"
 import { useCallback } from "react"

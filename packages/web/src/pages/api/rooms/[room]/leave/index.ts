@@ -1,3 +1,4 @@
+import { getRoomRef, RoomStatus } from "@boardgames/common"
 import { remove } from "@boardgames/utils"
 import update from "immutability-helper"
 import { ApiError } from "next/dist/server/api-utils"
@@ -7,8 +8,7 @@ import { handle, readParam } from "lib/api/server/handle"
 import { HttpMethod, HttpStatus } from "lib/api/types"
 import { DocRef, firestore } from "lib/firebase/admin"
 import { WithId } from "lib/firebase/firestore"
-import { getRoomRef } from "lib/model/collections"
-import { RoomData, RoomStatus } from "lib/model/RoomData"
+import { RoomData } from "lib/games/types"
 import { RouteParam } from "lib/utils/navigation"
 
 export async function leaveRoom(
@@ -50,9 +50,7 @@ export async function leaveRoom(
 
     const updatedData = update(roomData, {
       playerOrder: playerOrder => remove(playerOrder, userId),
-      players: {
-        $unset: [userId],
-      },
+      players: { $unset: [userId] },
     })
 
     transaction.set(roomRef, updatedData)

@@ -1,4 +1,4 @@
-import { mod } from "./math"
+import { isNumber, mod } from "@boardgames/utils"
 
 export type Position = {
   x: number
@@ -12,37 +12,30 @@ export enum Direction {
   WEST = 3,
 }
 
-export const Directions = [
-  Direction.NORTH,
-  Direction.EAST,
-  Direction.SOUTH,
-  Direction.WEST,
-]
-
 export enum Rotation {
   LEFT = -1,
   RIGHT = 1,
 }
 
+export const Directions = Object.values(Direction).filter<Direction>(isNumber)
+
 export function getDir(rot: number): Direction {
   return mod(rot, Directions.length)
 }
 
-export function movePos(pos: Position, rot: number, dis: number = 1): Position {
-  switch (getDir(rot)) {
-    case Direction.NORTH:
-      return { x: pos.x, y: pos.y - dis }
-    case Direction.EAST:
-      return { x: pos.x + dis, y: pos.y }
-    case Direction.SOUTH:
-      return { x: pos.x, y: pos.y + dis }
-    case Direction.WEST:
-      return { x: pos.x - dis, y: pos.y }
+export function movePos(
+  pos: Position,
+  dir: Direction,
+  dis: number = 1
+): Position {
+  return {
+    x: pos.x + dis * (dir % 2) * (2 - dir),
+    y: pos.y + dis * (1 - (dir % 2)) * (dir - 1),
   }
 }
 
 export function getAdjacentPos(pos: Position): Position[] {
-  return Directions.map(direction => movePos(pos, direction))
+  return Directions.map(dir => movePos(pos, dir))
 }
 
 export function isSamePos(pos1: Position, pos2: Position): boolean {

@@ -1,0 +1,42 @@
+{
+  "name": "@boardgames/common",
+  "version": "1.0.0",
+  "author": "Loïc Nicolas <loicnico96@gmail.com>",
+  "license": "UNLICENSED",
+  "private": true,
+  "bugs": "https://github.com/loicnico96/boardgames",
+  "homepage": "https://github.com/loicnico96/boardgames/tree/main/packages/common#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loicnico96/boardgames",
+    "directory": "packages/common"
+  },
+  "sideEffects": false,
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "format": "prettier --write .",
+    "format-check": "prettier --check .",
+    "lint": "eslint src",
+    "lint-fix": "eslint --fix src",
+    "lint-staged": "lint-staged",
+    "test": "jest --watch",
+    "test-coverage": "jest --coverage",
+    "typecheck": "tsc --noEmit",
+    "docs": "typedoc src"
+  },
+  "devDependencies": {
+    "@boardgames/devtools": "workspace:*",
+    "rollup": "2.75.7",
+    "typescript": "4.7.4"
+  },
+  "peerDependencies": {
+    "@boardgames/utils": "workspace:*",
+    "immutability-helper": "*"
+  }
+}

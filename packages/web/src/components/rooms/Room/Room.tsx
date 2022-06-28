@@ -1,9 +1,10 @@
+import { RoomStatus } from "@boardgames/common"
+
+import { GameComponents } from "components/games/GameComponent"
 import { GameProvider } from "components/providers/GameProvider"
 import { RoomLobby } from "components/rooms/RoomLobby"
-import { useGameData } from "hooks/rooms/useGameData"
 import { useRoomData } from "hooks/rooms/useRoomData"
 import { useRoomId } from "hooks/rooms/useRoomId"
-import { RoomStatus } from "lib/model/RoomData"
 import { getGameType, getRoomStatus } from "lib/store/selectors/rooms"
 
 export function Room() {
@@ -15,17 +16,11 @@ export function Room() {
     return <RoomLobby />
   }
 
+  const GameComponent = GameComponents[game]
+
   return (
     <GameProvider game={game}>
-      <Game />
+      <GameComponent />
     </GameProvider>
   )
-}
-
-// TODO
-export function Game() {
-  const roomId = useRoomId()
-  const game = useRoomData(roomId, getGameType)
-  const state = useGameData(game, roomId, s => s)
-  return <>{JSON.stringify(state, undefined, 2)}</>
 }

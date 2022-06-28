@@ -1,9 +1,9 @@
+import { RoomStatus } from "@boardgames/common"
 import { useCallback } from "react"
 
 import { useTranslations } from "hooks/useTranslations"
 import { leaveRoom } from "lib/api/client/leaveRoom"
 import { useAuthContext } from "lib/auth/context"
-import { RoomStatus } from "lib/model/RoomData"
 import {
   getRoomResource,
   useGlobalActions,

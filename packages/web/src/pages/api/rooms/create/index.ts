@@ -1,3 +1,4 @@
+import { Collection, RoomStatus } from "@boardgames/common"
 import { enumValue } from "@boardgames/utils"
 import { ApiError } from "next/dist/server/api-utils"
 
@@ -6,9 +7,8 @@ import { handle, readBody } from "lib/api/server/handle"
 import { HttpMethod, HttpStatus } from "lib/api/types"
 import { firestore } from "lib/firebase/admin"
 import { WithId } from "lib/firebase/firestore"
-import { GameType } from "lib/games/types"
-import { Collection } from "lib/model/collections"
-import { RoomData, RoomStatus } from "lib/model/RoomData"
+import { getGameContext } from "lib/games/context"
+import { GameType, RoomData } from "lib/games/types"
 
 export async function createRoom<T extends GameType>(
   userId: string,
@@ -23,11 +23,13 @@ export async function createRoom<T extends GameType>(
     )
   }
 
+  const context = getGameContext(game)
+
   const roomData: RoomData<T> = {
     createdAt: Date.now(),
     createdBy: userId,
     game,
-    options: {}, // TODO - Default options
+    options: context.getDefaultOptions(),
     playerOrder: [userId],
     players: { [userId]: { name: userName } },
     status: RoomStatus.OPENED,

@@ -1,7 +1,6 @@
 import { HttpMethod } from "lib/api/types"
 import { WithId } from "lib/firebase/firestore"
-import { GameType } from "lib/games/types"
-import { RoomData } from "lib/model/RoomData"
+import { GameType, RoomData } from "lib/games/types"
 import { RoutePath } from "lib/utils/navigation"
 
 import { apiCall, apiPath } from "./utils"

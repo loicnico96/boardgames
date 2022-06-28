@@ -1,10 +1,6 @@
-import { GameType } from "lib/games/types"
-import {
-  PlayerInfo,
-  RoomData,
-  RoomOptions,
-  RoomStatus,
-} from "lib/model/RoomData"
+import { BaseOptions, RoomStatus, UserInfo } from "@boardgames/common"
+
+import { GameType, RoomData } from "lib/games/types"
 
 export function getGameType(room: RoomData): GameType {
   return room.game
@@ -18,11 +14,11 @@ export function getPlayerIds(room: RoomData): string[] {
   return room.playerOrder
 }
 
-export function getPlayers(room: RoomData): Record<string, PlayerInfo> {
+export function getPlayers(room: RoomData): Record<string, UserInfo> {
   return room.players
 }
 
-export function getRoomOptions(room: RoomData): RoomOptions {
+export function getRoomOptions(room: RoomData): BaseOptions {
   return room.options
 }
 

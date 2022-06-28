@@ -1,9 +1,10 @@
+import { RoomStatus } from "@boardgames/common"
 import { useCallback } from "react"
 
 import { useTranslations } from "hooks/useTranslations"
 import { startGame } from "lib/api/client/startGame"
 import { useAuthContext } from "lib/auth/context"
-import { RoomStatus } from "lib/model/RoomData"
+import { getGameSettings } from "lib/games/settings"
 import {
   getRoomResource,
   useGlobalActions,
@@ -38,8 +39,7 @@ export function useStartGame(roomId: string) {
           return t.reason.onlyOwnerCanStart
         }
 
-        const minPlayers = 2
-        const maxPlayers = 4
+        const { maxPlayers, minPlayers } = getGameSettings(room.game)
 
         if (room.playerOrder.length < minPlayers) {
           return t.reason.notEnoughPlayers

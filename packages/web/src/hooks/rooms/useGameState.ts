@@ -1,14 +1,13 @@
 import { assert } from "@boardgames/utils"
-import { GameType } from "lib/games/types"
-import { GameData } from "lib/model/GameData"
+import { GameState, GameType } from "lib/games/types"
 import { getGameResource, useGlobalStore } from "lib/store/global"
 import { Selector } from "lib/store/utils"
 import { useCallback } from "react"
 
-export function useGameData<T extends GameType, R>(
+export function useGameState<T extends GameType, R>(
   game: T,
   roomId: string,
-  selector: Selector<GameData<T>, R>
+  selector: Selector<GameState<T>, R>
 ): R {
   return useGlobalStore(
     useCallback(

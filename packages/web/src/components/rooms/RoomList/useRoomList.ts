@@ -1,9 +1,8 @@
+import { Collection } from "@boardgames/common"
 import { compact, generate, SortDir } from "@boardgames/utils"
 
 import { useQuery, UseQueryResult } from "hooks/db/useQuery"
-import { GameType } from "lib/games/types"
-import { Collection } from "lib/model/collections"
-import { RoomData } from "lib/model/RoomData"
+import { GameType, RoomData } from "lib/games/types"
 import { useGlobalActions } from "lib/store/global"
 import { getLoadedResource } from "lib/utils/resource"
 

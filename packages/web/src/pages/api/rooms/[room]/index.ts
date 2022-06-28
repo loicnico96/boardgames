@@ -1,4 +1,5 @@
-import { any, record } from "@boardgames/utils"
+import { getRoomRef, RoomStatus } from "@boardgames/common"
+import { any, record, toError } from "@boardgames/utils"
 import update from "immutability-helper"
 import { ApiError } from "next/dist/server/api-utils"
 
@@ -7,9 +8,8 @@ import { handle, readBody, readParam } from "lib/api/server/handle"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
 import { DocRef, firestore } from "lib/firebase/admin"
 import { WithId } from "lib/firebase/firestore"
-import { GameType } from "lib/games/types"
-import { getRoomRef } from "lib/model/collections"
-import { RoomData, RoomStatus } from "lib/model/RoomData"
+import { getGameContext } from "lib/games/context"
+import { GameOptions, GameType, RoomData } from "lib/games/types"
 import { RouteParam } from "lib/utils/navigation"
 
 type RoomUpdate<T extends GameType> = Pick<RoomData<T>, "options">
@@ -83,10 +83,24 @@ export async function updateRoom<T extends GameType>(
       )
     }
 
+    const context = getGameContext(roomData.game)
+
+    let updatedOptions: GameOptions<T>
+
+    try {
+      updatedOptions = context.validateOptions({
+        ...roomData.options,
+        ...roomUpdate.options,
+      })
+    } catch (error) {
+      throw new ApiError(
+        HttpStatus.BAD_REQUEST,
+        `Invalid room options: ${toError(error).message}`
+      )
+    }
+
     const updatedData = update(roomData, {
-      options: {
-        $merge: roomUpdate.options,
-      },
+      options: { $set: updatedOptions },
     })
 
     transaction.set(roomRef, updatedData)

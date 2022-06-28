@@ -1,10 +1,10 @@
+import { RoomStatus } from "@boardgames/common"
 import { useCallback } from "react"
 import { toast } from "react-toastify"
 
 import { useTranslations } from "hooks/useTranslations"
 import { closeRoom } from "lib/api/client/closeRoom"
 import { useAuthContext } from "lib/auth/context"
-import { RoomStatus } from "lib/model/RoomData"
 import { getRoomResource, useGlobalStore } from "lib/store/global"
 
 export function useCloseRoom(roomId: string) {
