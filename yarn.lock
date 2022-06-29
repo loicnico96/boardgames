@@ -1597,10 +1597,10 @@ __metadata:
   resolution: "@boardgames/common@workspace:packages/common"
   dependencies:
     "@boardgames/devtools": "workspace:*"
+    "@boardgames/utils": "workspace:*"
     rollup: 2.75.7
     typescript: 4.7.4
   peerDependencies:
-    "@boardgames/utils": "workspace:*"
     immutability-helper: "*"
   languageName: unknown
   linkType: soft
@@ -1658,16 +1658,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@boardgames/metropolys@workspace:packages/metropolys":
+"@boardgames/metropolys@workspace:*, @boardgames/metropolys@workspace:packages/metropolys":
   version: 0.0.0-use.local
   resolution: "@boardgames/metropolys@workspace:packages/metropolys"
   dependencies:
+    "@boardgames/common": "workspace:*"
     "@boardgames/devtools": "workspace:*"
+    "@boardgames/utils": "workspace:*"
+    immutability-helper: 3.1.1
     rollup: 2.75.7
     typescript: 4.7.4
-  peerDependencies:
-    "@boardgames/common": "workspace:*"
-    "@boardgames/utils": "workspace:*"
   languageName: unknown
   linkType: soft
 
@@ -1675,12 +1675,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@boardgames/roborally@workspace:packages/roborally"
   dependencies:
+    "@boardgames/common": "workspace:*"
     "@boardgames/devtools": "workspace:*"
+    "@boardgames/utils": "workspace:*"
+    immutability-helper: 3.1.1
     rollup: 2.75.7
     typescript: 4.7.4
-  peerDependencies:
-    "@boardgames/common": "workspace:*"
-    "@boardgames/utils": "workspace:*"
   languageName: unknown
   linkType: soft
 
@@ -1729,6 +1729,7 @@ __metadata:
   dependencies:
     "@boardgames/common": "workspace:*"
     "@boardgames/components": "workspace:*"
+    "@boardgames/metropolys": "workspace:*"
     "@boardgames/roborally": "workspace:*"
     "@boardgames/utils": "workspace:*"
     "@emotion/react": 11.9.3

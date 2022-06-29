@@ -38,7 +38,7 @@
   },
   "scripts": {
     "all": "yarn workspaces foreach -vpi run",
-    "build": "yarn workspaces foreach -vpi --topological-dev run build",
+    "build": "yarn workspaces foreach -vpi --topological-dev --recursive --from @boardgames/web run build",
     "common": "yarn workspace @boardgames/common",
     "components": "yarn workspace @boardgames/components",
     "deploy": "vercel",
