@@ -70,7 +70,7 @@ export function readBody<T extends Record<string, unknown>>(
   validators: { [K in keyof T]: Validator<T[K]> } // Validator<T>
 ): T {
   try {
-    return object(validators)(request.body)
+    return object(validators)(request.body) as T
   } catch (error) {
     throw new ApiError(HttpStatus.BAD_REQUEST, toError(error).message)
   }

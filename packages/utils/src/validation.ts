@@ -186,16 +186,18 @@ export function optional<T>(validator: Validator<T>): Validator<T | undefined> {
  * @param validators - Validator for each entry
  * @returns A validator that accepts an object with known entries
  */
-export function object<T extends Record<string, unknown>>(validators: {
-  [K in Key<T>]: Validator<T[K]>
-}): Validator<T> {
+export function object<T extends Record<string, Validator<unknown>>>(
+  validators: T
+): Validator<{
+  [K in Key<T>]: ReturnType<T[K]>
+}> {
   return value => {
     assert(isRecord(value), "Not a record")
     return reduce(
       validators,
       (result, validator, key) => {
         try {
-          const validatedValue = validator(value[key])
+          const validatedValue = validator(value[key]) as any
           if (validatedValue !== undefined) {
             result[key] = validatedValue
           }
@@ -208,7 +210,9 @@ export function object<T extends Record<string, unknown>>(validators: {
           }
         }
       },
-      {} as T
+      {} as {
+        [K in Key<T>]: ReturnType<T[K]>
+      }
     )
   }
 }
@@ -221,17 +225,19 @@ export function object<T extends Record<string, unknown>>(validators: {
  */
 export function objectUnion<
   P extends string,
-  T extends Record<string, Record<string, unknown>>
+  T extends Record<string, Record<string, Validator<unknown>>>
 >(
   discriminator: P,
-  validators: { [K in Key<T>]: { [L in Key<T[K]>]: Validator<T[K][L]> } }
-): Validator<ObjectUnion<P, T>> {
+  validators: T
+): Validator<
+  ObjectUnion<P, { [K in Key<T>]: { [L in Key<T[K]>]: ReturnType<T[K][L]> } }>
+> {
   return value => {
     assert(isRecord(value), "Not a record")
 
-    const baseObject = object<Record<P, Key<T>>>({
-      [discriminator]: oneOf(Object.keys(validators)),
-    } as Record<P, Validator<Key<T>>>)(value)
+    const baseObject = object({
+      [discriminator]: oneOf(Object.keys(validators)) as Validator<Key<T>>,
+    })(value)
 
     return {
       ...baseObject,
