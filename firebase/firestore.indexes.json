@@ -15,5 +15,18 @@
       ]
     }
   ],
-  "fieldOverrides": []
+  "fieldOverrides": [
+    {
+      "collectionGroup": "client",
+      "queryScope": "COLLECTION_GROUP",
+      "fieldPath": "state",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "server",
+      "queryScope": "COLLECTION_GROUP",
+      "fieldPath": "state",
+      "indexes": []
+    }
+  ]
 }
