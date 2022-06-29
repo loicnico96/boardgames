@@ -35,7 +35,10 @@ export function any(): Validator<unknown> {
 /**
  * Gets a validator that accepts an array
  * @param validator - Validator (invoked for each item)
- * @param options - Additional validation rules
+ * @param options.length - Exact number of items
+ * @param options.maxLength - Maximum number of items (included)
+ * @param options.minLength - Miniumm number of items (included)
+ * @param options.unique - If true, all items must be unique (using strict equality)
  * @returns A validator that accepts an array
  */
 export function array<T>(
@@ -114,7 +117,8 @@ export function exact<T extends string | number | boolean | null | undefined>(
 
 /**
  * Gets a validator that accepts a number
- * @param options - Additional validation rules
+ * @param options.max - Maximum value (included)
+ * @param options.min - Miniumm value (included)
  * @returns A validator that accepts a number
  */
 export function float(
@@ -139,7 +143,8 @@ export function float(
 
 /**
  * Gets a validator that accepts an integer
- * @param options - Additional validation rules
+ * @param options.max - Maximum value (included)
+ * @param options.min - Miniumm value (included)
  * @returns A validator that accepts an integer
  */
 export function integer(
@@ -184,16 +189,20 @@ export function optional<T>(validator: Validator<T>): Validator<T | undefined> {
 /**
  * Gets a validator that accepts an object with known entries
  * @param validators - Validator for each entry
+ * @param options.extraKeys - If true, extra (non-validated) entries are preserved on the object
  * @returns A validator that accepts an object with known entries
  */
 export function object<T extends Record<string, Validator<unknown>>>(
-  validators: T
+  validators: T,
+  options: {
+    extraKeys?: boolean
+  } = {}
 ): Validator<{
   [K in Key<T>]: ReturnType<T[K]>
 }> {
   return value => {
     assert(isRecord(value), "Not a record")
-    return reduce(
+    const validatedObject = reduce(
       validators,
       (result, validator, key) => {
         try {
@@ -210,10 +219,14 @@ export function object<T extends Record<string, Validator<unknown>>>(
           }
         }
       },
-      {} as {
-        [K in Key<T>]: ReturnType<T[K]>
-      }
+      {} as { [K in Key<T>]: ReturnType<T[K]> }
     )
+
+    if (options.extraKeys) {
+      return value as { [K in Key<T>]: ReturnType<T[K]> }
+    } else {
+      return validatedObject
+    }
   }
 }
 
@@ -311,7 +324,10 @@ export function record<T>(
 
 /**
  * Gets a validator that accepts a string
- * @param options - Additional validation rules
+ * @param options.length - Exact length
+ * @param options.maxLength - Maximum length (included)
+ * @param options.minLength - Miniumm length (included)
+ * @param options.pattern - Regular expression to match
  * @returns A validator that accepts a string
  */
 export function string(

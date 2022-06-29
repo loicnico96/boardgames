@@ -64,15 +64,17 @@ export class Random {
 
   /**
    * Shuffles an array
-   * @remarks The array will be mutated.
-   * @param array - Array to shuffle
+   * @param array - Array to shuffle (will not be mutated)
+   * @returns A shuffled copy of the array
    */
-  public shuffle<T>(array: Array<T>): void {
+  public shuffle<T>(array: ReadonlyArray<T>): Array<T> {
+    const result = array.slice()
     for (let i = array.length - 1; i > 0; i--) {
       const j = this.int(i + 1)
       const x = array[i]
-      array[i] = array[j]
-      array[j] = x
+      result[i] = array[j]
+      result[j] = x
     }
+    return result
   }
 }

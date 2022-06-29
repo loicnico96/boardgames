@@ -16,11 +16,8 @@ export async function getInitialGameState(
   generator: Random
 ): Promise<MetropolysState> {
   const startingPlayerId = generator.pick(room.playerOrder)
-  const colors = Object.values(DistrictColor)
-  const shapes = Object.values(MissionShape)
-
-  generator.shuffle(colors)
-  generator.shuffle(shapes)
+  const colors = generator.shuffle(Object.values(DistrictColor))
+  const shapes = generator.shuffle(Object.values(MissionShape))
 
   return {
     bids: [],
@@ -29,16 +26,16 @@ export async function getInitialGameState(
     lastRuins: null,
     mostMetro: null,
     playerOrder: room.playerOrder,
-    players: generate(room.playerOrder, playerId => [
+    players: generate(room.playerOrder, (playerId, playerIndex) => [
       playerId,
       {
         ...room.players[playerId],
         action: null,
         buildings: fill(BUILDING_COUNT, true),
-        color: colors[room.playerOrder.indexOf(playerId)],
+        color: colors[playerIndex],
         pass: false,
         ready: startingPlayerId !== playerId,
-        shape: shapes[room.playerOrder.indexOf(playerId)],
+        shape: shapes[playerIndex],
         tokens: generate(Object.values(Token), token => [token, 0]),
       },
     ]),

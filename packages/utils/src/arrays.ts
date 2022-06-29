@@ -81,15 +81,15 @@ export function fill<T>(
 /**
  * Generates a record by mapping over an array
  * @param array - Array
- * @param mapFn - Function returning a [key, value] tuple (invoked for each array item, with value as parameter)
+ * @param mapFn - Function returning a [key, value] tuple (invoked for each array item, with value and index as parameters)
  * @returns The generated record
  */
 export function generate<T, K extends string, R>(
   array: ReadonlyArray<T>,
-  mapFn: (item: T) => [K, R]
+  mapFn: (item: T, index: number) => [K, R]
 ): Record<K, R> {
-  return array.reduce((result, item) => {
-    const [key, value] = mapFn(item)
+  return array.reduce((result, item, index) => {
+    const [key, value] = mapFn(item, index)
     result[key] = value
     return result
   }, {} as Record<K, R>)

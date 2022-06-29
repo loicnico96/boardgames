@@ -193,6 +193,18 @@ describe("object", () => {
     )
     expect(() => validator({ bar: 3.14 })).toThrow("Missing key 'foo'")
   })
+
+  it("preserves extra keys", () => {
+    const validator = object(
+      { foo: string(), bar: optional(float()) },
+      { extraKeys: true }
+    )
+    expect(validator({ foo: "foo", bar: 3.14, baz: "baz" })).toStrictEqual({
+      foo: "foo",
+      bar: 3.14,
+      baz: "baz",
+    })
+  })
 })
 
 describe("objectUnion", () => {
