@@ -28,11 +28,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "rollup": "2.75.7",
     "rollup-plugin-delete": "2.0.0",
-    "rollup-plugin-typescript2": "0.32.1"
-  },
-  "peerDependencies": {
-    "rollup": "*",
-    "typescript": "*"
+    "rollup-plugin-typescript2": "0.32.1",
+    "typescript": "4.7.4"
   }
 }

@@ -1598,10 +1598,7 @@ __metadata:
   dependencies:
     "@boardgames/devtools": "workspace:*"
     "@boardgames/utils": "workspace:*"
-    rollup: 2.75.7
-    typescript: 4.7.4
-  peerDependencies:
-    immutability-helper: "*"
+    immutability-helper: 3.1.1
   languageName: unknown
   linkType: soft
 
@@ -1634,7 +1631,6 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     require-from-string: 2.0.2
-    rollup: 2.75.7
     tsconfig-paths-webpack-plugin: 3.5.2
     typescript: 4.7.4
     webpack: 5.73.0
@@ -1650,11 +1646,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@boardgames/devtools@workspace:packages/devtools"
   dependencies:
+    rollup: 2.75.7
     rollup-plugin-delete: 2.0.0
     rollup-plugin-typescript2: 0.32.1
-  peerDependencies:
-    rollup: "*"
-    typescript: "*"
+    typescript: 4.7.4
   languageName: unknown
   linkType: soft
 
@@ -1665,9 +1660,6 @@ __metadata:
     "@boardgames/common": "workspace:*"
     "@boardgames/devtools": "workspace:*"
     "@boardgames/utils": "workspace:*"
-    immutability-helper: 3.1.1
-    rollup: 2.75.7
-    typescript: 4.7.4
   languageName: unknown
   linkType: soft
 
@@ -1678,9 +1670,6 @@ __metadata:
     "@boardgames/common": "workspace:*"
     "@boardgames/devtools": "workspace:*"
     "@boardgames/utils": "workspace:*"
-    immutability-helper: 3.1.1
-    rollup: 2.75.7
-    typescript: 4.7.4
   languageName: unknown
   linkType: soft
 
@@ -1717,9 +1706,7 @@ __metadata:
   dependencies:
     "@boardgames/devtools": "workspace:*"
     "@types/seedrandom": 3.0.2
-    rollup: 2.75.7
     seedrandom: 3.0.5
-    typescript: 4.7.4
   languageName: unknown
   linkType: soft
 

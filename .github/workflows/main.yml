@@ -32,11 +32,11 @@ jobs:
           restore-keys: ${{ runner.os }}-yarn-
       - name: Install dependencies
         run: yarn install --immutable
+      - name: Build application
+        run: yarn build
       - name: Run Prettier
         run: yarn all format-check
       - name: Run ESLint
         run: yarn all lint
-      - name: Build application
-        run: yarn build
       - name: Run tests
         run: yarn all test-coverage --passWithNoTests
