@@ -1,10 +1,11 @@
+import { Metropolys } from "@boardgames/metropolys"
+
 import { GameProvider } from "components/providers/GameProvider"
-import { MetropolysContext } from "lib/games/metropolys/context"
 import { GameType } from "lib/games/types"
 
-export default function Metropolys() {
+export default function MetropolysComponent() {
   return (
-    <GameProvider context={MetropolysContext} game={GameType.METROPOLYS}>
+    <GameProvider {...Metropolys} game={GameType.METROPOLYS}>
       {null}
     </GameProvider>
   )

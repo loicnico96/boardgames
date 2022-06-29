@@ -1,10 +1,11 @@
+import { Roborally } from "@boardgames/roborally"
+
 import { GameProvider } from "components/providers/GameProvider"
-import { RoborallyContext } from "lib/games/roborally/context"
 import { GameType } from "lib/games/types"
 
-export default function Roborally() {
+export default function RoborallyComponent() {
   return (
-    <GameProvider context={RoborallyContext} game={GameType.METROPOLYS}>
+    <GameProvider {...Roborally} game={GameType.ROBORALLY}>
       {null}
     </GameProvider>
   )

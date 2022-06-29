@@ -1,19 +1,25 @@
-import {
-  BaseAction,
-  getClientRef,
-  getRoomRef,
-  getServerRef,
-  RoomStatus,
-} from "@boardgames/common"
+import { BaseAction, GameContext, RoomStatus } from "@boardgames/common"
 import { string, toError } from "@boardgames/utils"
+import { UpdateData } from "firebase/firestore"
 import { ApiError } from "next/dist/server/api-utils"
 
 import { getUserId } from "lib/api/server/auth"
+import {
+  getClientDocRef,
+  getRoomDocRef,
+  getServerDocRef,
+} from "lib/api/server/db"
 import { handle, readBody, readParam } from "lib/api/server/handle"
 import { GenericHttpResponse, HttpMethod, HttpStatus } from "lib/api/types"
 import { firestore } from "lib/firebase/admin"
-import { getGameContext } from "lib/games/context"
-import { GameState, GameType, isGameType } from "lib/games/types"
+import { getGameDefinition } from "lib/games/definitions"
+import {
+  GameAction,
+  GameData,
+  GameType,
+  isGameType,
+  RoomData,
+} from "lib/games/types"
 import { RouteParam } from "lib/utils/navigation"
 
 export async function playerAction<T extends GameType>(
@@ -23,32 +29,34 @@ export async function playerAction<T extends GameType>(
   action: BaseAction
 ): Promise<GenericHttpResponse> {
   const success = await firestore.runTransaction(async transaction => {
-    const clientRef = firestore.doc(getClientRef(game, roomId))
-    const serverRef = firestore.doc(getServerRef(game, roomId))
+    const clientRef = getClientDocRef(game, roomId)
+    const serverRef = getServerDocRef(game, roomId)
     const serverDoc = await transaction.get(serverRef)
-    const gameState = serverDoc.data() as GameState<T> | undefined
+    const serverData = serverDoc.data()
 
-    if (!gameState) {
+    if (!serverData) {
       throw new ApiError(HttpStatus.NOT_FOUND, "This game is not ongoing")
     }
 
-    if (gameState.finished) {
+    const { resolveState, validateAction } = getGameDefinition(game)
+
+    const seed = Date.now()
+
+    const context = new GameContext({ ...serverData, seed })
+
+    if (context.isEnded()) {
       throw new ApiError(
         HttpStatus.FAILED_PRECONDITION,
         "This game has already ended"
       )
     }
 
-    if (!gameState.playerOrder.includes(userId)) {
+    if (!context.state.playerOrder.includes(userId)) {
       throw new ApiError(
         HttpStatus.NOT_AUTHORIZED,
         "You are not a player in this game"
       )
     }
-
-    const context = getGameContext(game)
-
-    context.setState(gameState)
 
     if (context.player(userId).ready) {
       throw new ApiError(
@@ -57,23 +65,29 @@ export async function playerAction<T extends GameType>(
       )
     }
 
+    let validatedAction: GameAction<T>
+
     try {
-      context.setAction(userId, context.validateAction(userId, action))
+      validatedAction = validateAction(context.state, userId, action)
     } catch (error) {
       throw new ApiError(HttpStatus.BAD_REQUEST, toError(error).message)
     }
 
-    context.setSeed(Date.now())
+    context.setAction(userId, validatedAction)
 
-    transaction.update(clientRef, context.state)
+    transaction.update(clientRef, context.data as UpdateData<GameData<T>>)
 
-    await context.resolveState()
+    if (context.isReady()) {
+      await resolveState(context)
+    }
 
-    transaction.update(serverRef, context.state)
+    transaction.update(serverRef, context.data as UpdateData<GameData<T>>)
 
-    if (context.state.finished) {
-      const roomRef = firestore.doc(getRoomRef(roomId))
-      transaction.update(roomRef, { status: RoomStatus.FINISHED })
+    if (context.isEnded()) {
+      const roomRef = getRoomDocRef<T>(roomId)
+      transaction.update(roomRef, { status: RoomStatus.FINISHED } as UpdateData<
+        RoomData<T>
+      >)
     }
 
     return true

@@ -6,11 +6,11 @@ export default {
   input: "src/index.ts",
   output: [
     {
-      file: "dist/index.cjs.js",
+      file: "dist/index.js",
       format: "cjs",
     },
     {
-      file: "dist/index.esm.js",
+      file: "dist/esm/index.js",
       format: "esm",
     },
   ],
@@ -19,8 +19,10 @@ export default {
       targets: "dist",
     }),
     typescript({
+      useTsconfigDeclarationDir: true,
       tsconfigOverride: {
         compilerOptions: {
+          declarationDir: "dist/types",
           declaration: true,
         },
       },

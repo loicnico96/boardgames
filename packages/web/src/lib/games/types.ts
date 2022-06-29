@@ -1,8 +1,10 @@
-import { RoomData as BaseRoom } from "@boardgames/common"
+import {
+  RoomData as BaseRoomData,
+  GameData as BaseGameData,
+} from "@boardgames/common"
+import { MetropolysModel } from "@boardgames/metropolys"
+import { RoborallyModel } from "@boardgames/roborally"
 import { isEnum } from "@boardgames/utils"
-
-import { MetropolysModel } from "./metropolys/context"
-import { RoborallyModel } from "./roborally/context"
 
 export enum GameType {
   METROPOLYS = "metropolys",
@@ -18,8 +20,12 @@ export type GameAction<T extends GameType> = GameModel<T>["action"]
 export type GameEvent<T extends GameType> = GameModel<T>["event"]
 export type GameOptions<T extends GameType> = GameModel<T>["options"]
 export type GameState<T extends GameType> = GameModel<T>["state"]
+export type GameData<T extends GameType> = BaseGameData<GameState<T>>
 
-export type RoomData<T extends GameType = GameType> = BaseRoom<T, GameModel<T>>
+export type RoomData<T extends GameType = GameType> = BaseRoomData<
+  T,
+  GameOptions<T>
+>
 
 export function isGameType(value: unknown): value is GameType {
   return isEnum(value, GameType)

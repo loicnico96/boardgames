@@ -11,7 +11,7 @@ export function Room() {
   const roomStatus = useRoomData(roomId, getRoomStatus)
   const game = useRoomData(roomId, getGameType)
 
-  if (roomStatus === RoomStatus.OPENED) {
+  if (roomStatus === RoomStatus.OPEN) {
     return <RoomLobby />
   }
 

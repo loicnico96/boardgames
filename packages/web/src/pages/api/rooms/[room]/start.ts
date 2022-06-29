@@ -1,21 +1,19 @@
-import {
-  getClientRef,
-  getGameRef,
-  getRef,
-  getRoomRef,
-  getServerRef,
-  RoomStatus,
-} from "@boardgames/common"
-import { assert } from "@boardgames/utils"
+import { GameContext, getGameRef, getRef, RoomStatus } from "@boardgames/common"
+import { Random } from "@boardgames/utils"
 import update from "immutability-helper"
 import { ApiError } from "next/dist/server/api-utils"
 
 import { getUserId } from "lib/api/server/auth"
+import {
+  getClientDocRef,
+  getRoomDocRef,
+  getServerDocRef,
+} from "lib/api/server/db"
 import { handle, readParam } from "lib/api/server/handle"
 import { HttpMethod, HttpStatus } from "lib/api/types"
-import { DocRef, firestore } from "lib/firebase/admin"
+import { firestore } from "lib/firebase/admin"
 import { WithId } from "lib/firebase/firestore"
-import { getGameContext } from "lib/games/context"
+import { getGameDefinition } from "lib/games/definitions"
 import { getGameSettings } from "lib/games/settings"
 import { GameType, RoomData } from "lib/games/types"
 import { RouteParam } from "lib/utils/navigation"
@@ -25,7 +23,7 @@ export async function startGame<T extends GameType>(
   roomId: string
 ): Promise<WithId<RoomData<T>>> {
   return firestore.runTransaction(async transaction => {
-    const roomRef = firestore.doc(getRoomRef(roomId)) as DocRef<RoomData<T>>
+    const roomRef = getRoomDocRef<T>(roomId)
     const roomDoc = await transaction.get(roomRef)
     const roomData = roomDoc.data()
 
@@ -36,7 +34,7 @@ export async function startGame<T extends GameType>(
       )
     }
 
-    if (roomData.status !== RoomStatus.OPENED) {
+    if (roomData.status !== RoomStatus.OPEN) {
       throw new ApiError(
         HttpStatus.FAILED_PRECONDITION,
         "This game has already started"
@@ -50,7 +48,9 @@ export async function startGame<T extends GameType>(
       )
     }
 
-    const { maxPlayers, minPlayers } = getGameSettings(roomData.game)
+    const { game } = roomData
+    const { maxPlayers, minPlayers } = getGameSettings(game)
+    const { getInitialGameState, resolveState } = getGameDefinition(game)
 
     if (roomData.playerOrder.length < minPlayers) {
       throw new ApiError(
@@ -72,29 +72,32 @@ export async function startGame<T extends GameType>(
 
     transaction.set(roomRef, updatedData)
 
-    const context = getGameContext(roomData.game)
-
-    const initialState = await context.getInitialGameState(
-      roomData,
-      Date.now(),
-      async <S>(ref: string): Promise<S> => {
-        const fullRef = getRef(getGameRef(roomData.game), ref)
-        const doc = await firestore.doc(fullRef).get()
-        assert(doc.exists, `Not found: ${ref}`)
+    const seed = Date.now()
+    const generator = new Random(seed)
+    const fetcher = async <S>(ref: string): Promise<S> => {
+      const fullRef = getRef(getGameRef(roomData.game), ref)
+      const doc = await firestore.doc(fullRef).get()
+      if (doc.exists) {
         return doc.data() as S
+      } else {
+        throw new ApiError(HttpStatus.NOT_FOUND, `Not found: ${fullRef}`)
       }
-    )
+    }
 
-    context.setState(initialState)
+    const state = await getInitialGameState(roomData, generator, fetcher)
 
-    const clientRef = firestore.doc(getClientRef(roomData.game, roomId))
-    const serverRef = firestore.doc(getServerRef(roomData.game, roomId))
+    const context = new GameContext({ state, seed })
 
-    transaction.create(clientRef, context.state)
+    const clientRef = getClientDocRef(game, roomId)
+    const serverRef = getServerDocRef(game, roomId)
 
-    await context.resolveState()
+    transaction.create(clientRef, context.data)
 
-    transaction.create(serverRef, context.state)
+    if (context.isReady()) {
+      await resolveState(context)
+    }
+
+    transaction.create(serverRef, context.data)
 
     return { ...updatedData, id: roomId }
   })

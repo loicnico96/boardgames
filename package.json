@@ -48,8 +48,10 @@
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "lint-staged": "lint-staged",
+    "metropolys": "yarn workspace @boardgames/metropolys",
     "precommit": "yarn workspaces foreach -v run lint-staged",
     "prepare": "husky install",
+    "roborally": "yarn workspace @boardgames/roborally",
     "utils": "yarn workspace @boardgames/utils",
     "web": "yarn workspace @boardgames/web"
   }

@@ -1,22 +1,23 @@
-import { getRoomRef, RoomStatus } from "@boardgames/common"
+import { RoomStatus } from "@boardgames/common"
 import { remove } from "@boardgames/utils"
 import update from "immutability-helper"
 import { ApiError } from "next/dist/server/api-utils"
 
 import { getUserId } from "lib/api/server/auth"
+import { getRoomDocRef } from "lib/api/server/db"
 import { handle, readParam } from "lib/api/server/handle"
 import { HttpMethod, HttpStatus } from "lib/api/types"
-import { DocRef, firestore } from "lib/firebase/admin"
+import { firestore } from "lib/firebase/admin"
 import { WithId } from "lib/firebase/firestore"
-import { RoomData } from "lib/games/types"
+import { GameType, RoomData } from "lib/games/types"
 import { RouteParam } from "lib/utils/navigation"
 
-export async function leaveRoom(
+export async function leaveRoom<T extends GameType>(
   userId: string,
   roomId: string
-): Promise<WithId<RoomData>> {
+): Promise<WithId<RoomData<T>>> {
   return firestore.runTransaction(async transaction => {
-    const roomRef = firestore.doc(getRoomRef(roomId)) as DocRef<RoomData>
+    const roomRef = getRoomDocRef<T>(roomId)
     const roomDoc = await transaction.get(roomRef)
     const roomData = roomDoc.data()
 
@@ -27,7 +28,7 @@ export async function leaveRoom(
       )
     }
 
-    if (roomData.status !== RoomStatus.OPENED) {
+    if (roomData.status !== RoomStatus.OPEN) {
       throw new ApiError(
         HttpStatus.FAILED_PRECONDITION,
         "This game has already started"

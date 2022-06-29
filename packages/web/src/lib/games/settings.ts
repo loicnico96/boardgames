@@ -1,21 +1,14 @@
-import { GameType } from "./types"
+import { GameSettings } from "@boardgames/common"
+import { MetropolysSettings } from "@boardgames/metropolys"
+import { RoborallySettings } from "@boardgames/roborally"
 
-export type GameSettings = {
-  maxPlayers: number
-  minPlayers: number
-}
+import { GameType } from "./types"
 
 const SETTINGS: {
   [T in GameType]: GameSettings
 } = {
-  metropolys: {
-    maxPlayers: 4,
-    minPlayers: 2,
-  },
-  roborally: {
-    maxPlayers: 8,
-    minPlayers: 1,
-  },
+  metropolys: MetropolysSettings,
+  roborally: RoborallySettings,
 }
 
 export function getGameSettings(game: GameType): GameSettings {

@@ -1,30 +1,36 @@
-export type BaseAction = {
+import { RoomStatus } from "./rooms"
+
+export interface BaseAction {
   [key: string]: unknown
   code: string
 }
 
-export type BaseEvent = {
+export interface BaseEvent {
   [key: string]: unknown
   code: string
 }
 
-export type BaseOptions = {
+export interface BaseOptions {
   [key: string]: unknown
 }
 
-export type BasePlayer<A extends BaseAction = BaseAction> = {
+export interface BasePlayer<A extends BaseAction = BaseAction> {
   action: A | null
   ready: boolean
 }
 
-export type BaseState<P extends BasePlayer = BasePlayer> = {
-  finished: boolean
+export interface BaseState<P extends BasePlayer = BasePlayer> {
   playerOrder: string[]
-  players: { [playerId in string]?: P }
-  seed: number
+  players: { [playerId in string]: P }
+  status: RoomStatus
 }
 
-export type BaseModel<
+export interface GameData<S extends BaseState> {
+  seed: number
+  state: S
+}
+
+export type GameModel<
   A extends BaseAction = BaseAction,
   E extends BaseEvent = BaseEvent,
   O extends BaseOptions = BaseOptions,

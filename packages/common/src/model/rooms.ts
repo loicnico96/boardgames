@@ -1,20 +1,20 @@
-import { BaseModel } from "./games"
+import { BaseOptions } from "./games"
 import { UserInfo } from "./users"
 
 export enum RoomStatus {
-  OPENED = 0,
-  ONGOING = 1,
-  FINISHED = 2,
+  OPEN = "open",
+  ONGOING = "ongoing",
+  FINISHED = "finished",
 }
 
 export type RoomData<
   T extends string = string,
-  M extends BaseModel = BaseModel
+  O extends BaseOptions = BaseOptions
 > = {
   createdAt: number
   createdBy: string
   game: T
-  options: M["options"]
+  options: O
   playerOrder: string[]
   players: Record<string, UserInfo>
   status: RoomStatus

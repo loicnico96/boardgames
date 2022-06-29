@@ -1,74 +1,93 @@
-import { assert, mod, Random } from "@boardgames/utils"
+import { mod, Random } from "@boardgames/utils"
 import update, { Spec } from "immutability-helper"
 
-import { BaseAction, BaseOptions, BaseModel, RoomData } from "./model"
+import { GameData, GameModel, RoomStatus } from "./model"
 
-export type StateChangeHandler<M extends BaseModel> = (
+export type StateChangeHandler<M extends GameModel> = (
   state: M["state"],
   event: M["event"]
 ) => Promise<void>
 
-export abstract class BaseContext<M extends BaseModel> {
-  private __generator: Random | undefined
+export class GameContext<M extends GameModel> {
+  private __data: GameData<M["state"]>
+  private __generator: Random
   private __onStateChange: StateChangeHandler<M> | undefined
-  private __state: M["state"] | undefined
+
+  public constructor(
+    data: GameData<M["state"]>,
+    onStateChange?: StateChangeHandler<M>
+  ) {
+    this.__data = data
+    this.__generator = new Random(data.seed)
+    this.__onStateChange = onStateChange
+  }
+
+  public get data(): GameData<M["state"]> {
+    return this.__data
+  }
 
   public get generator(): Random {
-    const generator = this.__generator
-    assert(!!generator, "Context was not initialized")
-    return generator
+    return this.__generator
   }
 
   public get state(): M["state"] {
-    const state = this.__state
-    assert(!!state, "Context was not initialized")
-    return state
+    return this.__data.state
   }
 
-  public player(playerId: string): M["player"] {
-    const player = this.state.players[playerId]
-    assert(!!player, "Not a player")
-    return player
+  public endGame(): void {
+    this.update({ status: { $set: RoomStatus.FINISHED } } as Spec<M["state"]>)
+  }
+
+  public isEnded(): boolean {
+    return this.state.status === RoomStatus.FINISHED
+  }
+
+  public isReady(): boolean {
+    return this.state.playerOrder.every(id => this.player(id).ready)
   }
 
   public nextPlayerId(playerId: string, shift: number = 1): string {
-    const playerIds = this.state.playerOrder
-    const playerIndex = playerIds.indexOf(playerId)
-    assert(playerIndex >= 0, "Not a player")
-    return playerIds[mod(playerIndex + shift, playerIds.length)]
+    const { playerOrder } = this.state
+    const playerIndex = playerOrder.indexOf(playerId)
+    return playerOrder[mod(playerIndex + shift, playerOrder.length)]
   }
 
-  public setState(state: M["state"]): void {
-    this.__generator = new Random(state.seed)
-    this.__state = state
+  public player(playerId: string): M["player"] {
+    return this.state.players[playerId]
+  }
+
+  public clearAction(playerId: string): void {
+    this.updatePlayer(playerId, {
+      $merge: {
+        action: null,
+      },
+    } as Spec<M["player"]>)
+  }
+
+  public requireAction(playerId: string): void {
+    this.updatePlayer(playerId, {
+      $merge: {
+        action: null,
+        ready: false,
+      },
+    } as Spec<M["player"]>)
+  }
+
+  public setAction(playerId: string, action: M["action"]): void {
+    this.updatePlayer(playerId, {
+      $merge: {
+        action,
+        ready: true,
+      },
+    } as Spec<M["player"]>)
   }
 
   public update(spec: Spec<M["state"]>): void {
-    this.__state = update(this.state, spec)
+    this.__data = update(this.__data, { state: spec })
   }
 
   public updatePlayer(playerId: string, spec: Spec<M["player"]>): void {
     this.update({ players: { [playerId]: spec } } as Spec<M["state"]>)
-  }
-
-  public requireAction(playerId: string): void {
-    this.updatePlayer(playerId, { $merge: { ready: false } } as Spec<
-      M["player"]
-    >)
-  }
-
-  public setAction(playerId: string, action: M["action"]): void {
-    this.updatePlayer(playerId, { $merge: { action, ready: true } } as Spec<
-      M["player"]
-    >)
-  }
-
-  public setSeed(seed: number): void {
-    this.update({ $merge: { seed } } as Spec<M["state"]>)
-  }
-
-  public onStateChange(handler: StateChangeHandler<M>): void {
-    this.__onStateChange = handler
   }
 
   public async post(event: M["event"]): Promise<void> {
@@ -76,29 +95,4 @@ export abstract class BaseContext<M extends BaseModel> {
       await this.__onStateChange(this.state, event)
     }
   }
-
-  public endGame(): void {
-    this.update({ $merge: { finished: true } } as Spec<M["state"]>)
-  }
-
-  public isOver(): boolean {
-    return this.state.finished
-  }
-
-  public abstract getDefaultOptions(): M["options"]
-
-  public abstract getInitialGameState(
-    room: RoomData<string, M>,
-    seed: number,
-    fetcher: <T>(ref: string) => Promise<T>
-  ): Promise<M["state"]>
-
-  public abstract resolveState(): Promise<void>
-
-  public abstract validateAction(
-    playerId: string,
-    action: BaseAction
-  ): M["action"]
-
-  public abstract validateOptions(options: BaseOptions): M["options"]
 }

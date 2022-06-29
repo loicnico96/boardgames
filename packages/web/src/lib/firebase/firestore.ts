@@ -22,7 +22,7 @@ import firebaseApp from "./app"
 
 const firestore = getFirestore(firebaseApp)
 
-export type DocumentData = Record<string, unknown>
+export type DocumentData = {}
 
 export type WithId<T extends DocumentData> = T & { id: string }
 

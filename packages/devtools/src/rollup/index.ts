@@ -3,19 +3,12 @@ import { RollupOptions } from "rollup"
 import cleanOutDir from "rollup-plugin-delete"
 import typescript from "rollup-plugin-typescript2"
 
-export enum BuildFormat {
-  CJS = "cjs",
-  ESM = "esm",
-}
-
 export type BuildOptions = {
   // External dependencies
   dependencies?: string[]
-  // Input options
   inputDir?: string
   // Output options
   outputDir?: string
-  formats?: BuildFormat[]
   sourcemap?: boolean
   // Typescript config overrides
   declaration?: boolean
@@ -27,20 +20,27 @@ export function rollup({
   declaration = false,
   dependencies,
   exclude,
-  formats = [BuildFormat.CJS, BuildFormat.ESM],
   include,
   inputDir = "src",
   outputDir = "dist",
-  sourcemap = false,
+  sourcemap,
 }: BuildOptions): RollupOptions {
   return {
     external: dependencies,
     input: posix.join(inputDir, "index.ts"),
-    output: formats.map(format => ({
-      file: posix.join(outputDir, `index.${format}.js`),
-      sourcemap,
-      format,
-    })),
+    output: [
+      {
+        file: posix.join(outputDir, "index.js"),
+        format: "cjs",
+        sourcemap,
+      },
+      {
+        dir: posix.join(outputDir, "esm"),
+        format: "esm",
+        preserveModules: true,
+        sourcemap,
+      },
+    ],
     plugins: [
       cleanOutDir({
         targets: outputDir,
@@ -49,10 +49,12 @@ export function rollup({
         tsconfigOverride: {
           compilerOptions: {
             declaration,
+            declarationDir: posix.join(outputDir, "types"),
           },
           exclude,
           include,
         },
+        useTsconfigDeclarationDir: true,
       }),
     ],
   }

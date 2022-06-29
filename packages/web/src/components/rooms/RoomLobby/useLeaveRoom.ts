@@ -30,7 +30,7 @@ export function useLeaveRoom(roomId: string) {
           return t.reason.notAuthenticated
         }
 
-        if (room.status !== RoomStatus.OPENED) {
+        if (room.status !== RoomStatus.OPEN) {
           return t.reason.alreadyStarted
         }
 

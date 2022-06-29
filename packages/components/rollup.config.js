@@ -17,4 +17,5 @@ export default rollup({
     "src/storybook",
     "src/test-utils",
   ],
+  preserveModules: true,
 })
