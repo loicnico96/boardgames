@@ -28,12 +28,12 @@ export function compact<T>(
 /**
  * Counts the number of items matching given predicate inside an array
  * @param array - Array
- * @param filterFn - Predicate (invoked for each array item, with the value as parameter)
+ * @param filterFn - Predicate (invoked for each array item, with value and index as parameters)
  * @returns The number of matching items
  */
 export function count<T>(
   array: ReadonlyArray<T>,
-  filterFn: (item: T) => boolean
+  filterFn: (item: T, index: number) => boolean
 ): number
 /**
  * Counts the number of occurrences of given value inside an array
@@ -44,11 +44,11 @@ export function count<T>(
 export function count<T>(array: ReadonlyArray<T>, value: T): number
 export function count<T>(
   array: ReadonlyArray<T>,
-  valueOrFilterFn: T | ((item: T) => boolean)
+  valueOrFilterFn: T | ((item: T, index: number) => boolean)
 ): number {
-  return array.filter(item =>
+  return array.filter((item, index) =>
     isFunction(valueOrFilterFn)
-      ? valueOrFilterFn(item)
+      ? valueOrFilterFn(item, index)
       : item === valueOrFilterFn
   ).length
 }
@@ -84,7 +84,7 @@ export function fill<T>(
  * @param mapFn - Function returning a [key, value] tuple (invoked for each array item, with value and index as parameters)
  * @returns The generated record
  */
-export function generate<T, K extends string, R>(
+export function generate<T, K extends number | string, R>(
   array: ReadonlyArray<T>,
   mapFn: (item: T, index: number) => [K, R]
 ): Record<K, R> {
@@ -98,12 +98,12 @@ export function generate<T, K extends string, R>(
 /**
  * Removes all items matching given predicate from an array
  * @param array - Array (will not be mutated)
- * @param filterFn - Predicate (invoked for each array item, with the value as parameter)
+ * @param filterFn - Predicate (invoked for each array item, with value and index as parameters)
  * @returns A copy of the array, without the matching items
  */
 export function remove<T>(
   array: ReadonlyArray<T>,
-  filterFn: (item: T) => boolean
+  filterFn: (item: T, index: number) => boolean
 ): Array<T>
 /**
  * Removes all occurrences of given value from an array
@@ -114,11 +114,11 @@ export function remove<T>(
 export function remove<T>(array: ReadonlyArray<T>, value: T): Array<T>
 export function remove<T>(
   array: ReadonlyArray<T>,
-  valueOrFilterFn: T | ((item: T) => boolean)
+  valueOrFilterFn: T | ((item: T, index: number) => boolean)
 ): Array<T> {
-  return array.filter(item =>
+  return array.filter((item, index) =>
     isFunction(valueOrFilterFn)
-      ? !valueOrFilterFn(item)
+      ? !valueOrFilterFn(item, index)
       : item !== valueOrFilterFn
   )
 }
