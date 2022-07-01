@@ -46,10 +46,26 @@ export class GameContext<M extends GameModel> {
     return this.state.playerOrder.every(id => this.player(id).ready)
   }
 
-  public nextPlayerId(playerId: string, shift: number = 1): string {
+  public nextPlayer(playerId: string, shift: number = 1): string {
     const { playerOrder } = this.state
     const playerIndex = playerOrder.indexOf(playerId)
     return playerOrder[mod(playerIndex + shift, playerOrder.length)]
+  }
+
+  public nextPlayerWhich(
+    playerId: string,
+    condition: (player: M["player"], playerId: string) => boolean
+  ): string | undefined {
+    const { playerOrder, players } = this.state
+    const playerIndex = playerOrder.indexOf(playerId)
+    const playerCount = playerOrder.length
+    for (let i = 0; i < playerCount; i++) {
+      const nextPlayerId = playerOrder[mod(playerIndex + i + 1, playerCount)]
+      if (condition(players[nextPlayerId], nextPlayerId)) {
+        return nextPlayerId
+      }
+    }
+    return undefined
   }
 
   public player(playerId: string): M["player"] {

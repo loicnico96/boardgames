@@ -11,7 +11,9 @@ export * from "./model"
 export * from "./model/action"
 export * from "./model/event"
 export * from "./model/options"
+export * from "./model/player"
 export * from "./model/state"
+export * from "./model/types"
 export * from "./settings"
 
 export const Metropolys: GameDefinition<MetropolysModel> = {

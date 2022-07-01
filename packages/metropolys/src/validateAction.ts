@@ -3,12 +3,13 @@ import { integer, objectUnion } from "@boardgames/utils"
 
 import { MetropolysAction } from "./model/action"
 import {
-  BUILDING_COUNT,
-  DISTRICT_COUNT,
   getHighestBid,
+  getPlayer,
   isDistrictAvailable,
   MetropolysState,
 } from "./model/state"
+import { BUILDING_COUNT, DISTRICT_COUNT } from "./model/types"
+import { isAdjacent } from "./utils/board"
 
 export function validateAction(
   state: MetropolysState,
@@ -54,7 +55,7 @@ export function checkPlayerCanBid(
   height: number
 ) {
   const highestBid = getHighestBid(state)
-  const player = state.players[playerId]
+  const player = getPlayer(state, playerId)
 
   if (!player.buildings[height]) {
     throw Error("Building is not available")
@@ -68,8 +69,7 @@ export function checkPlayerCanBid(
     throw Error("District is not available")
   }
 
-  // TODO: Uncomment when district adjacency is added
-  // if (highestBid && !isAdjacent(district, highestBid.district)) {
-  //   throw Error("District is not adjacent")
-  // }
+  if (highestBid && !isAdjacent(district, highestBid.district)) {
+    throw Error("District is not adjacent")
+  }
 }

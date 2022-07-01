@@ -1,65 +1,18 @@
-import { BasePlayer, BaseState } from "@boardgames/common"
+import { BaseState } from "@boardgames/common"
 
-import { MetropolysAction } from "./action"
+import { getDistrictSector } from "../utils/board"
 
-export const BUILDING_COUNT = 13
-export const DISTRICT_COUNT = 55
-
-export enum DistrictColor {
-  BLUE = "blue",
-  GRAY = "gray",
-  GREEN = "green",
-  ORANGE = "orange",
-  RED = "red",
-}
-
-export enum MissionShape {
-  BRIDGES = "bridges",
-  CHAINS = "chains",
-  LAKES = "lakes",
-  SECTORS = "sectors",
-  TOWERS = "towers",
-}
-
-export enum Token {
-  FANCY = "fancy",
-  METRO = "metro",
-  RUINS = "ruins",
-}
-
-export interface DistrictBuilding {
-  height: number
-  playerId: string
-}
-
-export interface District {
-  building?: DistrictBuilding
-  token?: Token
-}
-
-export interface Bid {
-  district: number
-  height: number
-  playerId: string
-}
-
-export interface MetropolysPlayer extends BasePlayer<MetropolysAction> {
-  buildings: boolean[]
-  color: DistrictColor
-  name: string
-  pass: boolean
-  ready: boolean
-  shape: MissionShape
-  tokens: Record<Token, number>
-}
+import { getTokenCount, MetropolysPlayer } from "./player"
+import { Bid, District, DistrictSector, Token } from "./types"
 
 export interface MetropolysState extends BaseState<MetropolysPlayer> {
   bids: Bid[]
   currentPlayer: string
-  districts: District[]
+  districts: Partial<Record<number, District>>
   lastRuins: string | null
   mostMetro: string | null
-  turn: number
+  round: number
+  sectors: DistrictSector[]
 }
 
 export function getBids(state: MetropolysState): Bid[] {
@@ -81,11 +34,7 @@ export function getDistrict(
   state: MetropolysState,
   district: number
 ): District {
-  return state.districts[district]
-}
-
-export function getTokenCount(player: MetropolysPlayer, token: Token): number {
-  return player.tokens[token]
+  return state.districts[district] ?? {}
 }
 
 export function getCurrentPlayerId(state: MetropolysState): string {
@@ -105,10 +54,21 @@ export function getMostMetroCount(state: MetropolysState): number {
   return playerId ? getTokenCount(state.players[playerId], Token.METRO) : 0
 }
 
+export function getPlayer(
+  state: MetropolysState,
+  playerId: string
+): MetropolysPlayer {
+  return state.players[playerId]
+}
+
 export function isDistrictAvailable(
   state: MetropolysState,
   district: number
 ): boolean {
   const { building } = getDistrict(state, district)
-  return !building && !getBidsForDistrict(state, district)
+  return (
+    !building &&
+    !getBidsForDistrict(state, district) &&
+    state.sectors.includes(getDistrictSector(district))
+  )
 }
