@@ -8,7 +8,8 @@ import { hasAvailableBuilding } from "./model/players"
 import {
   getHighestBid,
   getPlayer,
-  isDistrictAvailable,
+  isAbleToPass,
+  isDistrictBuildable,
   MetropolysState,
 } from "./model/state"
 
@@ -36,9 +37,7 @@ export function validateAction(
 }
 
 export function checkPlayerCanPass(state: MetropolysState) {
-  const highestBid = getHighestBid(state)
-
-  if (!highestBid) {
+  if (!isAbleToPass(state)) {
     throw Error("Cannot pass the first bid")
   }
 }
@@ -68,7 +67,7 @@ export function checkPlayerCanBid(
     throw Error("Building is not high enough")
   }
 
-  if (!isDistrictAvailable(state, district)) {
+  if (!isDistrictBuildable(state, district)) {
     throw Error("District is not available")
   }
 

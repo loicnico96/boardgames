@@ -2,7 +2,7 @@ import { BasePlayer, UserInfo } from "@boardgames/common"
 import { generate } from "@boardgames/utils"
 
 import { MetropolysAction } from "./actions"
-import { getInitialBuildings } from "./buildings"
+import { getBuildings, getInitialBuildings } from "./buildings"
 import { DistrictColor } from "./districts"
 import { MissionShape } from "./missions"
 import { Token } from "./tokens"
@@ -21,9 +21,9 @@ export function getAvailableBuildings(
   player: MetropolysPlayer,
   minHeight: number = 0
 ): number[] {
-  return Object.keys(player.buildings)
-    .map(Number)
-    .filter(height => height >= minHeight && !!player.buildings[height])
+  return getBuildings().filter(
+    height => height >= minHeight && hasAvailableBuilding(player, height)
+  )
 }
 
 export function getInitialPlayerState(
@@ -51,7 +51,7 @@ export function hasAvailableBuilding(
   player: MetropolysPlayer,
   height: number
 ): boolean {
-  return !!player.buildings[height]
+  return player.buildings[height] === true
 }
 
 export function hasAvailableBuildings(

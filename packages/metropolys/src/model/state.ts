@@ -1,6 +1,6 @@
 import { BaseState } from "@boardgames/common"
 
-import { DistrictSector, getDistrictSector } from "./districts"
+import { DistrictSector } from "./districts"
 import {
   getTokenCount,
   hasAvailableBuildings,
@@ -75,7 +75,7 @@ export function getMostMetroPlayerId(state: MetropolysState): string | null {
 
 export function getMostMetroCount(state: MetropolysState): number {
   const playerId = getMostMetroPlayerId(state)
-  return playerId ? getTokenCount(state.players[playerId], Token.METRO) : 0
+  return playerId ? getTokenCount(getPlayer(state, playerId), Token.METRO) : 0
 }
 
 export function getPlayer(
@@ -85,12 +85,15 @@ export function getPlayer(
   return state.players[playerId]
 }
 
-export function isAbleToBid(
-  player: MetropolysPlayer,
-  highestBid?: Bid
-): boolean {
+export function isAbleToBid(state: MetropolysState, playerId: string): boolean {
+  const highestBid = getHighestBid(state)
   const minHeight = highestBid ? highestBid.height + 1 : undefined
-  return !hasPassed(player) && hasAvailableBuildings(player, minHeight)
+  const player = getPlayer(state, playerId)
+  return (
+    playerId !== highestBid?.playerId &&
+    hasAvailableBuildings(player, minHeight) &&
+    !hasPassed(player)
+  )
 }
 
 export function isAbleToPass(state: MetropolysState): boolean {
@@ -101,7 +104,18 @@ export function isDistrictAvailable(
   state: MetropolysState,
   district: number
 ): boolean {
-  return state.sectors.includes(getDistrictSector(district))
+  return state.districts[district] !== undefined
+}
+
+export function isDistrictBuildable(
+  state: MetropolysState,
+  district: number
+): boolean {
+  return (
+    isDistrictAvailable(state, district) &&
+    !getDistrict(state, district)?.building &&
+    !getBidForDistrict(state, district)
+  )
 }
 
 export function isSectorAvailable(

@@ -66,8 +66,7 @@ async function endTurn(context: MetropolysContext) {
   if (highestBid) {
     const nextPlayerId = context.nextPlayerWhich(
       currentPlayerId,
-      (player, playerId) =>
-        playerId !== highestBid.playerId && isAbleToBid(player, highestBid)
+      (_, playerId) => isAbleToBid(context.state, playerId)
     )
 
     if (nextPlayerId) {
