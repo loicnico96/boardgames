@@ -1,23 +1,25 @@
 import { RoomStatus } from "@boardgames/common"
 import { filter } from "@boardgames/utils"
 
-import { getTokenCount } from "../model/player"
+import {
+  DistrictSector,
+  getDistrictColor,
+  getDistrictSector,
+  isAdjacent,
+  isBridge,
+} from "../model/districts"
+import { MissionShape } from "../model/missions"
+import { getTokenCount } from "../model/players"
 import {
   getLastRuinsPlayerId,
   getMostMetroPlayerId,
   getPlayer,
   MetropolysState,
 } from "../model/state"
-import { DistrictSector, Mission, Token } from "../model/types"
+import { Token } from "../model/tokens"
 
-import {
-  getDistrictColor,
-  getDistrictSector,
-  isAdjacent,
-  isBridge,
-  LAKES,
-  TOWERS,
-} from "./board"
+export const LAKES: number[][] = []
+export const TOWERS: number[][] = []
 
 export const SCORE_COLOR = 2
 
@@ -103,7 +105,7 @@ export function getPlayerShapeScore(
   const playerShape = getPlayer(state, playerId).shape
   const playerDistricts = getPlayerDistricts(state, playerId)
   switch (playerShape) {
-    case Mission.BRIDGES:
+    case MissionShape.BRIDGES:
       // TODO - Each building can only count for one objective
       return (
         playerDistricts.filter(districtA =>
@@ -112,14 +114,14 @@ export function getPlayerShapeScore(
           )
         ).length * SCORE_SHAPE_BRIDGES
       )
-    case Mission.CHAINS:
+    case MissionShape.CHAINS:
       return (
         getDistrictChains(playerDistricts).reduce(
           (result, chain) => result + Math.floor(chain.length / 3),
           0
         ) * SCORE_SHAPE_CHAINS
       )
-    case Mission.LAKES:
+    case MissionShape.LAKES:
       // TODO - Each building can only count for one objective
       return (
         LAKES.filter(
@@ -128,7 +130,7 @@ export function getPlayerShapeScore(
               .length >= 3
         ).length * SCORE_SHAPE_LAKES
       )
-    case Mission.SECTORS:
+    case MissionShape.SECTORS:
       return (
         state.sectors.filter(
           sector =>
@@ -137,7 +139,7 @@ export function getPlayerShapeScore(
             ).length >= 3
         ).length * SCORE_SHAPE_SECTORS
       )
-    case Mission.TOWERS:
+    case MissionShape.TOWERS:
       // TODO - Each building can only count for one objective
       return (
         TOWERS.filter(

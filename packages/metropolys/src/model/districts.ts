@@ -1,299 +1,311 @@
-import { DistrictColor, DistrictSector } from "../model/types"
-
-export type DistrictInfo = {
-  adjacent: number[]
-  color: DistrictColor
-  sector: DistrictSector
+export enum DistrictColor {
+  BLUE = "blue",
+  GRAY = "gray",
+  GREEN = "green",
+  ORANGE = "orange",
+  RED = "red",
 }
 
-export const DISTRICTS: Record<number, DistrictInfo> = {
+export enum DistrictSector {
+  CENTER = "center",
+  NORTH = "north",
+  EAST = "east",
+  SOUTH = "south",
+  WEST = "west",
+}
+
+export const DISTRICTS: {
+  [district in number]: {
+    adjacent: number[]
+    color: DistrictColor
+    sector: DistrictSector
+  }
+} = {
   // Central sector
-  "0": {
+  0: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "1": {
+  1: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "2": {
+  2: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "3": {
+  3: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "4": {
+  4: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "5": {
+  5: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "6": {
+  6: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "7": {
+  7: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "8": {
+  8: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "9": {
+  9: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "10": {
+  10: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "11": {
+  11: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "12": {
+  12: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "13": {
+  13: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
-  "14": {
+  14: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.CENTER,
   },
   // North sector
-  "15": {
+  15: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.NORTH,
   },
-  "16": {
+  16: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.NORTH,
   },
-  "17": {
+  17: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.NORTH,
   },
-  "18": {
+  18: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.NORTH,
   },
-  "19": {
+  19: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.NORTH,
   },
-  "20": {
+  20: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.NORTH,
   },
-  "21": {
+  21: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.NORTH,
   },
-  "22": {
+  22: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.NORTH,
   },
-  "23": {
+  23: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.NORTH,
   },
-  "24": {
+  24: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.NORTH,
   },
   // East sector
-  "25": {
+  25: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.EAST,
   },
-  "26": {
+  26: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.EAST,
   },
-  "27": {
+  27: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.EAST,
   },
-  "28": {
+  28: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.EAST,
   },
-  "29": {
+  29: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.EAST,
   },
-  "30": {
+  30: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.EAST,
   },
-  "31": {
+  31: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.EAST,
   },
-  "32": {
+  32: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.EAST,
   },
-  "33": {
+  33: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.EAST,
   },
-  "34": {
+  34: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.EAST,
   },
   // South sector
-  "35": {
+  35: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.SOUTH,
   },
-  "36": {
+  36: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.SOUTH,
   },
-  "37": {
+  37: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.SOUTH,
   },
-  "38": {
+  38: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.SOUTH,
   },
-  "39": {
+  39: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.SOUTH,
   },
-  "40": {
+  40: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.SOUTH,
   },
-  "41": {
+  41: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.SOUTH,
   },
-  "42": {
+  42: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.SOUTH,
   },
-  "43": {
+  43: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.SOUTH,
   },
-  "44": {
+  44: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.SOUTH,
   },
   // West sector
-  "45": {
+  45: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.WEST,
   },
-  "46": {
+  46: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.WEST,
   },
-  "47": {
+  47: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.WEST,
   },
-  "48": {
+  48: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.WEST,
   },
-  "49": {
+  49: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.WEST,
   },
-  "50": {
+  50: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.WEST,
   },
-  "51": {
+  51: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.WEST,
   },
-  "52": {
+  52: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.WEST,
   },
-  "53": {
+  53: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.WEST,
   },
-  "54": {
+  54: {
     adjacent: [],
     color: DistrictColor.RED,
     sector: DistrictSector.WEST,
   },
 }
 
-export const DISTRICT_COUNT = Object.keys(DISTRICTS).length
-
-export const LAKES: number[][] = []
-
-export const TOWERS: number[][] = []
+export function getAdjacentDistricts(district: number): number[] {
+  return DISTRICTS[district].adjacent
+}
 
 export function getDistrictColor(district: number): DistrictColor {
   return DISTRICTS[district].color
@@ -303,17 +315,25 @@ export function getDistrictSector(district: number): DistrictSector {
   return DISTRICTS[district].sector
 }
 
+export function getDistricts(): number[] {
+  return Object.keys(DISTRICTS).map(Number)
+}
+
 export function isAdjacent(districtA: number, districtB: number): boolean {
-  return DISTRICTS[districtA].adjacent.includes(districtB)
+  return getAdjacentDistricts(districtA).includes(districtB)
 }
 
 export function isBridge(districtA: number, districtB: number): boolean {
   return (
     isAdjacent(districtA, districtB) &&
-    getDistrictColor(districtA) !== getDistrictColor(districtB)
+    getDistrictSector(districtA) !== getDistrictSector(districtB)
   )
 }
 
-export function isDeadEnd(district: number): boolean {
-  return DISTRICTS[district].adjacent.length === 1
+export function isTokenAssignable(district: number): boolean {
+  return getAdjacentDistricts(district).length > 2
+}
+
+export function isValidDistrict(district: number): boolean {
+  return district in DISTRICTS
 }

@@ -1,25 +1,49 @@
 import { BaseState } from "@boardgames/common"
 
-import { getDistrictSector } from "../utils/board"
+import { DistrictSector, getDistrictSector } from "./districts"
+import {
+  getTokenCount,
+  hasAvailableBuildings,
+  hasPassed,
+  MetropolysPlayer,
+} from "./players"
+import { Token } from "./tokens"
 
-import { getTokenCount, MetropolysPlayer } from "./player"
-import { Bid, District, DistrictSector, Token } from "./types"
+export type Bid = {
+  district: number
+  height: number
+  playerId: string
+}
+
+export type DistrictBuilding = {
+  height: number
+  playerId: string
+}
+
+export type District = {
+  building?: DistrictBuilding
+  token?: Token
+}
 
 export interface MetropolysState extends BaseState<MetropolysPlayer> {
   bids: Bid[]
   currentPlayer: string
-  districts: Partial<Record<number, District>>
+  districts: { [district in number]?: District }
   lastRuins: string | null
   mostMetro: string | null
   round: number
   sectors: DistrictSector[]
 }
 
+export function getAvailableDistricts(state: MetropolysState): number[] {
+  return Object.keys(state.districts).map(Number)
+}
+
 export function getBids(state: MetropolysState): Bid[] {
   return state.bids
 }
 
-export function getBidsForDistrict(
+export function getBidForDistrict(
   state: MetropolysState,
   district: number
 ): Bid | undefined {
@@ -33,8 +57,8 @@ export function getHighestBid(state: MetropolysState): Bid | undefined {
 export function getDistrict(
   state: MetropolysState,
   district: number
-): District {
-  return state.districts[district] ?? {}
+): District | undefined {
+  return state.districts[district]
 }
 
 export function getCurrentPlayerId(state: MetropolysState): string {
@@ -61,14 +85,28 @@ export function getPlayer(
   return state.players[playerId]
 }
 
+export function isAbleToBid(
+  player: MetropolysPlayer,
+  highestBid?: Bid
+): boolean {
+  const minHeight = highestBid ? highestBid.height + 1 : undefined
+  return !hasPassed(player) && hasAvailableBuildings(player, minHeight)
+}
+
+export function isAbleToPass(state: MetropolysState): boolean {
+  return state.bids.length === 0
+}
+
 export function isDistrictAvailable(
   state: MetropolysState,
   district: number
 ): boolean {
-  const { building } = getDistrict(state, district)
-  return (
-    !building &&
-    !getBidsForDistrict(state, district) &&
-    state.sectors.includes(getDistrictSector(district))
-  )
+  return state.sectors.includes(getDistrictSector(district))
+}
+
+export function isSectorAvailable(
+  state: MetropolysState,
+  sector: DistrictSector
+): boolean {
+  return state.sectors.includes(sector)
 }

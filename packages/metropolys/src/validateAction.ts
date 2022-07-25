@@ -1,15 +1,16 @@
 import { BaseAction } from "@boardgames/common"
 import { integer, objectUnion } from "@boardgames/utils"
 
-import { MetropolysAction } from "./model/action"
+import { MetropolysAction } from "./model/actions"
+import { isValidBuilding } from "./model/buildings"
+import { isAdjacent, isValidDistrict } from "./model/districts"
+import { hasAvailableBuilding } from "./model/players"
 import {
   getHighestBid,
   getPlayer,
   isDistrictAvailable,
   MetropolysState,
 } from "./model/state"
-import { BUILDING_COUNT, DISTRICT_COUNT } from "./model/types"
-import { isAdjacent } from "./utils/board"
 
 export function validateAction(
   state: MetropolysState,
@@ -18,14 +19,8 @@ export function validateAction(
 ): MetropolysAction {
   const validatedAction = objectUnion("code", {
     bid: {
-      district: integer({
-        min: 0,
-        max: DISTRICT_COUNT - 1,
-      }),
-      height: integer({
-        min: 0,
-        max: BUILDING_COUNT - 1,
-      }),
+      district: integer(),
+      height: integer(),
     },
     pass: {},
   })(action)
@@ -57,7 +52,15 @@ export function checkPlayerCanBid(
   const highestBid = getHighestBid(state)
   const player = getPlayer(state, playerId)
 
-  if (!player.buildings[height]) {
+  if (!isValidDistrict(district)) {
+    throw Error("Invalid district")
+  }
+
+  if (!isValidBuilding(height)) {
+    throw Error("Invalid building")
+  }
+
+  if (!hasAvailableBuilding(player, height)) {
     throw Error("Building is not available")
   }
 

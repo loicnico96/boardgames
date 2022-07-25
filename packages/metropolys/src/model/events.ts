@@ -1,6 +1,6 @@
 import { ObjectUnion } from "@boardgames/utils"
 
-import { Token } from "./types"
+import { Token } from "./tokens"
 
 export type MetropolysEvent = ObjectUnion<
   "code",

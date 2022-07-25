@@ -1,13 +1,10 @@
 import { GameContext } from "@boardgames/common"
 
 import { MetropolysModel } from "./model"
-import { MetropolysAction } from "./model/action"
+import { MetropolysAction } from "./model/actions"
+import { getTokenCount, hasAvailableBuildings } from "./model/players"
 import {
-  getTokenCount,
-  hasAnyAvailableBuilding,
-  isAbleToBid,
-} from "./model/player"
-import {
+  Bid,
   getCurrentPlayerId,
   getDistrict,
   getHighestBid,
@@ -15,8 +12,9 @@ import {
   getMostMetroCount,
   getMostMetroPlayerId,
   getPlayer,
+  isAbleToBid,
 } from "./model/state"
-import { Bid, Token } from "./model/types"
+import { Token } from "./model/tokens"
 
 type MetropolysContext = GameContext<MetropolysModel>
 
@@ -84,7 +82,7 @@ async function endTurn(context: MetropolysContext) {
 
 async function winBid(context: MetropolysContext, bid: Bid) {
   const { district, height, playerId } = bid
-  const { token } = getDistrict(context.state, district)
+  const { token } = getDistrict(context.state, district)!
 
   context.update({
     bids: { $set: [] },
@@ -117,7 +115,7 @@ async function winBid(context: MetropolysContext, bid: Bid) {
 
   const player = getPlayer(context.state, playerId)
 
-  if (hasAnyAvailableBuilding(player)) {
+  if (hasAvailableBuildings(player)) {
     await nextRound(context, playerId)
   } else {
     await endGame(context, playerId)
